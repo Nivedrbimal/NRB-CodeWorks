@@ -3,10 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <!-- <img src=https://github.com/Nivedrbimal/NRB-CodeWorks/blob/main/Gemini_Generated_Image_uuqjayuuqjayuuqj.png></img> -->
+   <link rel="icon" href="/NRB-CodeWorks-Favicon.ico" type="image/x-icon">
   <title>NRB Codeworks</title>
-
-  <!-- JetBrains Mono for a coding feel -->
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="style.css" />
@@ -57,28 +55,6 @@
       <section id="math" class="panel hidden">
         <h2>Math Calculators</h2>
 
-        <!-- Kinematics generic solver -->
-        <div class="card">
-          <h3>Kinematics solver (s, u, v, a, t)</h3>
-          <p class="muted">Enter any known variables. The solver iteratively applies kinematic formulas to deduce unknowns.</p>
-
-          <div class="grid">
-            <label><span class="muted">s (displacement)</span><input id="kin_s" type="number" step="any" placeholder="meters" /></label>
-            <label><span class="muted">u (initial velocity)</span><input id="kin_u" type="number" step="any" placeholder="m/s" /></label>
-            <label><span class="muted">v (final velocity)</span><input id="kin_v" type="number" step="any" placeholder="m/s" /></label>
-            <label><span class="muted">a (acceleration)</span><input id="kin_a" type="number" step="any" placeholder="m/s²" /></label>
-            <label><span class="muted">t (time)</span><input id="kin_t" type="number" step="any" placeholder="s" /></label>
-          </div>
-
-          <div class="row">
-            <button class="btn primary" onclick="kinematics_solve()">Solve</button>
-            <button class="btn" onclick="kinematics_clear()">Clear</button>
-            <label class="inline"><input id="kin_typing" type="checkbox" checked /> Typing output</label>
-          </div>
-
-          <div id="kin_out" class="output mono"></div>
-        </div>
-
         <!-- Trig evaluator -->
         <div class="card">
           <h3>Trig & Inverse trig evaluator</h3>
@@ -89,6 +65,7 @@
               <select id="tri_mode">
                 <option value="deg">Degrees</option>
                 <option value="rad">Radians</option>
+                <option value="pol">Polar</option>
               </select>
             </label>
 
@@ -106,6 +83,12 @@
                 <option value="asec">arcsec</option>
                 <option value="acsc">arccsc</option>
                 <option value="acot">arccot</option>
+                <option value="sinh">sinh</option>
+                <option value="cosh">cosh</option>
+                <option value="tanh">tanh</option>
+                <option value="csch">csch</option>
+                <option value="sech">sech</option>
+                <option value="coth">coth</option>
               </select>
             </label>
 
@@ -120,7 +103,7 @@
           <div id="tri_out" class="output mono"></div>
         </div>
 
-        <!-- Triangle solver -->
+        <!-- <!-- Triangle solver -->
         <div class="card">
           <h3>Triangle solver (law of sines & cosines)</h3>
           <p class="muted">Enter any combination of sides (a,b,c) and angles (A,B,C in degrees). Solver will attempt to find the rest.</p>
@@ -151,13 +134,35 @@
             <button class="btn" onclick="openShape('3d')">Open 3D Solids</button>
           </div>
           <div id="shapes_area" class="output mono"></div>
-        </div>
+        </div> -->
       </section>
 
       <!-- PHYSICS -->
       <section id="physics" class="panel hidden">
-        <h2>Physics (PAC)</h2>
+        <h2>Physics</h2>
 
+     <!-- Kinematics generic solver -->
+        <div class="card">
+          <h3>Kinematics solver (s, u, v, a, t)</h3>
+          <p class="muted">Enter any known variables. The solver iteratively applies kinematic formulas to deduce unknowns.</p>
+
+          <div class="grid">
+            <label><span class="muted">s (displacement)</span><input id="kin_s" type="number" step="any" placeholder="meters" /></label>
+            <label><span class="muted">u (initial velocity)</span><input id="kin_u" type="number" step="any" placeholder="m/s" /></label>
+            <label><span class="muted">v (final velocity)</span><input id="kin_v" type="number" step="any" placeholder="m/s" /></label>
+            <label><span class="muted">a (acceleration)</span><input id="kin_a" type="number" step="any" placeholder="m/s²" /></label>
+            <label><span class="muted">t (time)</span><input id="kin_t" type="number" step="any" placeholder="s" /></label>
+          </div>
+
+          <div class="row">
+            <button class="btn primary" onclick="kinematics_solve()">Solve</button>
+            <button class="btn" onclick="kinematics_clear()">Clear</button>
+            <label class="inline"><input id="kin_typing" type="checkbox" checked /> Typing output</label>
+          </div>
+
+          <div id="kin_out" class="output mono"></div>
+        </div>
+        
         <!-- Projectile flexible solver -->
         <div class="card">
           <h3>Projectile motion — flexible solver</h3>
@@ -246,44 +251,13 @@
           <div id="ng_out" class="output mono">Press "New Game" to start (1–100).</div>
         </div>
 
-        <div class="card">
-          <h3>Utilities</h3>
-          <div class="row">
-            <label><span class="muted">Square side</span><input id="sq_side" type="number" /></label>
-            <button class="btn" onclick="squareSolver()">Compute</button>
-          </div>
-          <div id="sq_out" class="output mono"></div>
-
-          <div style="height:8px"></div>
-
-          <div class="row">
-            <label><span class="muted">Rectangle w</span><input id="rect_w" type="number" /></label>
-            <label><span class="muted">Rectangle h</span><input id="rect_h" type="number" /></label>
-            <button class="btn" onclick="rectangleSolver()">Compute</button>
-          </div>
-          <div id="rect_out" class="output mono"></div>
-        </div>
+       
       </section>
 
-      <!-- ABOUT / README -->
+      <!-- ABOUT  -->
       <section id="about" class="panel hidden">
-        <h2>About & GitHub Guide</h2>
-        <div class="card">
-          <h3>Quick GitHub Steps (summary)</h3>
-          <ol class="muted">
-            <li>Create a GitHub account at <kbd>github.com</kbd> if you don't have one.</li>
-            <li>Click <kbd>New repository</kbd>, name it <kbd>MathExercisesWeb</kbd>, set visibility public, create repo.</li>
-            <li>Upload files (Add file → Upload files) or push via Git from your PC.</li>
-            <li>Enable Pages: Settings → Pages → Source → choose <kbd>main</kbd> (or <kbd>master</kbd>) branch / root → Save.</li>
-            <li>Your site will appear at <kbd>https://&lt;your-username&gt;.github.io/MathExercisesWeb/</kbd> in a few minutes.</li>
-          </ol>
-          <p class="muted">Full step-by-step instructions are included in README.md (download repo and follow that file).</p>
-        </div>
-
-        <div class="card">
-          <h3>Typing Animation Control</h3>
-          <p class="muted">Outputs default to typing animation. You can uncheck the 'Typing output' checkbox near a solver to show instant output.</p>
-        </div>
+        <h2>About Me</h2>
+        
       </section>
     </main>
   </div>
