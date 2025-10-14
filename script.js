@@ -42,6 +42,24 @@ function typeOut(el, text, options = {}) {
   });
 }
 
+function toggleDropdown() {
+  document.getElementById("operationDropdown").classList.toggle("show");
+}
+
+// Close dropdown if clicked outside
+window.onclick = function(event) {
+  if (!event.target.matches('.dropdown-button')) {
+    document.getElementById("operationDropdown").classList.remove("show");
+  }
+}
+
+// Function to get selected operations
+function getSelectedOperations() {
+  const ops = [];
+  document.querySelectorAll(".operation:checked").forEach(cb => ops.push(cb.value));
+  return ops;
+}
+
 // ---------- TRIANGLE SOLVER ----------
 function triangle_clear() {
   ['tri_a','tri_b','tri_c','tri_A','tri_B','tri_C'].forEach(id => document.getElementById(id).value = '');
