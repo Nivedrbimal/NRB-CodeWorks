@@ -42,81 +42,6 @@ function typeOut(el, text, options = {}) {
   });
 }
 
-// ---------- KINEMATICS SOLVER ----------
-function kinematics_clear() {
-  ['kin_s','kin_u','kin_v','kin_a','kin_t'].forEach(id => document.getElementById(id).value = '');
-  document.getElementById('kin_out').textContent = '';
-}
-async function kinematics_solve() {
-  let s = toNum(document.getElementById('kin_s').value);
-  let u = toNum(document.getElementById('kin_u').value);
-  let v = toNum(document.getElementById('kin_v').value);
-  let a = toNum(document.getElementById('kin_a').value);
-  let t = toNum(document.getElementById('kin_t').value);
-  const known = x => x !== null;
-
-  let changed = true, iter = 0;
-  while (changed && iter < 40) {
-    changed = false; iter++;
-    // v = u + a t
-    if (!known(v) && known(u) && known(a) && known(t)) { v = u + a*t; changed = true; }
-    if (!known(u) && known(v) && known(a) && known(t)) { u = v - a*t; changed = true; }
-    if (!known(a) && known(v) && known(u) && known(t) && t !== 0) { a = (v - u)/t; changed = true; }
-    if (!known(t) && known(v) && known(u) && known(a) && a !== 0) { t = (v - u)/a; changed = true; }
-
-    // s = u t + 0.5 a t^2
-    if (!known(s) && known(u) && known(t) && known(a)) { s = u*t + 0.5*a*t*t; changed = true; }
-    // s = (u+v)/2 * t
-    if (!known(s) && known(u) && known(v) && known(t)) { s = (u+v)/2 * t; changed = true; }
-    if (!known(t) && known(s) && known(u) && known(v) && (u+v) !== 0) { t = (2*s)/(u+v); changed = true; }
-
-    // v^2 = u^2 + 2 a s
-    if (!known(v) && known(u) && known(a) && known(s)) { const val = u*u + 2*a*s; if (val >= 0) { v = Math.sqrt(val); changed = true; } }
-    if (!known(u) && known(v) && known(a) && known(s)) { const val = v*v - 2*a*s; if (val >= 0) { u = Math.sqrt(val); changed = true; } }
-    if (!known(a) && known(v) && known(u) && known(s) && s !== 0) { a = (v*v - u*u)/(2*s); changed = true; }
-  }
-
-  const out = `Iterations: ${iter}\n` +
-    `s = ${fmt(s)}\nu = ${fmt(u)}\nv = ${fmt(v)}\na = ${fmt(a)}\nt = ${fmt(t)}`;
-
-  const el = document.getElementById('kin_out');
-  const typing = document.getElementById('kin_typing').checked;
-  await typeOut(el, out, { disable: !typing, speed: 18 });
-}
-
-// ---------- TRIG EVALUATOR ----------
-function trig_compute() {
-  const mode = document.getElementById('tri_mode').value; // deg or rad
-  const op = document.getElementById('tri_op').value;
-  const raw = document.getElementById('tri_val').value;
-  const outEl = document.getElementById('tri_out');
-  if (raw === '') { outEl.textContent = 'Enter a value'; return; }
-  const x = Number(raw);
-  const toRad = v => mode === 'deg' ? v * Math.PI/180 : v;
-  const fromRad = v => mode === 'deg' ? v * 180/Math.PI : v;
-
-  try {
-    let res = null, note = '';
-    switch (op) {
-      case 'sin': res = Math.sin(toRad(x)); break;
-      case 'cos': res = Math.cos(toRad(x)); break;
-      case 'tan': res = Math.tan(toRad(x)); break;
-      case 'csc': res = 1/Math.sin(toRad(x)); break;
-      case 'sec': res = 1/Math.cos(toRad(x)); break;
-      case 'cot': res = 1/Math.tan(toRad(x)); break;
-      case 'asin': { let v = Math.asin(x); res = fromRad(v); note = '(output in chosen mode)'; break; }
-      case 'acos': { let v = Math.acos(x); res = fromRad(v); note = '(output in chosen mode)'; break; }
-      case 'atan': { let v = Math.atan(x); res = fromRad(v); note = '(output in chosen mode)'; break; }
-      case 'asec': { let v = 1/x; if (Math.abs(v) > 1) { let r = Math.acos(1/v); res = fromRad(r); note = '(arcsec)'; } else res = NaN; break; }
-      case 'acsc': { let v = 1/x; if (Math.abs(v) <= 1) { let r = Math.asin(1/v); res = fromRad(r); note = '(arccsc)'; } else res = NaN; break; }
-      case 'acot': { let r = Math.atan(1/x); res = fromRad(r); note = '(arccot)'; break; }
-    }
-    outEl.textContent = `Result: ${fmt(res)} ${note}`;
-  } catch (e) {
-    outEl.textContent = 'Error: ' + e.message;
-  }
-}
-
 // ---------- TRIANGLE SOLVER ----------
 function triangle_clear() {
   ['tri_a','tri_b','tri_c','tri_A','tri_B','tri_C'].forEach(id => document.getElementById(id).value = '');
@@ -165,14 +90,91 @@ function triangle_solve() {
   document.getElementById('tri_out').textContent = out;
 }
 
-// ---------- SHAPES (2D/3D quick) ----------
-function openShape(mode) {
-  const el = document.getElementById('shapes_area');
-  if (mode === '2d') {
-    el.textContent = `2D shapes available:\n- Circle: area = π r², perimeter = 2πr\n- Rectangle: area = w × h\n- Triangle: area = 0.5 × base × height\nUse the triangle solver or add a shaded UI and I'll port exact input boxes.`;
-  } else {
-    el.textContent = `3D solids available:\n- Cube: V = a³, SA = 6a²\n- Sphere: V = 4/3 π r³, SA = 4π r²\n- Cylinder: V = π r² h\nIf you'd like, I can add full input forms for each solid.`;
+
+
+// ---------- TRIG EVALUATOR ----------
+function trig_compute() {
+  const mode = document.getElementById('tri_mode').value; // deg or rad
+  const op = document.getElementById('tri_op').value;
+  const raw = document.getElementById('tri_val').value;
+  const outEl = document.getElementById('tri_out');
+  if (raw === '') { outEl.textContent = 'Enter a value'; return; }
+  const x = Number(raw);
+  const toRad = v => mode === 'deg' ? v * Math.PI/180 : v;
+  const fromRad = v => mode === 'deg' ? v * 180/Math.PI : v;
+
+  try {
+    let res = null, note = '';
+    switch (op) {
+      case 'sin': res = Math.sin(toRad(x)); break;
+      case 'cos': res = Math.cos(toRad(x)); break;
+      case 'tan': res = Math.tan(toRad(x)); break;
+      case 'csc': res = 1/Math.sin(toRad(x)); break;
+      case 'sec': res = 1/Math.cos(toRad(x)); break;
+      case 'cot': res = 1/Math.tan(toRad(x)); break;
+      case 'asin': { let v = Math.asin(x); res = fromRad(v); note = '(output in chosen mode)'; break; }
+      case 'acos': { let v = Math.acos(x); res = fromRad(v); note = '(output in chosen mode)'; break; }
+      case 'atan': { let v = Math.atan(x); res = fromRad(v); note = '(output in chosen mode)'; break; }
+      case 'asec': { let v = 1/x; if (Math.abs(v) > 1) { let r = Math.acos(1/v); res = fromRad(r); note = '(arcsec)'; } else res = NaN; break; }
+      case 'acsc': { let v = 1/x; if (Math.abs(v) <= 1) { let r = Math.asin(1/v); res = fromRad(r); note = '(arccsc)'; } else res = NaN; break; }
+      case 'acot': { let r = Math.atan(1/x); res = fromRad(r); note = '(arccot)'; break; }
+      case 'sinh': res = Math.sinh(toRad(x)); break;
+      case 'cosh': res = Math.cosh(toRad(x)); break;
+      case 'tanh': res = Math.tanh(toRad(x)); break;
+      case 'csch': res = 1/Math.sinh(toRad(x)); break;
+      case 'sech': res = 1/Math.cosh(toRad(x)); break;
+      case 'coth': res = 1/Math.tanh(toRad(x)); break;
+    }
+    outEl.textContent = `Result: ${fmt(res)} ${note}`;
+  } catch (e) {
+    outEl.textContent = 'Error: ' + e.message;
   }
+}
+
+// ---------- KINEMATICS SOLVER ----------
+function kinematics_clear() {
+  ['kin_s','kin_u','kin_v','kin_a','kin_t'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('kin_out').textContent = '';
+}
+async function kinematics_solve() {
+  let s = toNum(document.getElementById('kin_s').value);
+  let u = toNum(document.getElementById('kin_u').value);
+  let v = toNum(document.getElementById('kin_v').value);
+  let a = toNum(document.getElementById('kin_a').value);
+  let t = toNum(document.getElementById('kin_t').value);
+  const known = x => x !== null;
+
+  let changed = true, iter = 0;
+  while (changed && iter < 40) {
+    changed = false; iter++;
+    // v = u + a t
+    if (!known(v) && known(u) && known(a) && known(t)) { v = u + a*t; changed = true; }
+    if (!known(u) && known(v) && known(a) && known(t)) { u = v - a*t; changed = true; }
+    if (!known(a) && known(v) && known(u) && known(t) && t !== 0) { a = (v - u)/t; changed = true; }
+    if (!known(t) && known(v) && known(u) && known(a) && a !== 0) { t = (v - u)/a; changed = true; }
+
+    // s = u t + 0.5 a t^2
+    if (!known(s) && known(u) && known(t) && known(a)) { s = u*t + 0.5*a*t*t; changed = true; }
+    // s = (u+v)/2 * t
+    if (!known(s) && known(u) && known(v) && known(t)) { s = (u+v)/2 * t; changed = true; }
+    if (!known(t) && known(s) && known(u) && known(v) && (u+v) !== 0) { t = (2*s)/(u+v); changed = true; }
+
+    // v^2 = u^2 + 2 a s
+    if (!known(v) && known(u) && known(a) && known(s)) { const val = u*u + 2*a*s; if (val >= 0) { v = Math.sqrt(val); changed = true; } }
+    if (!known(u) && known(v) && known(a) && known(s)) { const val = v*v - 2*a*s; if (val >= 0) { u = Math.sqrt(val); changed = true; } }
+    if (!known(a) && known(v) && known(u) && known(s) && s !== 0) { a = (v*v - u*u)/(2*s); changed = true; }
+  }
+
+  const out = `Iterations: ${iter}\n` +
+    `s = ${fmt(s)}\n +
+    u = ${fmt(u)}\n +
+    v = ${fmt(v)}\n +
+    a = ${fmt(a)}\n +
+    t = ${fmt(t)}`;
+
+  const el = document.getElementById('kin_out');
+  const typing = document.getElementById('kin_typing').checked;
+  await typeOut(el, out, { disable: !typing, speed: 18 });
 }
 
 // ---------- PROJECTILE FLEXIBLE SOLVER ----------
@@ -226,8 +228,70 @@ function proj_flexible(){
   }
 
   const out = `Iterations: ${iter}\n` +
-    `v0 = ${fmt(v0)} m/s\nθ = ${fmt(theta)}°\ng = ${fmt(g)} m/s²\nT = ${fmt(T)} s\nR = ${fmt(R)} m\nH = ${fmt(H)} m`;
+    `v0 = ${fmt(v0)} m/s\n +
+    θ = ${fmt(theta)}°\n +
+    g = ${fmt(g)} m/s²\n +
+    T = ${fmt(T)} s\n +
+    R = ${fmt(R)} m\n +
+    H = ${fmt(H)} m`;
   document.getElementById('pm_out').textContent = out;
+}
+
+
+// ---------- WAVES CALCULATOR ---------
+
+function kinematics_clear() {
+  ['wav_v','wav_f','wav_wavelength','wav_T','wav_F', 'wav_u'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('wav_out').textContent = '';
+}
+async function kinematics_solve() {
+  let v = toNum(document.getElementById('wav_v').value);
+  let f = toNum(document.getElementById('wav_f').value);
+  let lambda = toNum(document.getElementById('lambda').value);
+  let T = toNum(document.getElementById('wav_T').value);
+  let F = toNum(document.getElementById('wav_F').value);
+  let mu = toNum(document.getElementById('wav_mu').value);
+  const known = x => x !== null;
+
+  let changed = true, iter = 0;
+  while (changed && iter < 40) {
+    changed = false; iter++;
+    
+    // v = f * lambda
+    if (!known(v) && known(f) && known(lambda)) { v = f * lambda; changed = true; }
+    if (!known(f) && known(v) && known(lambda) && lambda !== 0) { f = v / lambda; changed = true; }
+    if (!known(lambda) && known(v) && known(f) && f !== 0) { lambda = v / f; changed = true; }
+
+    // T = 1/f and f = 1/T
+    if (!known(T) && known(f) && f !== 0) { T = 1 / f; changed = true; }
+    if (!known(f) && known(T) && T !== 0) { f = 1 / T; changed = true; }
+
+    // v = lambda / T or lambda = v * T
+    if (!known(v) && known(lambda) && known(T) && T !== 0) { v = lambda / T; changed = true; }
+    if (!known(lambda) && known(v) && known(T)) { lambda = v * T; changed = true; }
+    if (!known(T) && known(v) && known(lambda) && v !== 0) { T = lambda / v; changed = true; }
+
+    // v = √(F/μ)
+    if (!known(v) && known(F) && known(mu) && mu !== 0) { v = Math.sqrt(F / mu); changed = true; }
+    // F = μv²
+    if (!known(F) && known(v) && known(mu)) { F = mu * v * v; changed = true; 
+    }
+    // μ = F/v²
+    if (!known(mu) && known(v) && known(F) && v !== 0) { mu = F / (v * v); changed = true; 
+    }
+  }
+
+  const out = `Iterations: ${iter}\n` +
+    `v = ${fmt(v)}\n` +
+    `f = ${fmt(f)}\n` +
+    `λ = ${fmt(lambda)}\n` +
+    `T = ${fmt(T)}\n` +
+    `F = ${fmt(F)}\n` +
+    `μ = ${fmt(mu)}`;
+  
+  const el = document.getElementById('wav_out');
+  const typing = document.getElementById('wav_typing').checked;
+  await typeOut(el, out, { disable: !typing, speed: 18 });
 }
 
 // ---------- GAMES: fg2 Quiz ----------
@@ -288,9 +352,4 @@ function ng_try(){
   else if (g < ng_secret) document.getElementById('ng_out').textContent = 'Too low.';
   else document.getElementById('ng_out').textContent = 'Too high.';
 }
-
-// ---------- UTILITIES ----------
-function squareSolver(){ const s = toNum(document.getElementById('sq_side').value); if (s === null) return; document.getElementById('sq_out').textContent = `Perimeter = ${fmt(4*s)}\nArea = ${fmt(s*s)}`; }
-function rectangleSolver(){ const w = toNum(document.getElementById('rect_w').value), h = toNum(document.getElementById('rect_h').value); if (w === null || h === null) return; document.getElementById('rect_out').textContent = `Perimeter = ${fmt(2*(w+h))}\nArea = ${fmt(w*h)}`; }
-
 // End of script.js
