@@ -29,8 +29,6 @@
         <button data-target="games" class="menu-btn">Games</button>
         <button data-target="utilities" class="menu-btn">Utilities</button>
       </nav>
-
-      <div class="tip">Tip: leave inputs blank for unknowns. Click <span class="kbd">Solve</span> and the app will try to compute missing values.</div>
     </aside>
 
     <main class="main">
@@ -55,6 +53,9 @@
       <section id="math" class="panel hidden">
         <h2>Math Calculators</h2>
 
+
+
+				
         <!-- Trig evaluator -->
         <div class="card">
           <h3>Trig & Inverse trig evaluator</h3>
@@ -185,11 +186,27 @@
           <div id="pm_out" class="output mono"></div>
         </div>
 
-        <!-- Energy menu (scaffolded) -->
+       
+     <!-- Waves flexible solver -->
         <div class="card">
-          <h3>Energy menu (pac4) — scaffold</h3>
-          <p class="muted">Your original energy menu (many equations) is scaffolded here. I included kinematics + projectile + placeholders for full energy/momentum/waves conversion. Tell me which submenus to prioritize and I'll port them next.</p>
-          <div id="energy_area" class="output mono">Energy submenus ready for conversion.</div>
+          <h3>Waves - flexible solver</h3>
+          <p class="muted">Enter any known variables.</p>
+
+          <div class="grid">
+            <label><span class="muted">v (wave speed)</span><input id="wav_v" type="number" step="any" placeholder="m/s" /></label>
+            <label><span class="muted">f (frequency)</span><input id="wav_f" type="number" step="any" placeholder="Hz" /></label>
+            <label><span class="muted">λ (wavelength)</span><input id="wav_wavelength" type="number" step="any" placeholder="m" /></label>
+            <label><span class="muted">T (period)</span><input id="wav_T" type="number" step="any" placeholder="s" /></label>
+            <label><span class="muted">F (tension)</span><input id="wav_F" type="number" step="any" placeholder="N" /></label>
+            <label><span class="muted">μ (linear mass density)</span><input id="wav_u" type="number" step="any" placeholder="kg/m" /></label>
+          </div>
+
+          <div class="row">
+            <button class="btn primary" onclick="waves_solve()">Solve</button>
+            <button class="btn" onclick="waves_clear()">Clear</button>
+          </div>
+
+          <div id="wav_out" class="output mono"></div>
         </div>
       </section>
 
@@ -198,8 +215,8 @@
         <h2>Chemistry (CAC)</h2>
 
         <div class="card">
-          <h3>Formula mass & quick helpers (scaffold)</h3>
-          <p class="muted">Scaffolded for CAC features from your Java source (molar mass, stoichiometry, etc.). Tell me specific CAC functions to prioritize and I will port them next.</p>
+          <h3>Formula mass & quick helpers</h3>
+          <p class="muted">Currently in progress please wait</p>
         </div>
       </section>
 
