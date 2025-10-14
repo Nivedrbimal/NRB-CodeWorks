@@ -166,11 +166,7 @@ async function kinematics_solve() {
   }
 
   const out = `Iterations: ${iter}\n` +
-    `s = ${fmt(s)}\n +
-    u = ${fmt(u)}\n +
-    v = ${fmt(v)}\n +
-    a = ${fmt(a)}\n +
-    t = ${fmt(t)}`;
+    `s = ${fmt(s)}\nu = ${fmt(u)}\nv = ${fmt(v)}\na = ${fmt(a)}\nt = ${fmt(t)}`;
 
   const el = document.getElementById('kin_out');
   const typing = document.getElementById('kin_typing').checked;
@@ -206,45 +202,32 @@ function proj_flexible(){
     // If R & θ known -> v0
     if (known(R) && known(theta) && !known(v0)) { const th = deg2rad(theta); const denom = Math.sin(2*th); if (Math.abs(denom) > 1e-12) { v0 = Math.sqrt(R*g/denom); changed = true; } }
     // If v0 & R known -> θ (principal)
-    if (known(v0) && known(R) && !known(theta)) {
-      const val = (R*g)/(v0*v0);
-      if (Math.abs(val) <= 1) { const twoTh = Math.asin(val); theta = rad2deg(twoTh/2); changed = true; }
+    if (known(v0) && known(R) && !known(theta)) { const val = (R*g)/(v0*v0); if (Math.abs(val) <= 1) { const twoTh = Math.asin(val); theta = rad2deg(twoTh/2); changed = true; }
     }
     // If H & v0 known -> θ
-    if (known(H) && known(v0) && !known(theta)) {
-      const v = (2*g*H)/(v0*v0);
-      if (v >= 0 && v <= 1) { theta = rad2deg(Math.asin(Math.sqrt(v))); changed = true; }
+    if (known(H) && known(v0) && !known(theta)) { const v = (2*g*H)/(v0*v0); if (v >= 0 && v <= 1) { theta = rad2deg(Math.asin(Math.sqrt(v))); changed = true; }
     }
     // If H & θ known -> v0
-    if (known(H) && known(theta) && !known(v0)) {
-      const th = deg2rad(theta); const denom = Math.sin(th)*Math.sin(th);
-      if (denom > 0) { v0 = Math.sqrt(2*g*H/denom); changed = true; }
+    if (known(H) && known(theta) && !known(v0)) { const th = deg2rad(theta); const denom = Math.sin(th)*Math.sin(th); if (denom > 0) { v0 = Math.sqrt(2*g*H/denom); changed = true; }
     }
     // If T & v0 known -> θ
-    if (known(T) && known(v0) && !known(theta)) {
-      const val = (T*g)/(2*v0);
-      if (Math.abs(val) <= 1) { theta = rad2deg(Math.asin(val)); changed = true; }
+    if (known(T) && known(v0) && !known(theta)) { const val = (T*g)/(2*v0); if (Math.abs(val) <= 1) { theta = rad2deg(Math.asin(val)); changed = true; }
     }
   }
 
   const out = `Iterations: ${iter}\n` +
-    `v0 = ${fmt(v0)} m/s\n +
-    θ = ${fmt(theta)}°\n +
-    g = ${fmt(g)} m/s²\n +
-    T = ${fmt(T)} s\n +
-    R = ${fmt(R)} m\n +
-    H = ${fmt(H)} m`;
+    `v0 = ${fmt(v0)} m/s\nθ = ${fmt(theta)}°\ng = ${fmt(g)} m/s²\nT = ${fmt(T)} s\nR = ${fmt(R)} m\nH = ${fmt(H)} m`;
   document.getElementById('pm_out').textContent = out;
 }
 
 
 // ---------- WAVES CALCULATOR ---------
 
-function kinematics_clear() {
+function waves_clear() {
   ['wav_v','wav_f','wav_wavelength','wav_T','wav_F', 'wav_u'].forEach(id => document.getElementById(id).value = '');
   document.getElementById('wav_out').textContent = '';
 }
-async function kinematics_solve() {
+async function waves_solve() {
   let v = toNum(document.getElementById('wav_v').value);
   let f = toNum(document.getElementById('wav_f').value);
   let lambda = toNum(document.getElementById('lambda').value);
