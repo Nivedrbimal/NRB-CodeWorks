@@ -158,7 +158,6 @@
           <div class="row">
             <button class="btn primary" onclick="kinematics_solve()">Solve</button>
             <button class="btn" onclick="kinematics_clear()">Clear</button>
-            <label class="inline"><input id="kin_typing" type="checkbox" checked /> Typing output</label>
           </div>
 
           <div id="kin_out" class="output mono"></div>
@@ -225,20 +224,9 @@
         <h2>Games</h2>
 
         <div class="card">
-          <h3>Pi Memoery Game</h3>
-          <div class="grid">
-            <label><span class="muted">Min</span><input id="fg_min" type="number" value="0" /></label>
-            <label><span class="muted">Max</span><input id="fg_max" type="number" value="10" /></label>
-            <label><span class="muted">Ops per question</span><input id="fg_ops" type="number" value="1" /></label>
-            <label><span class="muted"># Questions</span><input id="fg_n" type="number" value="5" /></label>
-          </div>
-
-          <div class="row">
-            <button class="btn primary" onclick="fg2_start()">Start Quiz</button>
-            <button class="btn" onclick="fg2_reset()">Reset</button>
-          </div>
-
-          <div id="fg2_area" class="output mono"></div>
+          <h3>Pi Memory Game - working in progress</h3>
+          <!-- <div class="grid">
+            </div> -->
         </div>
 
         <div class="card">
@@ -248,6 +236,18 @@
             <label><span class="muted">Max</span><input id="fg_max" type="number" value="10" /></label>
             <label><span class="muted">Ops per question</span><input id="fg_ops" type="number" value="1" /></label>
             <label><span class="muted"># Questions</span><input id="fg_n" type="number" value="5" /></label>
+			<div class="dropdown" id="operationDropdown">
+  			<div class="dropdown-button" onclick="toggleDropdown()">Select Operations</div>
+			<div class="dropdown-content">
+   			<label><input type="checkbox" value="+" class="operation"> Addition (+)</label><br>
+    		<label><input type="checkbox" value="-" class="operation"> Subtraction (-)</label><br>
+    		<label><input type="checkbox" value="*" class="operation"> Multiplication (×)</label><br>
+    		<label><input type="checkbox" value="/" class="operation"> Division (÷)</label><br>
+    		<label><input type="checkbox" value="%" class="operation"> Modulo (%)</label><br>
+    		<label><input type="checkbox" value="^" class="operation"> Power (^)</label>
+  		</div>
+		</div>
+
           </div>
 
           <div class="row">
