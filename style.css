@@ -27,10 +27,10 @@ html,body{height:100%;margin:0;background:linear-gradient(180deg,var(--bg),#0304
 .hidden{display:none}
 .cards{display:flex;gap:12px;flex-wrap:wrap}
 
-.dropdown { position: relative; display: inline-block; }
+/* .dropdown { position: relative; display: inline-block; }
 .dropdown-button { padding: 8px 15px; border: 1px solid #ccc; cursor: pointer; user-select: none; }
 .dropdown-content { display: none; position: absolute; background: white; min-width: 180px; border: 1px solid #ccc; z-index: 1; padding: 10px; }
-.dropdown.show .dropdown-content { display: block; }
+.dropdown.show .dropdown-content { display: block; } */
 
 .card{background:linear-gradient(180deg,#07141b,#061119);padding:14px;border-radius:12px;border:1px solid var(--glass);box-shadow:0 8px 30px rgba(2,6,23,0.6);margin-bottom:12px}
 .card h3{margin:0 0 8px 0}
