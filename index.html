@@ -27,9 +27,9 @@
         <button data-target="home" class="menu-btn active">Home</button>
         <button data-target="math" class="menu-btn">Math Calculators</button>
         <button data-target="physics" class="menu-btn">Physics Calculators</button>
-        <!-- <button data-target="chem" class="menu-btn">Chemistry Calculators</button> -->
+        <button data-target="chem" class="menu-btn">Chemistry Calculators</button>
         <button data-target="games" class="menu-btn">Games</button>
-        <!-- <button data-target="utilities" class="menu-btn">Utilities</button> -->
+        <button data-target="utilities" class="menu-btn">Utilities</button>
       </nav>
 
       <div class="tip">Tip: leave inputs blank for unknowns. Click <span class="kbd">Solve</span> and the app will try to compute missing values.</div>
@@ -45,9 +45,9 @@
             <div class="row">
               <button class="btn" onclick="navTo('math')">Open Math</button>
               <button class="btn" onclick="navTo('physics')">Open Physics</button>
-              <!-- <button class="btn" onclick="navTo('chemistry')">Open Chemistry</button> -->
+              <button class="btn" onclick="navTo('chemistry')">Open Chemistry</button>
               <button class="btn" onclick="navTo('games')">Open Games</button>
-              <!-- <button class="btn" onclick="navTo('utilities')">Open Utilities</button> -->
+              <button class="btn" onclick="navTo('utilities')">Open Utilities</button>
             </div>
           </div>
         </div>
@@ -198,12 +198,29 @@
         </div>
       </section>
 
-      <!-- GAMES & UTILITIES -->
+      <!-- GAMES -->
       <section id="games" class="panel hidden">
-        <h2>Games & Utilities</h2>
+        <h2>Games</h2>
 
         <div class="card">
-          <h3>Math Quiz (fg2)</h3>
+          <h3>Pi Memoery Game</h3>
+          <div class="grid">
+            <label><span class="muted">Min</span><input id="fg_min" type="number" value="0" /></label>
+            <label><span class="muted">Max</span><input id="fg_max" type="number" value="10" /></label>
+            <label><span class="muted">Ops per question</span><input id="fg_ops" type="number" value="1" /></label>
+            <label><span class="muted"># Questions</span><input id="fg_n" type="number" value="5" /></label>
+          </div>
+
+          <div class="row">
+            <button class="btn primary" onclick="fg2_start()">Start Quiz</button>
+            <button class="btn" onclick="fg2_reset()">Reset</button>
+          </div>
+
+          <div id="fg2_area" class="output mono"></div>
+        </div>
+
+        <div class="card">
+          <h3>Math Quiz</h3>
           <div class="grid">
             <label><span class="muted">Min</span><input id="fg_min" type="number" value="0" /></label>
             <label><span class="muted">Max</span><input id="fg_max" type="number" value="10" /></label>
