@@ -13,7 +13,7 @@ document.querySelectorAll('.menu-btn').forEach(b => {
 });
 
 // show home on load
-navTo('home');
+window.addEventListener('DOMContentLoaded', () => navTo('home'));
 
 // ---------- Utilities ----------
 const isNum = v => v !== null && v !== '' && !Number.isNaN(Number(v));
@@ -50,9 +50,10 @@ function toggleDropdown() {
 
 // Close dropdown if clicked outside
 window.onclick = function(event) {
-  if (!event.target.matches('.dropdown-button')) {
-    document.getElementById("operationDropdown").classList.remove("show");
-  }
+ const dropdown = document.getElementById("operationDropdown");
+if (dropdown && !event.target.matches('.dropdown-button')) {
+  dropdown.classList.remove("show");
+}
 }
 
 // Function to get selected operations
@@ -153,7 +154,7 @@ function trig_compute() {
 
 // ---------- KINEMATICS SOLVER ----------
 function kinematics_clear() {
-  ['kin_s','kin_u','kin_v','kin_a','kin_t'].forEach(id => document.getElementById(id).value = '');
+  ['kin_s','kin_u','kin_v','kin_a','kin_t'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('kin_out').textContent = '';
 }
 async function kinematics_solve() {
@@ -256,7 +257,7 @@ function proj_flexible(){
 // ---------- WAVES CALCULATOR ---------
 
 function waves_clear() {
-  ['wav_v','wav_f','wav_lambda','wav_T','wav_F', 'wav_u'].forEach(id => document.getElementById(id).value = '');
+  ['wav_v','wav_f','wav_lambda','wav_T','wav_F', 'wav_mu'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('wav_out').textContent = '';
 }
 async function waves_solve() {
