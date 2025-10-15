@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>NRB Codeworks</title>
-  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="https://github.com/Nivedrbimal/NRB-CodeWorks/blob/main/favicon.ico" type="image/x-icon">
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="style.css" />
@@ -169,12 +169,12 @@
           <p class="muted">Enter any known combination among initial speed (v₀), launch angle θ (deg), gravity g, time of flight T, range R, max height H. Solver will attempt to compute the rest.</p>
 
           <div class="grid">
-            <label><span class="muted">v₀ (m/s)</span><input id="pm_v0" type="number" step="any" /></label>
-            <label><span class="muted">θ (deg)</span><input id="pm_theta" type="number" step="any" /></label>
-            <label><span class="muted">g (m/s²)</span><input id="pm_g" type="number" step="any" value="9.81" /></label>
-            <label><span class="muted">T (time of flight)</span><input id="pm_T" type="number" step="any" /></label>
-            <label><span class="muted">R (range)</span><input id="pm_R" type="number" step="any" /></label>
-            <label><span class="muted">H (max height)</span><input id="pm_H" type="number" step="any" /></label>
+            <label><span class="muted">v₀ (initial velocity)</span><input id="pm_v0" type="number" step="any" placeholder="m/s"/></label>
+            <label><span class="muted">θ (angle of projection)</span><input id="pm_theta" type="number" step="any"  placeholder="degrees"/></label>
+            <label><span class="muted">g (gravity)</span><input id="pm_g" type="number" step="any" value="9.81" placeholder="m/s²"/></label>
+            <label><span class="muted">T (time of flight)</span><input id="pm_T" type="number" step="any" placeholder="s"/></label>
+            <label><span class="muted">R (range)</span><input id="pm_R" type="number" step="any" placeholder="m"/></label>
+            <label><span class="muted">H (max height)</span><input id="pm_H" type="number" step="any" placeholder="m"/></label>
           </div>
 
           <div class="row">
@@ -236,19 +236,19 @@
             <label><span class="muted">Max</span><input id="fg_max" type="number" value="10" /></label>
             <label><span class="muted">Ops per question</span><input id="fg_ops" type="number" value="1" /></label>
             <label><span class="muted"># Questions</span><input id="fg_n" type="number" value="5" /></label>
-			<div class="muted" id="operationDropdown">Allowed Operations:
+			<div class="dropdown" id="operationDropdown">
+        <span class="muted">Allowed Operations:</span> 
   			<div class="dropdown-button" onclick="toggleDropdown()">Select Operations</div>
-			<div class="muted">
+			<div class="dropdown-content">
    			<label><input type="checkbox" value="+" class="operation"> Addition (+)</label><br>
     		<label><input type="checkbox" value="-" class="operation"> Subtraction (-)</label><br>
     		<label><input type="checkbox" value="*" class="operation"> Multiplication (×)</label><br>
     		<label><input type="checkbox" value="/" class="operation"> Division (÷)</label><br>
-    		<label><input type="checkbox" value="%" class="operation"> Modulo (%)</label><br>
     		<label><input type="checkbox" value="^" class="operation"> Power (^)</label>
-  		</div>
+      </div>
 		</div>
 
-          </div>
+  </div>
 
           <div class="row">
             <button class="btn primary" onclick="fg2_start()">Start Quiz</button>
