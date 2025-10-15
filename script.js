@@ -25,7 +25,9 @@ const fmt = n => (n===null || n===undefined || !Number.isFinite(n)) ? '—' : (M
 function typeOut(el, text, options = {}) {
   const speed = options.speed ?? 16;
   const disable = options.disable ?? false;
-  if (disable) { el.textContent = text; return Promise.resolve(); }
+  if (disable) { 
+    el.textContent = text; return Promise.resolve(); 
+  }
 
   el.textContent = '';
   el.classList.add('typing-caret');
@@ -184,15 +186,22 @@ async function kinematics_solve() {
   }
 
   const out = `Iterations: ${iter}\n` +
-    `s = ${fmt(s)}\nu = ${fmt(u)}\nv = ${fmt(v)}\na = ${fmt(a)}\nt = ${fmt(t)}`;
+    `s = ${fmt(s)}\n` +
+    `u = ${fmt(u)}\n` +
+    `v = ${fmt(v)}\n` +
+    `a = ${fmt(a)}\n` +
+    `t = ${fmt(t)}`;
 
-  const el = document.getElementById('kin_out');
-  const typing = document.getElementById('kin_typing').checked;
-  await typeOut(el, out, { disable: !typing, speed: 18 });
+  const el = document.getElementById('kin_out').textContent = out;
+  // const typing = document.getElementById('kin_typing').checked;
+  // await typeOut(el, out, { disable: !typing, speed: 18 });
 }
 
 // ---------- PROJECTILE FLEXIBLE SOLVER ----------
-function proj_clear(){ ['pm_v0','pm_theta','pm_g','pm_T','pm_R','pm_H'].forEach(id=>document.getElementById(id).value=''); document.getElementById('pm_out').textContent=''; }
+function proj_clear(){ 
+  ['pm_v0','pm_theta','pm_g','pm_T','pm_R','pm_H'].forEach(id=>document.getElementById(id).value='');
+   document.getElementById('pm_out').textContent='';
+}
 function proj_flexible(){
   let v0 = toNum(document.getElementById('pm_v0').value);
   let theta = toNum(document.getElementById('pm_theta').value); // degrees
@@ -234,7 +243,12 @@ function proj_flexible(){
   }
 
   const out = `Iterations: ${iter}\n` +
-    `v0 = ${fmt(v0)} m/s\nθ = ${fmt(theta)}°\ng = ${fmt(g)} m/s²\nT = ${fmt(T)} s\nR = ${fmt(R)} m\nH = ${fmt(H)} m`;
+    `v0 = ${fmt(v0)} m/s\n` +
+    `θ = ${fmt(theta)}°\n` +
+    `g = ${fmt(g)} m/s²\n` +
+    `T = ${fmt(T)} s\n` +
+    `R = ${fmt(R)} m\n` +
+    `H = ${fmt(H)} m`;
   document.getElementById('pm_out').textContent = out;
 }
 
@@ -242,13 +256,13 @@ function proj_flexible(){
 // ---------- WAVES CALCULATOR ---------
 
 function waves_clear() {
-  ['wav_v','wav_f','wav_wavelength','wav_T','wav_F', 'wav_u'].forEach(id => document.getElementById(id).value = '');
+  ['wav_v','wav_f','wav_lambda','wav_T','wav_F', 'wav_u'].forEach(id => document.getElementById(id).value = '');
   document.getElementById('wav_out').textContent = '';
 }
 async function waves_solve() {
   let v = toNum(document.getElementById('wav_v').value);
   let f = toNum(document.getElementById('wav_f').value);
-  let lambda = toNum(document.getElementById('lambda').value);
+  let lambda = toNum(document.getElementById('wav_lambda').value);
   let T = toNum(document.getElementById('wav_T').value);
   let F = toNum(document.getElementById('wav_F').value);
   let mu = toNum(document.getElementById('wav_mu').value);
@@ -290,9 +304,9 @@ async function waves_solve() {
     `F = ${fmt(F)}\n` +
     `μ = ${fmt(mu)}`;
   
-  const el = document.getElementById('wav_out');
-  const typing = document.getElementById('wav_typing').checked;
-  await typeOut(el, out, { disable: !typing, speed: 18 });
+  document.getElementById('wav_out').textContent = out;
+  // const typing = document.getElementById('wav_typing').checked;
+  // await typeOut(el, out, { disable: !typing, speed: 18 });
 }
 
 // ---------- GAMES: fg2 Quiz ----------
@@ -307,9 +321,15 @@ function fg2_start(){
   fg2_state = {min,max,opsPer,n,idx:0,score:0};
   fg2_next();
 }
-function fg2_reset(){ fg2_state = null; document.getElementById('fg2_area').textContent = 'Reset. Configure and press Start.'; }
-function randInt(a,b){ return Math.floor(Math.random()*(b-a+1))+a; }
-function randChoice(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+function fg2_reset(){ 
+  fg2_state = null; document.getElementById('fg2_area').textContent = 'Reset. Configure and press Start.';
+ }
+function randInt(a,b){ 
+  return Math.floor(Math.random()*(b-a+1))+a; 
+}
+function randChoice(arr){ 
+  return arr[Math.floor(Math.random()*arr.length)]; 
+}
 function makeExpr(min,max,ops){
   let expr = `${randInt(min,max)}`;
   const opsList = ['+','-','*','/','%'];
@@ -344,7 +364,9 @@ function fg2_submit(){
 
 // ---------- NUMBER GUESSING ----------
 let ng_secret = null, ng_tries = 0;
-function ng_start(){ ng_secret = randInt(1,100); ng_tries = 0; document.getElementById('ng_out').textContent='I picked a number 1–100. Start guessing!'; }
+function ng_start(){ 
+  ng_secret = randInt(1,100); ng_tries = 0; document.getElementById('ng_out').textContent='I picked a number 1–100. Start guessing!';
+ }
 function ng_try(){
   const g = toNum(document.getElementById('ng_guess').value);
   if (g === null) return;
