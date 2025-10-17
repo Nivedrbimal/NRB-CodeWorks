@@ -3,256 +3,286 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>NRB Codeworks</title>
- <link rel="icon" href="faviconNRB.ico" type="image/x-icon">
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600&display=swap" rel="stylesheet">
-
+  <title>NRB CodeWorks</title>
+  <link rel="icon" href="faviconNRB.ico" type="image/x-icon">
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div id="app">
-    <aside class="sidebar">
-      <div class="brand">
-        <img class="logo" src="NRB-CodeWorks-Logo.png"></img>
-        <div>
-          <div class="title">NRB Codeworks</div>
-          <div class="subtitle">Math & Science Tools</div>
-        </div>
-      </div>
-
-      <nav class="menu">
-        <button data-target="home" class="menu-btn active">Home</button>
-        <button data-target="math" class="menu-btn">Math Calculators</button>
-        <button data-target="physics" class="menu-btn">Physics Calculators</button>
-        <button data-target="chemistry" class="menu-btn">Chemistry Calculators</button>
-        <button data-target="games" class="menu-btn">Games</button>
-        <button data-target="utilities" class="menu-btn">Utilities</button>
-      </nav>
-    </aside>
-
-    <main class="main">
-      <!-- HOME -->
-      <section id="home" class="panel">
-        <h1>Welcome — NRB CodeWorks</h1>
-        <div class="cards">
-          <div class="card">
-            <h3>Quick Open</h3>
-            <div class="row">
-              <button class="btn" onclick="navTo('math')">Open Math</button>
-              <button class="btn" onclick="navTo('physics')">Open Physics</button>
-              <button class="btn" onclick="navTo('chemistry')">Open Chemistry</button>
-              <button class="btn" onclick="navTo('games')">Open Games</button>
-              <button class="btn" onclick="navTo('utilities')">Open Utilities</button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- MATH -->
-      <section id="math" class="panel hidden">
-        <h2>Math Calculators</h2>
-
-		
-
-				
-        <!-- Trig evaluator -->
-        <div class="card">
-          <h3>Trig & Inverse trig evaluator</h3>
-          <p class="muted">Supports sin, cos, tan, csc, sec, cot, and inverse functions. Choose degrees or radians.</p>
-
-          <div class="row">
-            <label><span class="muted">Mode</span>
-              <select id="tri_mode">
-                <option value="deg">Degrees</option>
-                <option value="rad">Radians</option>
-                <option value="pol">Polar</option>
-              </select>
-            </label>
-
-            <label><span class="muted">Operation</span>
-              <select id="tri_op">
-                <option value="sin">sin</option>
-                <option value="cos">cos</option>
-                <option value="tan">tan</option>
-                <option value="csc">csc</option>
-                <option value="sec">sec</option>
-                <option value="cot">cot</option>
-                <option value="asin">arcsin</option>
-                <option value="acos">arccos</option>
-                <option value="atan">arctan</option>
-                <option value="asec">arcsec</option>
-                <option value="acsc">arccsc</option>
-                <option value="acot">arccot</option>
-                <option value="sinh">sinh</option>
-                <option value="cosh">cosh</option>
-                <option value="tanh">tanh</option>
-                <option value="csch">csch</option>
-                <option value="sech">sech</option>
-                <option value="coth">coth</option>
-              </select>
-            </label>
-
-            <label style="flex:1"><span class="muted">Input (angle or value)</span><input id="tri_val" type="number" step="any" placeholder="enter number" /></label>
-          </div>
-
-          <div class="row">
-            <button class="btn primary" onclick="trig_compute()">Compute</button>
-            <button class="btn" onclick="document.getElementById('tri_out').textContent='';">Clear</button>
-          </div>
-
-          <div id="tri_out" class="output mono"></div>
-        </div>
-      </section> 
-
-      <!-- PHYSICS -->
-      <section id="physics" class="panel hidden">
-        <h2>Physics</h2>
-
-     <!-- Kinematics generic solver -->
-        <div class="card">
-          <h3>Kinematics solver</h3>
-          <p class="muted">Enter any known variables. The solver iteratively applies kinematic formulas to deduce unknowns.</p>
-
-          <div class="grid">
-            <label><span class="muted">s (displacement)</span><input id="kin_s" type="number" step="any" placeholder="meters" /></label>
-            <label><span class="muted">u (initial velocity)</span><input id="kin_u" type="number" step="any" placeholder="m/s" /></label>
-            <label><span class="muted">v (final velocity)</span><input id="kin_v" type="number" step="any" placeholder="m/s" /></label>
-            <label><span class="muted">a (acceleration)</span><input id="kin_a" type="number" step="any" placeholder="m/s²" /></label>
-            <label><span class="muted">t (time)</span><input id="kin_t" type="number" step="any" placeholder="s" /></label>
-          </div>
-
-          <div class="row">
-            <button class="btn primary" onclick="kinematics_solve()">Solve</button>
-            <button class="btn" onclick="kinematics_clear()">Clear</button>
-          </div>
-
-          <div id="kin_out" class="output mono"></div>
-        </div>
-        
-        <!-- Projectile flexible solver -->
-        <div class="card">
-          <h3>Projectile motion — flexible solver</h3>
-          <p class="muted">Enter any known combination among initial speed (v₀), launch angle θ (deg), gravity g, time of flight T, range R, max height H. Solver will attempt to compute the rest.</p>
-
-          <div class="grid">
-            <label><span class="muted">v₀ (initial velocity)</span><input id="pm_v0" type="number" step="any" placeholder="m/s"/></label>
-            <label><span class="muted">θ (angle of projection)</span><input id="pm_theta" type="number" step="any"  placeholder="degrees"/></label>
-            <label><span class="muted">g (gravity)</span><input id="pm_g" type="number" step="any" value="9.81" placeholder="m/s²"/></label>
-            <label><span class="muted">T (time of flight)</span><input id="pm_T" type="number" step="any" placeholder="s"/></label>
-            <label><span class="muted">R (range)</span><input id="pm_R" type="number" step="any" placeholder="m"/></label>
-            <label><span class="muted">H (max height)</span><input id="pm_H" type="number" step="any" placeholder="m"/></label>
-          </div>
-
-          <div class="row">
-            <button class="btn primary" onclick="proj_flexible()">Solve</button>
-            <button class="btn" onclick="proj_clear()">Clear</button>
-          </div>
-
-          <div id="pm_out" class="output mono"></div>
-        </div>
-
-       
-     <!-- Waves flexible solver -->
-        <div class="card">
-          <h3>Waves - flexible solver</h3>
-          <p class="muted">Enter any known variables.</p>
-
-          <div class="grid">
-            <label><span class="muted">v (wave speed)</span><input id="wav_v" type="number" step="any" placeholder="m/s" /></label>
-            <label><span class="muted">f (frequency)</span><input id="wav_f" type="number" step="any" placeholder="Hz" /></label>
-            <label><span class="muted">λ (wavelength)</span><input id="wav_lambda" type="number" step="any" placeholder="m" /></label>
-            <label><span class="muted">T (period)</span><input id="wav_T" type="number" step="any" placeholder="s" /></label>
-            <label><span class="muted">F (tension)</span><input id="wav_F" type="number" step="any" placeholder="N" /></label>
-            <label><span class="muted">μ (linear mass density)</span><input id="wav_mu" type="number" step="any" placeholder="kg/m" /></label>
-          </div>
-
-          <div class="row">
-            <button class="btn primary" onclick="waves_solve()">Solve</button>
-            <button class="btn" onclick="waves_clear()">Clear</button>
-          </div>
-
-          <div id="wav_out" class="output mono"></div>
-        </div>
-      </section>
-
-      <!-- CHEMISTRY -->
-      <section id="chemistry" class="panel hidden">
-        <h2>Chemistry</h2>
-
-        <div class="card">
-          <h3>Formula mass & quick helpers</h3>
-          <p class="muted">Currently in progress please wait</p>
-        </div>
-      </section>
-
-      <!-- GAMES -->
-      <section id="games" class="panel hidden">
-        <h2>Games</h2>
-
-        <div class="card">
-          <h3>Pi Memory Game - working in progress</h3>
-          <!-- <div class="grid">
-            </div> -->
-        </div>
-
-        <div class="card">
-          <h3>Math Quiz</h3>
-          <div class="grid">
-            <label><span class="muted">Min</span><input id="fg_min" type="number" value="0" /></label>
-            <label><span class="muted">Max</span><input id="fg_max" type="number" value="10" /></label>
-            <label><span class="muted">Ops per question</span><input id="fg_ops" type="number" value="1" /></label>
-            <label><span class="muted"># Questions</span><input id="fg_n" type="number" value="5" /></label>
-			<div class="dropdown" id="operationDropdown">
-        <span class="muted">Allowed Operations:</span> 
-  			<div class="dropdown-button" onclick="toggleDropdown()">Select Operations</div>
-			<div class="dropdown-content">
-   			<label><input type="checkbox" value="+" class="operation"> Addition (+)</label><br>
-    		<label><input type="checkbox" value="-" class="operation"> Subtraction (-)</label><br>
-    		<label><input type="checkbox" value="*" class="operation"> Multiplication (×)</label><br>
-    		<label><input type="checkbox" value="/" class="operation"> Division (÷)</label><br>
-    		<label><input type="checkbox" value="^" class="operation"> Power (^)</label>
-      </div>
-		</div>
-
+  <!-- Intro screen (NEW) -->
+  <div id="intro" class="intro-screen" role="dialog" aria-labelledby="intro-text" aria-modal="true">
+    <div class="intro-content">
+      <img src="faviconNRB.ico" alt="" class="intro-logo" />
+      <h1 id="intro-text">Welcome to <span>NRB CodeWorks</span></h1>
+      <p class="sr-only" id="intro-desc">Intro screen will auto-close and reveal the site.</p>
+    </div>
   </div>
 
-          <div class="row">
-            <button class="btn primary" onclick="fg2_start()">Start Quiz</button>
-            <button class="btn" onclick="fg2_reset()">Reset</button>
+  <header class="main-header hidden" id="mainHeader" role="banner">
+    <div class="logo-area" aria-hidden="false">
+      <img class="logo" src="faviconNRB.ico" alt="NRB CodeWorks Logo">
+      <h1>NRB CodeWorks</h1>
+    </div>
+
+    <nav class="top-nav" role="navigation" aria-label="Top links">
+      <a href="#" class="top-link">Home</a>
+      <a href="#" class="top-link">Projects</a>
+      <a href="#" class="top-link">Tools</a>
+      <a href="#" class="top-link">About</a>
+    </nav>
+  </header>
+  
+  <aside class="sidebar collapsed hidden" id="sidebar" role="navigation" aria-label="Main menu">
+  <nav class="menu" id="mainMenu">
+    <button data-target="panel-home" class="menu-btn active" aria-controls="panel-home">
+      <i class="icon"><img src="iconHome.png"></i><span>Home</span>
+    </button>
+    <button data-target="panel-math" class="menu-btn" aria-controls="panel-math">
+      <i class="icon"><img src="iconMath.png"></i><span>Math</span>
+    </button>
+    <button data-target="panel-physics" class="menu-btn" aria-controls="panel-physics">
+      <i class="icon"><img src="iconPhysics.png"></i><span>Physics</span>
+    </button>
+    <button data-target="panel-chemistry" class="menu-btn" aria-controls="panel-chemistry">
+      <i class="icon"><img src="iconChemistry.png"></i><span>Chemistry</span>
+    </button>
+    <button data-target="panel-games" class="menu-btn" aria-controls="panel-games">
+      <i class="icon"><img src="iconGames.png"></i><span>Games</span>
+    </button>
+    <button data-target="panel-utilities" class="menu-btn" aria-controls="panel-utilities">
+      <i class="icon"><img src="iconUtilities.png"></i><span>Utilities</span>
+    </button>
+    <button data-target="panel-about" class="menu-btn" aria-controls="panel-about">
+      <i class="icon"><img src="iconAbout.png"></i><span>About</span>
+    </button>
+  </nav>
+  <button id="toggleSidebar" class="toggle-btn" aria-label="Toggle sidebar">☰</button>
+</aside>
+
+
+  <main id="app" class="hidden" role="main" tabindex="-1">
+    <!-- Home panel -->
+    <section id="panel-home" class="panel visible-panel" aria-labelledby="homeTitle">
+      <div class="home-panel">
+        <div class="home-content">
+          <h1 id="homeTitle" class="home-title">Make Life Easier</h1>
+          <div id="homeText" class="home-text">Math and Science is more than calculations. Have fun with it.</div>
+          <div class="quick-links" role="toolbar" aria-label="Quick links">
+            <button class="front-btn" onclick="navTo('panel-games')">Open Games</button>
+            <button class="front-btn" onclick="navTo('panel-utilities')">Open Utilities</button>
           </div>
+        </div>
+      </div>
+    </section>
 
-          <div id="fg2_area" class="output mono"></div>
+    <!-- MATH -->
+    <section id="panel-math" class="panel hidden" aria-labelledby="mathTitle">
+      <h2 id="mathTitle" class="title">Math Calculators</h2>
+
+      <!-- Trig evaluator -->
+      <div class="card" role="region" aria-labelledby="trigTitle">
+        <h3 id="trigTitle">Trig &amp; inverse trig evaluator</h3>
+        <p class="muted">Supports sin, cos, tan, csc, sec, cot and inverse functions. Choose degrees or radians.</p>
+
+        <div class="row">
+          <label><span class="muted">Mode</span>
+            <select id="tri_mode" aria-label="trig mode">
+              <option value="deg">Degrees</option>
+              <option value="rad">Radians</option>
+            </select>
+          </label>
+
+          <label><span class="muted">Operation</span>
+            <select id="tri_op" aria-label="trig operation">
+              <option value="sin">sin</option>
+              <option value="cos">cos</option>
+              <option value="tan">tan</option>
+              <option value="csc">csc</option>
+              <option value="sec">sec</option>
+              <option value="cot">cot</option>
+              <option value="asin">arcsin</option>
+              <option value="acos">arccos</option>
+              <option value="atan">arctan</option>
+              <option value="asec">arcsec</option>
+              <option value="acsc">arccsc</option>
+              <option value="acot">arccot</option>
+              <option value="sinh">sinh</option>
+              <option value="cosh">cosh</option>
+              <option value="tanh">tanh</option>
+              <option value="csch">csch</option>
+              <option value="sech">sech</option>
+              <option value="coth">coth</option>
+            </select>
+          </label>
+
+          <label style="flex:1"><span class="muted">Input (angle or value)</span>
+            <input id="tri_val" type="number" step="any" placeholder="enter number" aria-label="trig input" />
+          </label>
         </div>
 
-        <div class="card">
-          <h3>Number Guessing</h3>
-          <div class="row">
-            <button class="btn primary" onclick="ng_start()">New Game</button>
-            <input id="ng_guess" type="number" placeholder="Your guess" />
-            <button class="btn" onclick="ng_try()">Guess</button>
+        <div class="row">
+          <button class="btn primary" onclick="trig_compute()">Compute</button>
+          <button class="btn" onclick="document.getElementById('tri_out').textContent='';">Clear</button>
+        </div>
+
+        <div id="tri_out" class="output mono" role="status" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <!-- PHYSICS -->
+    <section id="panel-physics" class="panel hidden" aria-labelledby="physicsTitle">
+      <h2 id="physicsTitle" class="title">Physics</h2>
+
+      <!-- Kinematics solver -->
+      <div class="card" role="region" aria-labelledby="kinTitle">
+        <h3 id="kinTitle">Kinematics solver</h3>
+        <p class="muted">Enter any known variables. The solver iteratively applies kinematic formulas to deduce unknowns.</p>
+
+        <div class="grid">
+          <label><span class="muted">s (displacement)</span><input id="kin_s" type="number" step="any" placeholder="meters" /></label>
+          <label><span class="muted">u (initial velocity)</span><input id="kin_u" type="number" step="any" placeholder="m/s" /></label>
+          <label><span class="muted">v (final velocity)</span><input id="kin_v" type="number" step="any" placeholder="m/s" /></label>
+          <label><span class="muted">a (acceleration)</span><input id="kin_a" type="number" step="any" placeholder="m/s²" /></label>
+          <label><span class="muted">t (time)</span><input id="kin_t" type="number" step="any" placeholder="s" /></label>
+        </div>
+
+        <div class="row">
+          <button class="btn primary" onclick="kinematics_solve()">Solve</button>
+          <button class="btn" onclick="kinematics_clear()">Clear</button>
+        </div>
+
+        <div id="kin_out" class="output mono" role="status" aria-live="polite"></div>
+      </div>
+
+      <!-- Projectile flexible solver -->
+      <div class="card" role="region" aria-labelledby="projTitle">
+        <h3 id="projTitle">Projectile motion — flexible solver</h3>
+        <p class="muted">Enter any known combination among v₀, θ (deg), g, T, R, H. Solver will compute the rest.</p>
+
+        <div class="grid">
+          <label><span class="muted">v₀ (initial velocity)</span><input id="pm_v0" type="number" step="any" placeholder="m/s" /></label>
+          <label><span class="muted">θ (angle of projection)</span><input id="pm_theta" type="number" step="any" placeholder="degrees" /></label>
+          <label><span class="muted">g (gravity)</span><input id="pm_g" type="number" step="any" value="9.81" placeholder="m/s²" /></label>
+          <label><span class="muted">T (time of flight)</span><input id="pm_T" type="number" step="any" placeholder="s" /></label>
+          <label><span class="muted">R (range)</span><input id="pm_R" type="number" step="any" placeholder="m" /></label>
+          <label><span class="muted">H (max height)</span><input id="pm_H" type="number" step="any" placeholder="m" /></label>
+        </div>
+
+        <div class="row">
+          <button class="btn primary" onclick="proj_flexible()">Solve</button>
+          <button class="btn" onclick="proj_clear()">Clear</button>
+        </div>
+
+        <div id="pm_out" class="output mono" role="status" aria-live="polite"></div>
+      </div>
+
+      <!-- Waves flexible solver -->
+      <div class="card" role="region" aria-labelledby="wavTitle">
+        <h3 id="wavTitle">Waves - flexible solver</h3>
+        <p class="muted">Enter any known variables.</p>
+
+        <div class="grid">
+          <label><span class="muted">v (wave speed)</span><input id="wav_v" type="number" step="any" placeholder="m/s" /></label>
+          <label><span class="muted">f (frequency)</span><input id="wav_f" type="number" step="any" placeholder="Hz" /></label>
+          <label><span class="muted">λ (wavelength)</span><input id="wav_lambda" type="number" step="any" placeholder="m" /></label>
+          <label><span class="muted">T (period)</span><input id="wav_T" type="number" step="any" placeholder="s" /></label>
+          <label><span class="muted">F (tension)</span><input id="wav_F" type="number" step="any" placeholder="N" /></label>
+          <label><span class="muted">μ (linear mass density)</span><input id="wav_mu" type="number" step="any" placeholder="kg/m" /></label>
+        </div>
+
+        <div class="row">
+          <button class="btn primary" onclick="waves_solve()">Solve</button>
+          <button class="btn" onclick="waves_clear()">Clear</button>
+        </div>
+
+        <div id="wav_out" class="output mono" role="status" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <!-- CHEMISTRY -->
+    <section id="panel-chemistry" class="panel hidden" aria-labelledby="chemTitle">
+      <h2 id="chemTitle" class="title">Chemistry</h2>
+      <div class="card">
+        <h3>Formula mass & quick helpers</h3>
+        <p class="muted">Currently in progress — coming soon.</p>
+      </div>
+    </section>
+
+    <!-- GAMES -->
+    <section id="panel-games" class="panel hidden" aria-labelledby="gamesTitle">
+      <h2 id="gamesTitle" class="title">Games</h2>
+
+      <div class="card" role="region" aria-labelledby="piTitle">
+        <h3 id="piTitle">Pi Memory Game - working in progress</h3>
+      </div>
+
+      <div class="card" role="region" aria-labelledby="quizTitle">
+        <h3 id="quizTitle">Math Quiz</h3>
+        <div class="grid">
+          <label><span class="muted">Min</span><input id="fg_min" type="number" value="0" /></label>
+          <label><span class="muted">Max</span><input id="fg_max" type="number" value="10" /></label>
+          <label><span class="muted">Ops per question</span><input id="fg_ops" type="number" value="1" /></label>
+          <label><span class="muted"># Questions</span><input id="fg_n" type="number" value="5" /></label>
+        </div>
+
+        <div class="dropdown" id="operationDropdown">
+          <span class="muted">Allowed Operations:</span>
+          <div class="dropdown-button" id="opsToggle" role="button" tabindex="0" aria-expanded="false">Select Operations</div>
+          <div class="dropdown-content" id="opsContent" aria-hidden="true">
+            <label><input type="checkbox" value="+" class="operation" checked> Addition (+)</label><br>
+            <label><input type="checkbox" value="-" class="operation" checked> Subtraction (-)</label><br>
+            <label><input type="checkbox" value="*" class="operation" checked> Multiplication (×)</label><br>
+            <label><input type="checkbox" value="/" class="operation" checked> Division (÷)</label><br>
+            <label><input type="checkbox" value="%" class="operation"> Modulus (%)</label><br>
+            <label><input type="checkbox" value="^" class="operation"> Power (^)</label>
           </div>
-          <div id="ng_out" class="output mono">Press "New Game" to start (1–100).</div>
         </div>
-      </section>
 
-       <!-- UTILITIES -->
-      <section id="utilities" class="panel hidden">
-        <h2>Utilities</h2>
-
-        <div class="card">
-          <h3>Working in progress</h3>
-          <p class="muted">Currently in progress please wait</p>
+        <div class="row">
+          <button class="btn primary" onclick="fg2_start()">Start Quiz</button>
+          <button class="btn" onclick="fg2_reset()">Reset</button>
         </div>
-      </section>
 
-      <!-- ABOUT  -->
-      <section id="about" class="panel hidden">
-        <h2>About Me</h2>
-        
-      </section>
-    </main>
-  </div>
+        <div id="fg2_area" class="output mono" role="status" aria-live="polite">Configure and press Start.</div>
+      </div>
 
-  <script src="script.js"></script>
+      <div class="card" role="region" aria-labelledby="ngTitle">
+        <h3 id="ngTitle">Number Guessing</h3>
+        <div class="row">
+          <button class="btn primary" onclick="ng_start()">New Game</button>
+          <input id="ng_guess" type="number" placeholder="Your guess" aria-label="guess" />
+          <button class="btn" onclick="ng_try()">Guess</button>
+        </div>
+        <div id="ng_out" class="output mono" role="status" aria-live="polite">Press "New Game" to start (1–100).</div>
+      </div>
+
+      <div class="card" role="region" aria-labelledby="snakeTitle">
+        <h3 id="snakeTitle">Snake Game</h3>
+        <button class="btn primary" id="showSnakeBtn">Snake Game</button>
+        <div id="snakeContainer" class="snake-container hidden">
+          <canvas id="snakeCanvas" width="1000" height="1000" tabindex="0"></canvas>
+          <div id="snakeScore" class="mono">Score: 0</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- UTILITIES -->
+    <section id="panel-utilities" class="panel hidden" aria-labelledby="utilTitle">
+      <h2 id="utilTitle" class="title">Utilities</h2>
+      <div class="card">
+        <h3>Working in progress</h3>
+        <p class="muted">Currently in progress please wait</p>
+      </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section id="panel-about" class="panel hidden" aria-labelledby="aboutTitle">
+      <h2 id="aboutTitle">About Me</h2>
+      <div class="card">
+        <p class="muted">NRB CodeWorks — Math & Science tools built for learning.</p>
+      </div>
+    </section>
+  </main>
+
+  <script src="script.js" defer></script>
 </body>
 </html>
