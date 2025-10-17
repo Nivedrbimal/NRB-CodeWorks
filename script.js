@@ -1,6 +1,9 @@
-// script.js - All logic: solvers, games, typing effect, navigation
+
 // Uses DOMContentLoaded and defer script in HTML
 
+
+
+document.body.style.overflow = 'hidden'; 
 // ---------- Utilities ----------
 const isNum = v => v !== null && v !== '' && !Number.isNaN(Number(v));
 const toNum = v => isNum(v) ? Number(v) : null;
@@ -26,6 +29,26 @@ function typeOut(el, text, options = {}) {
 }
 
 // ---------- Navigation ----------
+
+document.addEventListener("DOMContentLoaded", () => {
+  const sidebar = document.getElementById("sidebar");
+  const toggleSidebarResponsive = document.getElementById("toggleSidebarResponsive");
+
+  toggleSidebarResponsive.addEventListener("click", () => {
+    sidebar.classList.toggle("open");
+  });
+});
+
+document.addEventListener("click", (e) => {
+  if (
+    sidebar.classList.contains("open") &&
+    !sidebar.contains(e.target) &&
+    e.target !== toggleSidebarResponsive
+  ) {
+    sidebar.classList.remove("open");
+  }
+});
+
 function navTo(id) {
   document.querySelectorAll('.panel').forEach(s => {
     if (s.id === id) {
@@ -121,7 +144,6 @@ window.addEventListener('load', () => {
     return;
   }
 
-  // After 2.5s fade out and then remove
   setTimeout(() => { intro.classList.add('fade-out'); }, 1250);
   setTimeout(() => {
     if (intro && intro.parentNode) intro.parentNode.removeChild(intro);
@@ -136,7 +158,7 @@ window.addEventListener('load', () => {
     document.body.style.overflow = 'auto';
     // set initial focus to app
     main && main.focus();
-  }, 3500);
+  }, 1250);
 });
 
 // ---------- TRIG EVALUATOR ----------
@@ -304,72 +326,139 @@ function waves_solve() {
 
 // ---------- GAMES: fg2 Quiz ----------
 let fg2_state = null;
-function fg2_start(){
+
+// get selected operations from checkboxes
+function getSelectedOperations() {
+  const ops = [];
+  document.querySelectorAll('.operation:checked').forEach(cb => {
+    ops.push(cb.value);
+  });
+  return ops.length > 0 ? ops : ['+']; // fallback to + if none selected
+}
+
+function fg2_start() {
   const min = toNum(document.getElementById('fg_min').value) ?? 0;
   const max = toNum(document.getElementById('fg_max').value) ?? 10;
   const opsPer = toNum(document.getElementById('fg_ops').value) ?? 1;
   const n = toNum(document.getElementById('fg_n').value) ?? 5;
-  if (min > max) { document.getElementById('fg2_area').textContent = 'Min must be <= Max.'; return; }
+
+  if (min > max) {
+    document.getElementById('fg2_area').textContent = 'Min must be <= Max.';
+    return;
+  }
+
   const allowed = getSelectedOperations();
-  fg2_state = {min,max,opsPer,n,idx:0,score:0,allowed};
+  fg2_state = { min, max, opsPer, n, idx: 0, score: 0, allowed };
   fg2_next();
 }
-function fg2_reset(){
+
+function fg2_reset() {
   fg2_state = null;
   document.getElementById('fg2_area').textContent = 'Reset. Configure and press Start.';
 }
 
-function randInt(a,b){
-  return Math.floor(Math.random()*(b-a+1))+a;
+function randInt(a, b) {
+  return Math.floor(Math.random() * (b - a + 1)) + a;
 }
-function randChoice(arr){
-  return arr[Math.floor(Math.random()*arr.length)];
+
+function randChoice(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
 }
-function makeExpr(min,max,ops,allowedOps){
-  // build an expression using allowedOps
+
+function makeExpr(min, max, ops, allowedOps) {
   const nums = [];
-  for (let i=0;i<ops+1;i++) nums.push(randInt(min,max));
-  let expr = ''+nums[0];
-  for (let i=0;i<ops;i++){
-    const op = randChoice(allowedOps);
-    const val = nums[i+1];
-    // For power '^' convert to Math.pow later - we'll use ** if supported
+  for (let i = 0; i < ops + 1; i++) nums.push(randInt(min, max));
+
+  let expr = '' + nums[0];
+
+  for (let i = 0; i < ops; i++) {
+    let op = randChoice(allowedOps);
+    let val = nums[i + 1];
+
+    // 🚫 Prevent division/modulo by zero
+    if ((op === '/' || op === '%') && val === 0) {
+      val = 1;
+    }
+
     expr += ` ${op} ${val}`;
   }
+
   return expr;
 }
 
-function evalExpr(s){
-  // allow digits, whitespace, operators and parentheses
-  if(!/^[0-9+\-*/%^().\s]+$/.test(s)) throw new Error('Invalid tokens');
-  // convert '^' to ** for exponent if present
+function evalExpr(s) {
+  if (!/^[0-9+\-*/%^().\s]+$/.test(s)) throw new Error('Invalid tokens');
   const safe = s.replace(/\^/g, '**');
   // eslint-disable-next-line no-new-func
   return Function(`"use strict"; return (${safe});`)();
 }
 
-function fg2_next(){
-  if(!fg2_state) return;
-  if(fg2_state.idx >= fg2_state.n){ document.getElementById('fg2_area').textContent = `Finished! Score: ${fg2_state.score}/${fg2_state.n}`; return; }
+function fg2_next() {
+  if (!fg2_state) return;
+
+  if (fg2_state.idx >= fg2_state.n) {
+    document.getElementById('fg2_area').textContent =
+      `Finished! Score: ${fg2_state.score}/${fg2_state.n}`;
+    return;
+  }
+
   const expr = makeExpr(fg2_state.min, fg2_state.max, fg2_state.opsPer, fg2_state.allowed);
   let correct;
-  try { correct = evalExpr(expr); } catch (e) { return fg2_next(); }
-  fg2_state.current = {expr, correct};
+  try {
+    correct = evalExpr(expr);
+  } catch (e) {
+    return fg2_next();
+  }
+
+  // ✅ Round correct answer to nearest 100th
+  correct = Math.round(correct * 100) / 100;
+
+  fg2_state.current = { expr, correct };
+
   const area = document.getElementById('fg2_area');
-  area.innerHTML = `Q${fg2_state.idx+1}/${fg2_state.n}: Solve → ${expr}\n\n<input id="fg2_answer" type="number" step="any" style="padding:6px 8px;border-radius:6px;border:1px solid rgba(255,255,255,0.03);background:#071219;color:#e6eef6;font-family:var(--mono)"/> <button class="btn" onclick="fg2_submit()">Submit</button>`;
+  area.innerHTML = `
+    Q${fg2_state.idx + 1}/${fg2_state.n}: Solve → ${expr}
+    <br><br>
+    <input id="fg2_answer" type="number" step="0.01" style="padding:6px 8px;border-radius:6px;border:1px solid rgba(255,255,255,0.03);background:#071219;color:#e6eef6;font-family:var(--mono)"/>
+    <button class="btn" onclick="fg2_submit()">Submit</button>
+  `;
+
   const ansInput = document.getElementById('fg2_answer');
   if (ansInput) ansInput.focus();
 }
 
-function fg2_submit(){
+function fg2_submit() {
   const ansInput = document.getElementById('fg2_answer');
   const ans = ansInput ? Number(ansInput.value) : NaN;
-  const ok = Math.abs(ans - fg2_state.current.correct) < 1e-9;
+
+  const correct = Math.round(fg2_state.current.correct * 100) / 100;
+  const ok = Math.abs(ans - correct) < 1e-9;
+
   if (ok) fg2_state.score++;
   fg2_state.idx++;
-  document.getElementById('fg2_area').textContent = (ok ? 'Correct! ' : 'Incorrect. ') + `Answer: ${fmt(fg2_state.current.correct)}`;
+
+  document.getElementById('fg2_area').textContent =
+    (ok ? 'Correct! ' : 'Incorrect. ') + `Answer: ${fmt(correct)}`;
+
   setTimeout(fg2_next, 700);
 }
+
+// ---------- Dropdown Toggle ----------
+document.addEventListener('DOMContentLoaded', () => {
+  const opsToggle = document.getElementById('opsToggle');
+  const opsContent = document.getElementById('opsContent');
+
+  if (opsToggle && opsContent) {
+    opsToggle.addEventListener('click', () => {
+      const expanded = opsToggle.getAttribute('aria-expanded') === 'true';
+      opsToggle.setAttribute('aria-expanded', !expanded);
+      opsContent.setAttribute('aria-hidden', expanded);
+      opsContent.classList.toggle('show');
+    });
+  }
+});
+
+
 
 // ---------- NUMBER GUESSING ----------
 let ng_secret = null, ng_tries = 0;
@@ -385,6 +474,8 @@ function ng_try(){
   else document.getElementById('ng_out').textContent = 'Too high.';
 }
 
+// -------------- Snake Game -------------
+
 const showSnakeBtn = document.getElementById("showSnakeBtn");
 const snakeContainer = document.getElementById("snakeContainer");
 const canvas = document.getElementById("snakeCanvas");
@@ -396,6 +487,9 @@ let snake;
 let direction;
 let food;
 let score;
+let foodsEaten;
+let specialFood = null;
+let specialFoodTimer = null;
 
 showSnakeBtn.addEventListener("click", () => {
   snakeContainer.classList.toggle("hidden");
@@ -405,14 +499,20 @@ showSnakeBtn.addEventListener("click", () => {
 function startSnakeGame() {
   snake = [{ x: 9 * box, y: 9 * box }];
   direction = "RIGHT";
-  food = {
+  food = randomFood();
+  score = 0;
+  foodsEaten = 0;
+  specialFood = null;
+  clearInterval(window.snakeGameLoop);
+  document.addEventListener("keydown", changeDirection);
+  window.snakeGameLoop = setInterval(drawSnakeGame, 100);
+}
+
+function randomFood() {
+  return {
     x: Math.floor(Math.random() * 19) * box,
     y: Math.floor(Math.random() * 19) * box
   };
-  score = 0;
-  document.addEventListener("keydown", changeDirection);
-  clearInterval(window.snakeGameLoop);
-  window.snakeGameLoop = setInterval(drawSnakeGame, 100);
 }
 
 function changeDirection(event) {
@@ -427,13 +527,21 @@ function drawSnakeGame() {
   ctx.fillStyle = "#000";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+  // Draw the normal food
+  ctx.fillStyle = "#f00";
+  ctx.fillRect(food.x, food.y, box, box);
+
+  // Draw the special food (if active)
+  if (specialFood) {
+    ctx.fillStyle = "#ff0"; // bright yellow
+    ctx.fillRect(specialFood.x - box / 2, specialFood.y - box / 2, box * 2, box * 2);
+  }
+
+  // Draw the snake
   for (let i = 0; i < snake.length; i++) {
     ctx.fillStyle = i === 0 ? "#0f0" : "#4f8";
     ctx.fillRect(snake[i].x, snake[i].y, box, box);
   }
-
-  ctx.fillStyle = "#f00";
-  ctx.fillRect(food.x, food.y, box, box);
 
   let snakeX = snake[0].x;
   let snakeY = snake[0].y;
@@ -443,18 +551,28 @@ function drawSnakeGame() {
   if (direction === "RIGHT") snakeX += box;
   if (direction === "DOWN") snakeY += box;
 
+  // Check for normal food collision
   if (snakeX === food.x && snakeY === food.y) {
-    score++;
-    food = {
-      x: Math.floor(Math.random() * 19) * box,
-      y: Math.floor(Math.random() * 19) * box
-    };
+    score += 5;
+    foodsEaten++;
+    food = randomFood();
+
+    // Every 10 foods → spawn a special one
+    if (foodsEaten % 10 === 0) spawnSpecialFood();
   } else {
     snake.pop();
   }
 
+  // Check for special food collision
+  if (specialFood && hitSpecialFood(snakeX, snakeY)) {
+    score += 25; // bonus points
+    specialFood = null; // remove it
+    clearTimeout(specialFoodTimer);
+  }
+
   const newHead = { x: snakeX, y: snakeY };
 
+  // Collision detection
   if (
     snakeX < 0 ||
     snakeY < 0 ||
@@ -463,13 +581,41 @@ function drawSnakeGame() {
     collision(newHead, snake)
   ) {
     clearInterval(window.snakeGameLoop);
+    clearTimeout(specialFoodTimer);
     alert("Game Over! Your score: " + score);
+    return;
   }
 
   snake.unshift(newHead);
   snakeScore.textContent = "Score: " + score;
 }
 
+// Spawn the special food
+function spawnSpecialFood() {
+  specialFood = {
+    x: Math.floor(Math.random() * 18 + 1) * box,
+    y: Math.floor(Math.random() * 18 + 1) * box
+  };
+
+  // Remove it after 5 seconds if not eaten
+  clearTimeout(specialFoodTimer);
+  specialFoodTimer = setTimeout(() => {
+    specialFood = null;
+  }, 5000);
+}
+
+// Detect if snake hits special food (it’s bigger)
+function hitSpecialFood(snakeX, snakeY) {
+  if (!specialFood) return false;
+  return (
+    snakeX < specialFood.x + box &&
+    snakeX + box > specialFood.x - box &&
+    snakeY < specialFood.y + box &&
+    snakeY + box > specialFood.y - box
+  );
+}
+
 function collision(head, array) {
   return array.some(segment => head.x === segment.x && head.y === segment.y);
 }
+
