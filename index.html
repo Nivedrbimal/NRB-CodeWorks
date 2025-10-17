@@ -29,30 +29,31 @@
       <a href="#" class="top-link">Tools</a>
       <a href="#" class="top-link">About</a>
     </nav>
+    <button id="toggleSidebarResponsive" class="sidebar-toggle-responsive" aria-label="Toggle responsive sidebar">☰</button>
   </header>
   
   <aside class="sidebar collapsed hidden" id="sidebar" role="navigation" aria-label="Main menu">
   <nav class="menu" id="mainMenu">
     <button data-target="panel-home" class="menu-btn active" aria-controls="panel-home">
-      <i class="icon"><img src="iconHome.png"></i><span>Home</span>
+      <i class="icon"><img src="iconHome.png" class="icon-img"></i><span>Home</span>
     </button>
     <button data-target="panel-math" class="menu-btn" aria-controls="panel-math">
-      <i class="icon"><img src="iconMath.png"></i><span>Math</span>
+      <i class="icon"><img src="iconMath.png" class="icon-img"></i><span>Math</span>
     </button>
     <button data-target="panel-physics" class="menu-btn" aria-controls="panel-physics">
-      <i class="icon"><img src="iconPhysics.png"></i><span>Physics</span>
+      <i class="icon"><img src="iconPhysics.png" class="icon-img"></i><span>Physics</span>
     </button>
     <button data-target="panel-chemistry" class="menu-btn" aria-controls="panel-chemistry">
-      <i class="icon"><img src="iconChemistry.png"></i><span>Chemistry</span>
+      <i class="icon"><img src="iconChemistry.png" class="icon-img"></i><span>Chemistry</span>
     </button>
     <button data-target="panel-games" class="menu-btn" aria-controls="panel-games">
-      <i class="icon"><img src="iconGames.png"></i><span>Games</span>
+      <i class="icon"><img src="iconGames.png" class="icon-img"></i><span>Games</span>
     </button>
     <button data-target="panel-utilities" class="menu-btn" aria-controls="panel-utilities">
-      <i class="icon"><img src="iconUtilities.png"></i><span>Utilities</span>
+      <i class="icon"><img src="iconUtilities.png" class="icon-img"></i><span>Utilities</span>
     </button>
     <button data-target="panel-about" class="menu-btn" aria-controls="panel-about">
-      <i class="icon"><img src="iconAbout.png"></i><span>About</span>
+      <i class="icon"><img src="iconAbout.png" class="icon-img"></i><span>About</span>
     </button>
   </nav>
   <button id="toggleSidebar" class="toggle-btn" aria-label="Toggle sidebar">☰</button>
@@ -259,7 +260,7 @@
         <h3 id="snakeTitle">Snake Game</h3>
         <button class="btn primary" id="showSnakeBtn">Snake Game</button>
         <div id="snakeContainer" class="snake-container hidden">
-          <canvas id="snakeCanvas" width="1000" height="1000" tabindex="0"></canvas>
+          <canvas id="snakeCanvas" width="700" height="700" tabindex="0"></canvas>
           <div id="snakeScore" class="mono">Score: 0</div>
         </div>
       </div>
@@ -276,9 +277,10 @@
 
     <!-- ABOUT -->
     <section id="panel-about" class="panel hidden" aria-labelledby="aboutTitle">
-      <h2 id="aboutTitle">About Me</h2>
+      <h2 id="aboutTitle" class="title">About Me</h2>
       <div class="card">
-        <p class="muted">NRB CodeWorks — Math & Science tools built for learning.</p>
+        <h4 class="muted">NRB CodeWorks — Math & Science tools built for learning.</h4>
+        <h4 class="muted">Hi! I’m NRB, a student who enjoys creating and experimenting with code, design, and technology. This website is my personal project space — a place where I build interactive tools, games, and learning experiments as I continue improving my programming skills. My goal is to make coding fun, creative, and accessible for anyone who visits. Whether it’s a math quiz, a simple game, or a web design experiment, each project here is built with curiosity and the drive to learn something new.</h4>
       </div>
     </section>
   </main>
