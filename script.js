@@ -365,6 +365,65 @@ function trigCompute() {
   }
 }
 
+// ---------- QUADRATIC EQUATION ---------
+
+function quadeClear() {
+  ['quadA', 'quadB', 'quadC', 'quadX1', 'quadX2', 'quadH', 'quadK', 'quadPx', 'quadPy'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('quadOut').textContent = '';
+}
+
+function quadeSolve() {
+  let a = toNum(document.getElementById('quadA').value);
+  let b = toNum(document.getElementById('quadB').value);
+  let c = toNum(document.getElementById('quadC').value);
+  let x1 = toNum(document.getElementById('quadX1').value);
+  let x2 = toNum(document.getElementById('quadX2').value);
+  let h = toNum(document.getElementById('quadH').value);
+  let k = toNum(document.getElementById('quadK').value);
+  let px = toNum(document.getElementById('quadPx').value);
+  let py = toNum(document.getElementById('quadPy').value);
+  const known = x => x !== null && x !== undefined && !isNaN(x);
+
+  let changed = true, iter = 0;
+  while (changed && iter < 40) {
+    changed = false; iter++;
+    if (known(a) && known(b) && known(c) && !known(x1) && !known(x2)) {
+      let discriminant = b*b - 4*a*c;
+      if (discriminant >= 0) { x1 = (-b + Math.sqrt(discriminant)) / (2*a); x2 = (-b - Math.sqrt(discriminant)) / (2*a); changed = true; }
+    }
+    if (known(a) && known(x1) && known(x2)) {
+      if (!known(b)) { b = -a * (x1 + x2); changed = true; }
+      if (!known(c)) { c = a * (x1 * x2); changed = true; }
+    }
+    if (known(a) && known(x1)) {
+      if (!known(b) && known(c)) { b = -(a*x1*x1 + c)/x1; changed = true; }
+      if (!known(c) && known(b)) { c = -(a*x1*x1 + b*x1); changed = true; } 
+    }
+    if (!known(a) && known(b) && known(c) && known(x1)) { a = -(b*x1 + c)/(x1*x1); changed = true; }
+    if (known(a) && known(b) && !known(h)) { h = -b/(2*a); changed = true; }
+    if (known(a) && known(h) && !known(k) && known(c)) { k = a*h*h + b*h + c; changed = true; }
+    if (known(a) && known(h) && !known(b)) { b = -2 * a * h; changed = true; }
+    if (known(a) && known(b) && known(h) && known(k) && !known(c)) { c = k - (a * h * h + b * h); changed = true; }
+    if (known(a) && known(b) && known(px) && known(py) && !known(c)) { c = py - (a*px*px + b*px); changed = true; }
+    if (known(a) && known(c) && known(px) && known(py) && !known(b)) { b = (py - c - a*px*px)/px; changed = true; }
+    if (known(b) && known(c) && known(px) && known(py) && !known(a)) { a = (py - b*px - c)/(px*px); changed = true; }
+  }
+
+  const out = `Iterations: ${iter}\n` +
+    `a = ${fmt(a)}\n` +
+    `b = ${fmt(b)}\n` +
+    `c = ${fmt(c)}\n` +
+    `x1 = ${fmt(x1)}\n` +
+    `x2 = ${fmt(x2)}\n` +
+    `h = ${fmt(h)}\n` +
+    `k = ${fmt(k)}\n` +
+    `x = ${fmt(px)}\n` +
+    `y = ${fmt(py)}`;
+
+  document.getElementById('quadOut').textContent = out;
+}
+
+
 // ---------- KINEMATICS SOLVER ----------
 function kinematics_clear() {
   ['kin_s', 'kin_u', 'kin_v', 'kin_a', 'kin_t'].forEach(id => document.getElementById(id).value = '');
@@ -639,147 +698,146 @@ function ng_try() {
 }
 
 // -------------- Snake Game -------------
-
-const showSnakeBtn = document.getElementById("showSnakeBtn");
-const snakeContainer = document.getElementById("snakeContainer");
 const canvas = document.getElementById("snakeCanvas");
 const ctx = canvas.getContext("2d");
 const snakeScore = document.getElementById("snakeScore");
 
+const leftBtn = document.getElementById("leftSnake");
+const upBtn = document.getElementById("upSnake");
+const rightBtn = document.getElementById("rightSnake");
+const downBtn = document.getElementById("downSnake");
+const startBtn = document.getElementById("startSnakeBtn");
+const pauseBtn = document.getElementById("pauseSnakeBtn"); 
+
 let box = 15;
-let snake;
-let direction;
-let food;
-let score;
-let foodsEaten;
+canvas.width = 300;
+canvas.height = 300;
+
+let snake, direction, food, score, foodsEaten;
 let specialFood = null;
 let specialFoodTimer = null;
-
-showSnakeBtn.addEventListener("click", () => {
-  snakeContainer.classList.toggle("hidden");
-  if (!snakeContainer.classList.contains("hidden")) startSnakeGame();
-});
-
+let paused = false;
 function startSnakeGame() {
-  snake = [{ x: 9 * box, y: 9 * box }];
-  direction = "RIGHT";
-  food = randomFood();
-  score = 0;
-  foodsEaten = 0;
-  specialFood = null;
-  clearInterval(window.snakeGameLoop);
-  document.addEventListener("keydown", changeDirection);
-  window.snakeGameLoop = setInterval(drawSnakeGame, 100);
-}
+  if (!snake || snake.length === 0) {
+    snake = [{ x: 3 * box, y: 3 * box }];
+    direction = "RIGHT";
+    food = randomFood();
+    score = 0;
+    foodsEaten = 0;
+    specialFood = null;
+  }
 
+  clearInterval(window.snakeGameLoop);
+  window.snakeGameLoop = setInterval(drawSnakeGame, 100);
+
+  if (specialFood) {
+    clearTimeout(specialFoodTimer);
+    specialFoodTimer = setTimeout(() => { specialFood = null; }, 5000);
+  }
+
+  paused = false;
+  pauseBtn.textContent = "Pause";
+  canvas.focus();
+}
 function randomFood() {
   return {
-    x: Math.floor(Math.random() * 19) * box,
-    y: Math.floor(Math.random() * 19) * box
+    x: Math.floor(Math.random() * 20) * box,
+    y: Math.floor(Math.random() * 20) * box
   };
 }
-
-function changeDirection(event) {
+leftBtn.addEventListener("click", () => { if (direction !== "RIGHT") direction = "LEFT"; });
+upBtn.addEventListener("click", () => { if (direction !== "DOWN") direction = "UP"; });
+rightBtn.addEventListener("click", () => { if (direction !== "LEFT") direction = "RIGHT"; });
+downBtn.addEventListener("click", () => { if (direction !== "UP") direction = "DOWN"; });
+document.addEventListener("keydown", (event) => {
   const key = event.keyCode;
   if (key === 37 && direction !== "RIGHT") direction = "LEFT";
   else if (key === 38 && direction !== "DOWN") direction = "UP";
   else if (key === 39 && direction !== "LEFT") direction = "RIGHT";
   else if (key === 40 && direction !== "UP") direction = "DOWN";
-}
-
+});
+pauseBtn.textContent = "Pause";
+pauseBtn.addEventListener("click", () => {
+  if (!paused) {
+    clearInterval(window.snakeGameLoop);
+    clearTimeout(specialFoodTimer);
+    paused = true;
+    pauseBtn.textContent = "Resume";
+  } else {
+    window.snakeGameLoop = setInterval(drawSnakeGame, 100);
+    if (specialFood) {
+      specialFoodTimer = setTimeout(() => { specialFood = null; }, 5000);
+    }
+    paused = false;
+    pauseBtn.textContent = "Pause";
+    canvas.focus();
+  }
+});
 function drawSnakeGame() {
-  ctx.fillStyle = "#000";
+  ctx.fillStyle = "#111";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-  // Draw the normal food
   ctx.fillStyle = "#f00";
   ctx.fillRect(food.x, food.y, box, box);
-
-  // Draw the special food (if active)
   if (specialFood) {
-    ctx.fillStyle = "#ff0"; // bright yellow
-    ctx.fillRect(specialFood.x - box / 2, specialFood.y - box / 2, box * 2, box * 2);
+    ctx.fillStyle = "#ff0";
+    ctx.fillRect(specialFood.x, specialFood.y, box * 2, box * 2);
   }
-
-  // Draw the snake
-  for (let i = 0; i < snake.length; i++) {
-    ctx.fillStyle = i === 0 ? "#0f0" : "#4f8";
-    ctx.fillRect(snake[i].x, snake[i].y, box, box);
-  }
-
+  snake.forEach((segment, index) => {
+    ctx.fillStyle = index === 0 ? "#0f0" : "#4f8";
+    ctx.fillRect(segment.x, segment.y, box, box);
+  });
   let snakeX = snake[0].x;
   let snakeY = snake[0].y;
-
   if (direction === "LEFT") snakeX -= box;
   if (direction === "UP") snakeY -= box;
   if (direction === "RIGHT") snakeX += box;
   if (direction === "DOWN") snakeY += box;
-
-  // Check for normal food collision
   if (snakeX === food.x && snakeY === food.y) {
     score += 5;
     foodsEaten++;
     food = randomFood();
-
-    // Every 10 foods → spawn a special one
     if (foodsEaten % 10 === 0) spawnSpecialFood();
   } else {
     snake.pop();
   }
-
-  // Check for special food collision
   if (specialFood && hitSpecialFood(snakeX, snakeY)) {
-    score += 25; // bonus points
-    specialFood = null; // remove it
+    score += 25;
+    specialFood = null;
     clearTimeout(specialFoodTimer);
   }
-
   const newHead = { x: snakeX, y: snakeY };
-
-  // Collision detection
   if (
-    snakeX < 0 ||
-    snakeY < 0 ||
-    snakeX >= canvas.width ||
-    snakeY >= canvas.height ||
+    snakeX < 0 || snakeY < 0 ||
+    snakeX >= canvas.width || snakeY >= canvas.height ||
     collision(newHead, snake)
   ) {
     clearInterval(window.snakeGameLoop);
     clearTimeout(specialFoodTimer);
     alert("Game Over! Your score: " + score);
+    snake = [];
     return;
   }
-
   snake.unshift(newHead);
   snakeScore.textContent = "Score: " + score;
 }
-
-// Spawn the special food
 function spawnSpecialFood() {
   specialFood = {
     x: Math.floor(Math.random() * 18 + 1) * box,
     y: Math.floor(Math.random() * 18 + 1) * box
   };
-
-  // Remove it after 5 seconds if not eaten
   clearTimeout(specialFoodTimer);
-  specialFoodTimer = setTimeout(() => {
-    specialFood = null;
-  }, 5000);
+  specialFoodTimer = setTimeout(() => { specialFood = null; }, 5000);
 }
-
-// Detect if snake hits special food (it’s bigger)
 function hitSpecialFood(snakeX, snakeY) {
   if (!specialFood) return false;
   return (
-    snakeX < specialFood.x + box &&
-    snakeX + box > specialFood.x - box &&
-    snakeY < specialFood.y + box &&
-    snakeY + box > specialFood.y - box
+    snakeX < specialFood.x + box * 2 &&
+    snakeX + box > specialFood.x &&
+    snakeY < specialFood.y + box * 2 &&
+    snakeY + box > specialFood.y
   );
 }
-
 function collision(head, array) {
   return array.some(segment => head.x === segment.x && head.y === segment.y);
 }
-
+startBtn.addEventListener("click", startSnakeGame);
