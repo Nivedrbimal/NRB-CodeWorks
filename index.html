@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -7,6 +8,7 @@
   <link rel="icon" href="faviconNRB.ico" type="image/x-icon">
   <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
   <!-- Intro screen (NEW) -->
   <div id="intro" class="intro-screen" role="dialog" aria-labelledby="intro-text" aria-modal="true">
@@ -29,35 +31,36 @@
       <a href="#" class="top-link">Tools</a>
       <a href="#" class="top-link">About</a>
     </nav>
-    <button id="toggleSidebarResponsive" class="sidebar-toggle-responsive" aria-label="Toggle responsive sidebar">☰</button>
+    <button id="toggleSidebarResponsive" class="sidebar-toggle-responsive"
+      aria-label="Toggle responsive sidebar">☰</button>
   </header>
-  
+
   <aside class="sidebar collapsed hidden" id="sidebar" role="navigation" aria-label="Main menu">
-  <nav class="menu" id="mainMenu">
-    <button data-target="panel-home" class="menu-btn active" aria-controls="panel-home">
-      <i class="icon"><img src="iconHome.png" class="icon-img"></i><span>Home</span>
-    </button>
-    <button data-target="panel-math" class="menu-btn" aria-controls="panel-math">
-      <i class="icon"><img src="iconMath.png" class="icon-img"></i><span>Math</span>
-    </button>
-    <button data-target="panel-physics" class="menu-btn" aria-controls="panel-physics">
-      <i class="icon"><img src="iconPhysics.png" class="icon-img"></i><span>Physics</span>
-    </button>
-    <button data-target="panel-chemistry" class="menu-btn" aria-controls="panel-chemistry">
-      <i class="icon"><img src="iconChemistry.png" class="icon-img"></i><span>Chemistry</span>
-    </button>
-    <button data-target="panel-games" class="menu-btn" aria-controls="panel-games">
-      <i class="icon"><img src="iconGames.png" class="icon-img"></i><span>Games</span>
-    </button>
-    <button data-target="panel-utilities" class="menu-btn" aria-controls="panel-utilities">
-      <i class="icon"><img src="iconUtilities.png" class="icon-img"></i><span>Utilities</span>
-    </button>
-    <button data-target="panel-about" class="menu-btn" aria-controls="panel-about">
-      <i class="icon"><img src="iconAbout.png" class="icon-img"></i><span>About</span>
-    </button>
-  </nav>
-  <button id="toggleSidebar" class="toggle-btn" aria-label="Toggle sidebar">☰</button>
-</aside>
+    <nav class="menu" id="mainMenu">
+      <button data-target="panel-home" class="menu-btn active" aria-controls="panel-home">
+        <i class="icon"><img src="iconHome.png" class="icon-img"></i><span>Home</span>
+      </button>
+      <button data-target="panel-math" class="menu-btn" aria-controls="panel-math">
+        <i class="icon"><img src="iconMath.png" class="icon-img"></i><span>Math</span>
+      </button>
+      <button data-target="panel-physics" class="menu-btn" aria-controls="panel-physics">
+        <i class="icon"><img src="iconPhysics.png" class="icon-img"></i><span>Physics</span>
+      </button>
+      <button data-target="panel-chemistry" class="menu-btn" aria-controls="panel-chemistry">
+        <i class="icon"><img src="iconChemistry.png" class="icon-img"></i><span>Chemistry</span>
+      </button>
+      <button data-target="panel-games" class="menu-btn" aria-controls="panel-games">
+        <i class="icon"><img src="iconGames.png" class="icon-img"></i><span>Games</span>
+      </button>
+      <button data-target="panel-utilities" class="menu-btn" aria-controls="panel-utilities">
+        <i class="icon"><img src="iconUtilities.png" class="icon-img"></i><span>Utilities</span>
+      </button>
+      <button data-target="panel-about" class="menu-btn" aria-controls="panel-about">
+        <i class="icon"><img src="iconAbout.png" class="icon-img"></i><span>About</span>
+      </button>
+    </nav>
+    <button id="toggleSidebar" class="toggle-btn" aria-label="Toggle sidebar">☰</button>
+  </aside>
 
 
   <main id="app" class="hidden" role="main" tabindex="-1">
@@ -82,7 +85,8 @@
       <!-- Trig evaluator -->
       <div class="card" role="region" aria-labelledby="trigTitle">
         <h3 id="trigTitle">Trigonometric evaluator</h3>
-        <p class="muted">Supports basic, inverse and hyperbolic trigonometric functions. Choose degrees, radians or polar.</p>
+        <p class="muted">Supports basic, inverse and hyperbolic trigonometric functions. Choose degrees, radians or
+          polar.</p>
 
         <div class="grid">
           <label><span class="muted">Mode</span>
@@ -128,6 +132,48 @@
 
         <div id="triOut" class="output mono" role="status" aria-live="polite"></div>
       </div>
+
+      <div class="card" role="region" aria-labelledby="trigTitle">
+        <h3 id="quadeTitle">Quadratic Equation</h3>
+        <p class="muted">Finds the unknown values when given knowns.</p>
+        <div class="grid">
+          <label><span class="muted">Enter value of 'a', leave blank if unknown</span>
+            <input id="quadA" type="number" step="any" placeholder="Value of 'a'" aria-label="quad a input" />
+          </label>
+          <label><span class="muted">Enter value of 'b', leave blank if unknown</span>
+            <input id="quadB" type="number" step="any" placeholder="Value of 'b'" aria-label="quad b input" />
+          </label>
+          <label><span class="muted">Enter value of 'c', leave blank if unknown</span>
+            <input id="quadC" type="number" step="any" placeholder="Value of 'c'" aria-label="quad c input" />
+          </label>
+          <label><span class="muted">Enter value of 'x₁', leave blank if unknown</span>
+            <input id="quadX1" type="number" step="any" placeholder="first solution for x'" aria-label="quad x₁ input" />
+          </label>
+          <label><span class="muted">Enter value of 'x₂', leave blank if unknown</span>
+            <input id="quadX2" type="number" step="any" placeholder="second solution for x'" aria-label="quad x₂ input" />
+          </label>
+        </div>
+        <div class="grid">
+          <label><span class="muted">Enter value of 'h', leave blank if unknown</span>
+            <input id="quadH" type="number" step="any" placeholder="x-coordinate of vertex'" aria-label="quad h input" />
+          </label>
+          <label><span class="muted">Enter value of 'k', leave blank if unknown</span>
+            <input id="quadK" type="number" step="any" placeholder="y-coordinate of vertex'" aria-label="quad k input" />
+          </label>
+          <label><span class="muted">Enter value of 'x', leave blank if unknown</span>
+            <input id="quadPx" type="number" step="any" placeholder="x-coordinate of known point'" aria-label="quad x input" />
+          </label>
+          <label><span class="muted">Enter value of 'y', leave blank if unknown</span>
+            <input id="quadPy" type="number" step="any" placeholder="y-coordinate of known point'" aria-label="quad y input" />
+          </label>
+
+        </div>
+        <div class="row">
+          <button class="btn primary" onclick="quadeSolve()">Solve</button>
+          <button class="btn" onclick="quadeClear()">Clear</button>
+        </div>
+        <div id="quadOut" class="output mono" role="status" aria-live="polite"></div>
+      </div>
     </section>
 
     <!-- PHYSICS -->
@@ -137,14 +183,20 @@
       <!-- Kinematics solver -->
       <div class="card" role="region" aria-labelledby="kinTitle">
         <h3 id="kinTitle">Kinematics solver</h3>
-        <p class="muted">Enter any known variables. The solver iteratively applies kinematic formulas to deduce unknowns.</p>
+        <p class="muted">Enter any known variables. The solver iteratively applies kinematic formulas to deduce
+          unknowns.</p>
 
         <div class="grid">
-          <label><span class="muted">s (displacement)</span><input id="kin_s" type="number" step="any" placeholder="meters" /></label>
-          <label><span class="muted">u (initial velocity)</span><input id="kin_u" type="number" step="any" placeholder="m/s" /></label>
-          <label><span class="muted">v (final velocity)</span><input id="kin_v" type="number" step="any" placeholder="m/s" /></label>
-          <label><span class="muted">a (acceleration)</span><input id="kin_a" type="number" step="any" placeholder="m/s²" /></label>
-          <label><span class="muted">t (time)</span><input id="kin_t" type="number" step="any" placeholder="s" /></label>
+          <label><span class="muted">s (displacement)</span><input id="kin_s" type="number" step="any"
+              placeholder="meters" /></label>
+          <label><span class="muted">u (initial velocity)</span><input id="kin_u" type="number" step="any"
+              placeholder="m/s" /></label>
+          <label><span class="muted">v (final velocity)</span><input id="kin_v" type="number" step="any"
+              placeholder="m/s" /></label>
+          <label><span class="muted">a (acceleration)</span><input id="kin_a" type="number" step="any"
+              placeholder="m/s²" /></label>
+          <label><span class="muted">t (time)</span><input id="kin_t" type="number" step="any"
+              placeholder="s" /></label>
         </div>
 
         <div class="row">
@@ -161,12 +213,18 @@
         <p class="muted">Enter any known combination among v₀, θ (deg), g, T, R, H. Solver will compute the rest.</p>
 
         <div class="grid">
-          <label><span class="muted">v₀ (initial velocity)</span><input id="pm_v0" type="number" step="any" placeholder="m/s" /></label>
-          <label><span class="muted">θ (angle of projection)</span><input id="pm_theta" type="number" step="any" placeholder="degrees" /></label>
-          <label><span class="muted">g (gravity)</span><input id="pm_g" type="number" step="any" value="9.81" placeholder="m/s²" /></label>
-          <label><span class="muted">T (time of flight)</span><input id="pm_T" type="number" step="any" placeholder="s" /></label>
-          <label><span class="muted">R (range)</span><input id="pm_R" type="number" step="any" placeholder="m" /></label>
-          <label><span class="muted">H (max height)</span><input id="pm_H" type="number" step="any" placeholder="m" /></label>
+          <label><span class="muted">v₀ (initial velocity)</span><input id="pm_v0" type="number" step="any"
+              placeholder="m/s" /></label>
+          <label><span class="muted">θ (angle of projection)</span><input id="pm_theta" type="number" step="any"
+              placeholder="degrees" /></label>
+          <label><span class="muted">g (gravity)</span><input id="pm_g" type="number" step="any" value="9.81"
+              placeholder="m/s²" /></label>
+          <label><span class="muted">T (time of flight)</span><input id="pm_T" type="number" step="any"
+              placeholder="s" /></label>
+          <label><span class="muted">R (range)</span><input id="pm_R" type="number" step="any"
+              placeholder="m" /></label>
+          <label><span class="muted">H (max height)</span><input id="pm_H" type="number" step="any"
+              placeholder="m" /></label>
         </div>
 
         <div class="row">
@@ -183,12 +241,18 @@
         <p class="muted">Enter any known variables.</p>
 
         <div class="grid">
-          <label><span class="muted">v (wave speed)</span><input id="wav_v" type="number" step="any" placeholder="m/s" /></label>
-          <label><span class="muted">f (frequency)</span><input id="wav_f" type="number" step="any" placeholder="Hz" /></label>
-          <label><span class="muted">λ (wavelength)</span><input id="wav_lambda" type="number" step="any" placeholder="m" /></label>
-          <label><span class="muted">T (period)</span><input id="wav_T" type="number" step="any" placeholder="s" /></label>
-          <label><span class="muted">F (tension)</span><input id="wav_F" type="number" step="any" placeholder="N" /></label>
-          <label><span class="muted">μ (linear mass density)</span><input id="wav_mu" type="number" step="any" placeholder="kg/m" /></label>
+          <label><span class="muted">v (wave speed)</span><input id="wav_v" type="number" step="any"
+              placeholder="m/s" /></label>
+          <label><span class="muted">f (frequency)</span><input id="wav_f" type="number" step="any"
+              placeholder="Hz" /></label>
+          <label><span class="muted">λ (wavelength)</span><input id="wav_lambda" type="number" step="any"
+              placeholder="m" /></label>
+          <label><span class="muted">T (period)</span><input id="wav_T" type="number" step="any"
+              placeholder="s" /></label>
+          <label><span class="muted">F (tension)</span><input id="wav_F" type="number" step="any"
+              placeholder="N" /></label>
+          <label><span class="muted">μ (linear mass density)</span><input id="wav_mu" type="number" step="any"
+              placeholder="kg/m" /></label>
         </div>
 
         <div class="row">
@@ -228,7 +292,8 @@
 
         <div class="dropdown" id="operationDropdown">
           <span class="muted">Allowed Operations:</span>
-          <div class="dropdown-button" id="opsToggle" role="button" tabindex="0" aria-expanded="false">Select Operations</div>
+          <div class="dropdown-button" id="opsToggle" role="button" tabindex="0" aria-expanded="false">Select Operations
+          </div>
           <div class="dropdown-content" id="opsContent" aria-hidden="true">
             <label><input type="checkbox" value="+" class="operation" checked> Addition (+)</label><br>
             <label><input type="checkbox" value="-" class="operation" checked> Subtraction (-)</label><br>
@@ -259,10 +324,17 @@
 
       <div class="card" role="region" aria-labelledby="snakeTitle">
         <h3 id="snakeTitle">Snake Game</h3>
-        <button class="btn primary" id="showSnakeBtn">Snake Game</button>
-        <div id="snakeContainer" class="snake-container hidden">
-          <canvas id="snakeCanvas" width="700" height="700" tabindex="0"></canvas>
+        <button class="btn primary" id="startSnakeBtn" onclick="startSnakeGame()">Start Game</button>
+        <button class="btn primary" id="pauseSnakeBtn">Pause Game</button>
+        <div class="row">
+        <div id="snakeContainer" class="snake-container">
+          <canvas id="snakeCanvas" class="snake-canvas" tabindex="0"></canvas>
           <div id="snakeScore" class="mono">Score: 0</div>
+        <div class="direction-pad">
+          <button id="upSnake">↑</button>
+          <button id="leftSnake">←</button>
+          <button id="rightSnake">→</button>
+          <button id="downSnake">↓</button>
         </div>
       </div>
     </section>
@@ -281,11 +353,16 @@
       <h2 id="aboutTitle" class="title">About Me</h2>
       <div class="card">
         <h4 class="muted">NRB CodeWorks — Math & Science tools built for learning.</h4>
-        <h4 class="muted">Hi! I’m NRB, a student who enjoys creating and experimenting with code, design, and technology. This website is my personal project space — a place where I build interactive tools, games, and learning experiments as I continue improving my programming skills. My goal is to make coding fun, creative, and accessible for anyone who visits. Whether it’s a math quiz, a simple game, or a web design experiment, each project here is built with curiosity and the drive to learn something new.</h4>
+        <h4 class="muted">Hi! I’m NRB, a student who enjoys creating and experimenting with code, design, and
+          technology. This website is my personal project space — a place where I build interactive tools, games, and
+          learning experiments as I continue improving my programming skills. My goal is to make coding fun, creative,
+          and accessible for anyone who visits. Whether it’s a math quiz, a simple game, or a web design experiment,
+          each project here is built with curiosity and the drive to learn something new.</h4>
       </div>
     </section>
   </main>
 
   <script src="script.js" defer></script>
 </body>
+
 </html>
