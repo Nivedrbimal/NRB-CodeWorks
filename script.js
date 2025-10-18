@@ -3,11 +3,11 @@
 
 
 
-document.body.style.overflow = 'hidden'; 
+document.body.style.overflow = 'hidden';
 // ---------- Utilities ----------
 const isNum = v => v !== null && v !== '' && !Number.isNaN(Number(v));
 const toNum = v => isNum(v) ? Number(v) : null;
-const fmt = n => (n===null || n===undefined || !Number.isFinite(n)) ? '—' : (Math.abs(n) < 1e-8 ? n.toExponential(4) : Number(n.toPrecision(12)).toString());
+const fmt = n => (n === null || n === undefined || !Number.isFinite(n)) ? '—' : (Math.abs(n) < 1e-8 ? n.toExponential(4) : Number(n.toPrecision(12)).toString());
 
 function typeOut(el, text, options = {}) {
   const speed = options.speed ?? 16;
@@ -104,7 +104,7 @@ function toggleDropdown() {
 const opsToggle = document.getElementById('opsToggle');
 if (opsToggle) {
   opsToggle.addEventListener('click', toggleDropdown);
-  opsToggle.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleDropdown(); }});
+  opsToggle.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleDropdown(); } });
 }
 
 // Close dropdown when clicking outside
@@ -122,7 +122,7 @@ document.addEventListener('click', (e) => {
 function getSelectedOperations() {
   const boxes = Array.from(document.querySelectorAll('.operation'));
   const ops = boxes.filter(cb => cb.checked).map(cb => cb.value);
-  return ops.length ? ops : ['+','-','*','/'];
+  return ops.length ? ops : ['+', '-', '*', '/'];
 }
 
 // ---------- INTRO SCREEN ----------
@@ -162,40 +162,204 @@ window.addEventListener('load', () => {
 });
 
 // ---------- TRIG EVALUATOR ----------
-function trig_compute() {
-  const mode = document.getElementById('tri_mode').value; // deg or rad
-  const op = document.getElementById('tri_op').value;
-  const raw = document.getElementById('tri_val').value;
-  const outEl = document.getElementById('tri_out');
-  if (raw === '') { outEl.textContent = 'Enter a value'; return; }
-  const x = Number(raw);
-  const toRad = v => mode === 'deg' ? v * Math.PI/180 : v;
-  const fromRad = v => mode === 'deg' ? v * 180/Math.PI : v;
-
+function parseRadianInput(raw) {
+  // replace π with Math.PI
+  let str = raw.replace(/π/g, 'Math.PI');
+  
+  // evaluate fractions, e.g., "Math.PI/2"
   try {
-    let res = null, note = '';
+    return eval(str); // returns a number in radians
+  } catch(e) {
+    return NaN;
+  }
+}
+function updatePlaceholder() {
+  const mode = document.getElementById('triMode').value;
+  const input = document.getElementById('triVal');
+  const op = document.getElementById('triOp').value;
+  if (['asin', 'acos', 'atan', 'acsc', 'asec', 'acot'].includes(op)) {
+    input.placeholder = 'Enter value';
+  } 
+  else if (['sinh', 'cosh', 'tanh', 'csch', 'sech', 'coth'].includes(op)) {
+    input.placeholder = 'Enter a real number';
+  } 
+  else {
+    if (mode === 'deg' || mode === 'pol') {
+      input.placeholder = 'Enter in degree(s)';
+    } else if (mode === 'rad') {
+      input.placeholder = 'Enter in radian(s) (use the pi symbol (π) when inputting)';
+    } else {
+      input.placeholder = 'Enter number';
+    }
+  }
+}
+function trigClear() {
+  document.getElementById('triOut').textContent = '';
+  document.getElementById('triVal').value = '';
+  document.getElementById('triOp').value = 'sin';
+  document.getElementById('triMode').value = 'deg';
+  updatePlaceholder(); 
+}
+function trigCompute() {
+  const mode = document.getElementById('triMode').value;
+  const op = document.getElementById('triOp').value;
+  const raw = document.getElementById('triVal').value;
+  const outEl = document.getElementById('triOut');
+  if (!raw) { outEl.textContent = 'Enter a value'; return; }
+  let x;
+  if (mode === 'rad') {
+    x = parseRadianInput(raw);
+  } else {
+    x = Number(raw);
+  }
+  if (isNaN(x)) { outEl.textContent = 'Invalid input'; return; }
+  const toRad = v => mode === 'deg' ? v * Math.PI / 180 : v;
+  const fromRad = v => mode === 'deg' ? v * 180 / Math.PI : v;
+  const pi = Math.PI;
+  
+  try {
+    const angle = toRad(x);
+    let res = null;
     switch (op) {
       case 'sin': res = Math.sin(toRad(x)); break;
       case 'cos': res = Math.cos(toRad(x)); break;
       case 'tan': res = Math.tan(toRad(x)); break;
-      case 'csc': res = 1/Math.sin(toRad(x)); break;
-      case 'sec': res = 1/Math.cos(toRad(x)); break;
-      case 'cot': res = 1/Math.tan(toRad(x)); break;
-      case 'asin': { let v = Math.asin(x); res = fromRad(v); note = '(output in chosen mode)'; break; }
-      case 'acos': { let v = Math.acos(x); res = fromRad(v); note = '(output in chosen mode)'; break; }
-      case 'atan': { let v = Math.atan(x); res = fromRad(v); note = '(output in chosen mode)'; break; }
-      case 'asec': { let v = 1/x; if (Math.abs(v) <= 1) { let r = Math.acos(1/v); res = fromRad(r); note = '(arcsec)'; } else res = NaN; break; }
-      case 'acsc': { let v = 1/x; if (Math.abs(v) <= 1) { let r = Math.asin(1/v); res = fromRad(r); note = '(arccsc)'; } else res = NaN; break; }
-      case 'acot': { let r = Math.atan(1/x); res = fromRad(r); note = '(arccot)'; break; }
+      case 'csc': res = 1 / Math.sin(toRad(x)); break;
+      case 'sec': res = 1 / Math.cos(toRad(x)); break;
+      case 'cot': res = 1 / Math.tan(toRad(x)); break;
+      case 'asin': { let v = Math.asin(x); res = fromRad(v); break; }
+      case 'acos': { let v = Math.acos(x); res = fromRad(v); break; }
+      case 'atan': { let v = Math.atan(x); res = fromRad(v); break; }
+      case 'asec': { let v = 1 / x; if (Math.abs(v) <= 1) { let r = Math.acos(1 / v); res = fromRad(r); } else res = NaN; break; }
+      case 'acsc': { let v = 1 / x; if (Math.abs(v) <= 1) { let r = Math.asin(1 / v); res = fromRad(r); } else res = NaN; break; }
+      case 'acot': { let r = Math.atan(1 / x); res = fromRad(r); break; }
       case 'sinh': res = Math.sinh(toRad(x)); break;
       case 'cosh': res = Math.cosh(toRad(x)); break;
       case 'tanh': res = Math.tanh(toRad(x)); break;
-      case 'csch': res = 1/Math.sinh(toRad(x)); break;
-      case 'sech': res = 1/Math.cosh(toRad(x)); break;
-      case 'coth': res = 1/Math.tanh(toRad(x)); break;
+      case 'csch': res = 1 / Math.sinh(toRad(x)); break;
+      case 'sech': res = 1 / Math.cosh(toRad(x)); break;
+      case 'coth': res = 1 / Math.tanh(toRad(x)); break;
       default: res = NaN;
     }
-    outEl.textContent = `Result: ${fmt(res)} ${note}`;
+    var rad = null;
+    if (op === 'sin') {
+      if (angle === 0 || angle === 2*pi || angle === -2*pi) rad = '0';
+      else if (angle === pi/6 || angle === -11*pi/6) rad = '1/2';
+      else if (angle === pi/4 || angle === -7*pi/4) rad = '√2/2';
+      else if (angle === pi/3 || angle === -5*pi/3) rad = '√3/2';
+      else if (angle === pi/2 || angle === -3*pi/2) rad = '1';
+      else if (angle === 2*pi/3 || angle === -4*pi/3) rad = '√3/2';
+      else if (angle === 3*pi/4 || angle === -5*pi/4) rad = '√2/2';
+      else if (angle === 5*pi/6 || angle === -7*pi/6) rad = '1/2';
+      else if (angle === pi || angle === -pi) rad = '0';
+      else if (angle === 7*pi/6 || angle === -5*pi/6) rad = '-1/2';
+      else if (angle === 5*pi/4 || angle === -3*pi/4) rad = '-√2/2';
+      else if (angle === 4*pi/3 || angle === -2*pi/3) rad = '-√3/2';
+      else if (angle === 3*pi/2 || angle === -pi/2) rad = '-1';
+      else if (angle === 5*pi/3 || angle === -pi/3) rad = '-√3/2';
+      else if (angle === 7*pi/4 || angle === -pi/4) rad = '-√2/2';
+      else if (angle === 11*pi/6 || angle === -pi/6) rad = '-1/2';
+    }
+
+    // cos
+    else if (op === 'cos') {
+      if (angle === 0 || angle === 2*pi || angle === -2*pi) rad = '1';
+      else if (angle === pi/6 || angle === -11*pi/6) rad = '√3/2';
+      else if (angle === pi/4 || angle === -7*pi/4) rad = '√2/2';
+      else if (angle === pi/3 || angle === -5*pi/3) rad = '1/2';
+      else if (angle === pi/2 || angle === -3*pi/2) rad = '0';
+      else if (angle === 2*pi/3 || angle === -4*pi/3) rad = '-1/2';
+      else if (angle === 3*pi/4 || angle === -5*pi/4) rad = '-√2/2';
+      else if (angle === 5*pi/6 || angle === -7*pi/6) rad = '-√3/2';
+      else if (angle === pi || angle === -pi) rad = '-1';
+      else if (angle === 7*pi/6 || angle === -5*pi/6) rad = '-√3/2';
+      else if (angle === 5*pi/4 || angle === -3*pi/4) rad = '-√2/2';
+      else if (angle === 4*pi/3 || angle === -2*pi/3) rad = '-1/2';
+      else if (angle === 3*pi/2 || angle === -pi/2) rad = '0';
+      else if (angle === 5*pi/3 || angle === -pi/3) rad = '1/2';
+      else if (angle === 7*pi/4 || angle === -pi/4) rad = '√2/2';
+      else if (angle === 11*pi/6 || angle === -pi/6) rad = '√3/2';
+    }
+
+    // tan
+    else if (op === 'tan') {
+      if (angle === 0 || angle === pi || angle === -pi || angle === 2*pi || angle === -2*pi) rad = '0';
+      else if (angle === pi/6 || angle === -11*pi/6) rad = '1/√3';
+      else if (angle === pi/4 || angle === -7*pi/4) rad = '1';
+      else if (angle === pi/3 || angle === -5*pi/3) rad = '√3';
+      else if (angle === pi/2 || angle === -3*pi/2 || angle === 3*pi/2 || angle === -pi/2) rad = 'undefined';
+      else if (angle === 2*pi/3 || angle === -4*pi/3) rad = '-√3';
+      else if (angle === 3*pi/4 || angle === -5*pi/4) rad = '-1';
+      else if (angle === 5*pi/6 || angle === -7*pi/6) rad = '-1/√3';
+      else if (angle === 7*pi/6 || angle === -5*pi/6) rad = '1/√3';
+      else if (angle === 5*pi/4 || angle === -3*pi/4) rad = '1';
+      else if (angle === 4*pi/3 || angle === -2*pi/3) rad = '√3';
+      else if (angle === 5*pi/3 || angle === -pi/3) rad = '-√3';
+      else if (angle === 7*pi/4 || angle === -pi/4) rad = '-1';
+      else if (angle === 11*pi/6 || angle === -pi/6) rad = '-1/√3';
+    }
+
+    // csc
+    else if (op === 'csc') {
+      if (angle === 0 || angle === pi || angle === -pi || angle === 2*pi || angle === -2*pi) rad = 'undefined';
+      else if (angle === pi/6 || angle === -11*pi/6) rad = '2';
+      else if (angle === pi/4 || angle === -7*pi/4) rad = '√2';
+      else if (angle === pi/3 || angle === -5*pi/3) rad = '2√3/3';
+      else if (angle === pi/2 || angle === -3*pi/2) rad = '1';
+      else if (angle === 2*pi/3 || angle === -4*pi/3) rad = '2√3/3';
+      else if (angle === 3*pi/4 || angle === -5*pi/4) rad = '√2';
+      else if (angle === 5*pi/6 || angle === -7*pi/6) rad = '2';
+      else if (angle === 7*pi/6 || angle === -5*pi/6) rad = '-2';
+      else if (angle === 5*pi/4 || angle === -3*pi/4) rad = '-√2';
+      else if (angle === 4*pi/3 || angle === -2*pi/3) rad = '-2√3/3';
+      else if (angle === 3*pi/2 || angle === -pi/2) rad = '-1';
+      else if (angle === 5*pi/3 || angle === -pi/3) rad = '-2√3/3';
+      else if (angle === 7*pi/4 || angle === -pi/4) rad = '-√2';
+      else if (angle === 11*pi/6 || angle === -pi/6) rad = '-2';
+    }
+
+    // sec
+    else if (op === 'sec') {
+      if (angle === pi/2 || angle === -3*pi/2 || angle === 3*pi/2 || angle === -pi/2) rad = 'undefined';
+      else if (angle === 0 || angle === 2*pi || angle === -2*pi) rad = '1';
+      else if (angle === pi/6 || angle === -11*pi/6) rad = '2√3/3';
+      else if (angle === pi/4 || angle === -7*pi/4) rad = '√2';
+      else if (angle === pi/3 || angle === -5*pi/3) rad = '2';
+      else if (angle === 2*pi/3 || angle === -4*pi/3) rad = '-2';
+      else if (angle === 3*pi/4 || angle === -5*pi/4) rad = '-√2';
+      else if (angle === 5*pi/6 || angle === -7*pi/6) rad = '-2√3/3';
+      else if (angle === pi || angle === -pi) rad = '-1';
+      else if (angle === 7*pi/6 || angle === -5*pi/6) rad = '-2√3/3';
+      else if (angle === 5*pi/4 || angle === -3*pi/4) rad = '-√2';
+      else if (angle === 4*pi/3 || angle === -2*pi/3) rad = '-2';
+      else if (angle === 5*pi/3 || angle === -pi/3) rad = '2';
+      else if (angle === 7*pi/4 || angle === -pi/4) rad = '√2';
+      else if (angle === 11*pi/6 || angle === -pi/6) rad = '2√3/3';
+    }
+
+    // cot
+    else if (op === 'cot') {
+      if (angle === 0 || angle === pi || angle === -pi || angle === 2*pi || angle === -2*pi) rad = 'undefined';
+      else if (angle === pi/6 || angle === -11*pi/6) rad = '√3/1';
+      else if (angle === pi/4 || angle === -7*pi/4) rad = '1';
+      else if (angle === pi/3 || angle === -5*pi/3) rad = '3√3/3';
+      else if (angle === pi/2 || angle === -3*pi/2 || angle === 3*pi/2 || angle === -pi/2) rad = '0';
+      else if (angle === 2*pi/3 || angle === -4*pi/3) rad = '-3√3/3';
+      else if (angle === 3*pi/4 || angle === -5*pi/4) rad = '-1';
+      else if (angle === 5*pi/6 || angle === -7*pi/6) rad = '-√3';
+      else if (angle === 7*pi/6 || angle === -5*pi/6) rad = '√3';
+      else if (angle === 5*pi/4 || angle === -3*pi/4) rad = '1';
+      else if (angle === 4*pi/3 || angle === -2*pi/3) rad = '3√3/1';
+      else if (angle === 5*pi/3 || angle === -pi/3) rad = '-3√3/3';
+      else if (angle === 7*pi/4 || angle === -pi/4) rad = '-1';
+      else if (angle === 11*pi/6 || angle === -pi/6) rad = '-√3';
+    }
+
+    if (rad !== null) {
+      outEl.textContent = `Result: ${fmt(res)} or ` + rad;
+    }
+    else
+      outEl.textContent = `Result: ${fmt(res)}`;
   } catch (e) {
     outEl.textContent = 'Error: ' + e.message;
   }
@@ -203,7 +367,7 @@ function trig_compute() {
 
 // ---------- KINEMATICS SOLVER ----------
 function kinematics_clear() {
-  ['kin_s','kin_u','kin_v','kin_a','kin_t'].forEach(id => document.getElementById(id).value = '');
+  ['kin_s', 'kin_u', 'kin_v', 'kin_a', 'kin_t'].forEach(id => document.getElementById(id).value = '');
   document.getElementById('kin_out').textContent = '';
 }
 function kinematics_solve() {
@@ -217,16 +381,16 @@ function kinematics_solve() {
   let changed = true, iter = 0;
   while (changed && iter < 40) {
     changed = false; iter++;
-    if (!known(v) && known(u) && known(a) && known(t)) { v = u + a*t; changed = true; }
-    if (!known(u) && known(v) && known(a) && known(t)) { u = v - a*t; changed = true; }
-    if (!known(a) && known(v) && known(u) && known(t) && t !== 0) { a = (v - u)/t; changed = true; }
-    if (!known(t) && known(v) && known(u) && known(a) && a !== 0) { t = (v - u)/a; changed = true; }
-    if (!known(s) && known(u) && known(t) && known(a)) { s = u*t + 0.5*a*t*t; changed = true; }
-    if (!known(s) && known(u) && known(v) && known(t)) { s = (u+v)/2 * t; changed = true; }
-    if (!known(t) && known(s) && known(u) && known(v) && (u+v) !== 0) { t = (2*s)/(u+v); changed = true; }
-    if (!known(v) && known(u) && known(a) && known(s)) { const val = u*u + 2*a*s; if (val >= 0) { v = Math.sqrt(val); changed = true; } }
-    if (!known(u) && known(v) && known(a) && known(s)) { const val = v*v - 2*a*s; if (val >= 0) { u = Math.sqrt(val); changed = true; } }
-    if (!known(a) && known(v) && known(u) && known(s) && s !== 0) { a = (v*v - u*u)/(2*s); changed = true; }
+    if (!known(v) && known(u) && known(a) && known(t)) { v = u + a * t; changed = true; }
+    if (!known(u) && known(v) && known(a) && known(t)) { u = v - a * t; changed = true; }
+    if (!known(a) && known(v) && known(u) && known(t) && t !== 0) { a = (v - u) / t; changed = true; }
+    if (!known(t) && known(v) && known(u) && known(a) && a !== 0) { t = (v - u) / a; changed = true; }
+    if (!known(s) && known(u) && known(t) && known(a)) { s = u * t + 0.5 * a * t * t; changed = true; }
+    if (!known(s) && known(u) && known(v) && known(t)) { s = (u + v) / 2 * t; changed = true; }
+    if (!known(t) && known(s) && known(u) && known(v) && (u + v) !== 0) { t = (2 * s) / (u + v); changed = true; }
+    if (!known(v) && known(u) && known(a) && known(s)) { const val = u * u + 2 * a * s; if (val >= 0) { v = Math.sqrt(val); changed = true; } }
+    if (!known(u) && known(v) && known(a) && known(s)) { const val = v * v - 2 * a * s; if (val >= 0) { u = Math.sqrt(val); changed = true; } }
+    if (!known(a) && known(v) && known(u) && known(s) && s !== 0) { a = (v * v - u * u) / (2 * s); changed = true; }
   }
 
   const out = `Iterations: ${iter}\n` +
@@ -240,11 +404,11 @@ function kinematics_solve() {
 }
 
 // ---------- PROJECTILE FLEXIBLE SOLVER ----------
-function proj_clear(){
-  ['pm_v0','pm_theta','pm_g','pm_T','pm_R','pm_H'].forEach(id => document.getElementById(id).value = '');
+function proj_clear() {
+  ['pm_v0', 'pm_theta', 'pm_g', 'pm_T', 'pm_R', 'pm_H'].forEach(id => document.getElementById(id).value = '');
   document.getElementById('pm_out').textContent = '';
 }
-function proj_flexible(){
+function proj_flexible() {
   let v0 = toNum(document.getElementById('pm_v0').value);
   let theta = toNum(document.getElementById('pm_theta').value); // degrees
   let g = toNum(document.getElementById('pm_g').value) ?? 9.81;
@@ -253,24 +417,24 @@ function proj_flexible(){
   let H = toNum(document.getElementById('pm_H').value);
 
   const known = x => x !== null;
-  const deg2rad = d => d * Math.PI/180;
-  const rad2deg = r => r * 180/Math.PI;
+  const deg2rad = d => d * Math.PI / 180;
+  const rad2deg = r => r * 180 / Math.PI;
 
   let changed = true, iter = 0;
   while (changed && iter < 40) {
     changed = false; iter++;
     if (known(v0) && known(theta)) {
       const th = deg2rad(theta);
-      if (!known(T)) { T = 2*v0*Math.sin(th)/g; changed = true; }
-      if (!known(R)) { R = (v0*v0*Math.sin(2*th))/g; changed = true; }
-      if (!known(H)) { H = (v0*v0*Math.sin(th)*Math.sin(th))/(2*g); changed = true; }
+      if (!known(T)) { T = 2 * v0 * Math.sin(th) / g; changed = true; }
+      if (!known(R)) { R = (v0 * v0 * Math.sin(2 * th)) / g; changed = true; }
+      if (!known(H)) { H = (v0 * v0 * Math.sin(th) * Math.sin(th)) / (2 * g); changed = true; }
     }
-    if (known(T) && known(theta) && !known(v0)) { const th = deg2rad(theta); v0 = (T*g)/(2*Math.sin(th)); changed = true; }
-    if (known(R) && known(theta) && !known(v0)) { const th = deg2rad(theta); const denom = Math.sin(2*th); if (Math.abs(denom) > 1e-12) { v0 = Math.sqrt(R*g/denom); changed = true; } }
-    if (known(v0) && known(R) && !known(theta)) { const val = (R*g)/(v0*v0); if (Math.abs(val) <= 1) { const twoTh = Math.asin(val); theta = rad2deg(twoTh/2); changed = true; } }
-    if (known(H) && known(v0) && !known(theta)) { const v = (2*g*H)/(v0*v0); if (v >= 0 && v <= 1) { theta = rad2deg(Math.asin(Math.sqrt(v))); changed = true; } }
-    if (known(H) && known(theta) && !known(v0)) { const th = deg2rad(theta); const denom = Math.sin(th)*Math.sin(th); if (denom > 0) { v0 = Math.sqrt(2*g*H/denom); changed = true; } }
-    if (known(T) && known(v0) && !known(theta)) { const val = (T*g)/(2*v0); if (Math.abs(val) <= 1) { theta = rad2deg(Math.asin(val)); changed = true; } }
+    if (known(T) && known(theta) && !known(v0)) { const th = deg2rad(theta); v0 = (T * g) / (2 * Math.sin(th)); changed = true; }
+    if (known(R) && known(theta) && !known(v0)) { const th = deg2rad(theta); const denom = Math.sin(2 * th); if (Math.abs(denom) > 1e-12) { v0 = Math.sqrt(R * g / denom); changed = true; } }
+    if (known(v0) && known(R) && !known(theta)) { const val = (R * g) / (v0 * v0); if (Math.abs(val) <= 1) { const twoTh = Math.asin(val); theta = rad2deg(twoTh / 2); changed = true; } }
+    if (known(H) && known(v0) && !known(theta)) { const v = (2 * g * H) / (v0 * v0); if (v >= 0 && v <= 1) { theta = rad2deg(Math.asin(Math.sqrt(v))); changed = true; } }
+    if (known(H) && known(theta) && !known(v0)) { const th = deg2rad(theta); const denom = Math.sin(th) * Math.sin(th); if (denom > 0) { v0 = Math.sqrt(2 * g * H / denom); changed = true; } }
+    if (known(T) && known(v0) && !known(theta)) { const val = (T * g) / (2 * v0); if (Math.abs(val) <= 1) { theta = rad2deg(Math.asin(val)); changed = true; } }
   }
 
   const out = `Iterations: ${iter}\n` +
@@ -285,7 +449,7 @@ function proj_flexible(){
 
 // ---------- WAVES CALCULATOR ----------
 function waves_clear() {
-  ['wav_v','wav_f','wav_lambda','wav_T','wav_F', 'wav_mu'].forEach(id => document.getElementById(id).value = '');
+  ['wav_v', 'wav_f', 'wav_lambda', 'wav_T', 'wav_F', 'wav_mu'].forEach(id => document.getElementById(id).value = '');
   document.getElementById('wav_out').textContent = '';
 }
 function waves_solve() {
@@ -462,14 +626,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // ---------- NUMBER GUESSING ----------
 let ng_secret = null, ng_tries = 0;
-function ng_start(){
-  ng_secret = randInt(1,100); ng_tries = 0; document.getElementById('ng_out').textContent='I picked a number 1–100. Start guessing!';
+function ng_start() {
+  ng_secret = randInt(1, 100); ng_tries = 0; document.getElementById('ng_out').textContent = 'I picked a number 1–100. Start guessing!';
 }
-function ng_try(){
+function ng_try() {
   const g = toNum(document.getElementById('ng_guess').value);
   if (g === null) return;
   ng_tries++;
-  if (g === ng_secret){ document.getElementById('ng_out').textContent = `🎉 You got it in ${ng_tries} tries!`; ng_secret = null; }
+  if (g === ng_secret) { document.getElementById('ng_out').textContent = `🎉 You got it in ${ng_tries} tries!`; ng_secret = null; }
   else if (g < ng_secret) document.getElementById('ng_out').textContent = 'Too low.';
   else document.getElementById('ng_out').textContent = 'Too high.';
 }
