@@ -690,9 +690,9 @@ input[type="number"],select,input[type="text"] {
 
   #app {
     margin-left: 0px !important;
-    margin-top: calc(var(--header-height-responsive) + 2px);
     padding: 1rem;
-    min-height: calc(100vh - var(--header-height-responsive) - 32px);
+    min-height: calc(100vh - var(--header-height-responsive));
+    padding-top: calc(var(--header-height-responsive) + 2px);
   }
 
   .home-panel{
