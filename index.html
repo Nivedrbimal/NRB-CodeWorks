@@ -324,17 +324,21 @@
 
       <div class="card" role="region" aria-labelledby="snakeTitle">
         <h3 id="snakeTitle">Snake Game</h3>
-        <button class="btn primary" id="startSnakeBtn" onclick="startSnakeGame()">Start Game</button>
-        <button class="btn primary" id="pauseSnakeBtn">Pause Game</button>
-        <div class="row">
-        <div id="snakeContainer" class="snake-container">
+        <div class=" row snake-game-container">
           <canvas id="snakeCanvas" class="snake-canvas" tabindex="0"></canvas>
-          <div id="snakeScore" class="mono">Score: 0</div>
-        <div class="direction-pad">
-          <button id="upSnake">↑</button>
-          <button id="leftSnake">←</button>
-          <button id="rightSnake">→</button>
-          <button id="downSnake">↓</button>
+          <div class="snake-controls">
+            <div class="row" style="padding: 5px;">
+              <button class="btn primary" id="startSnakeBtn" onclick="startSnakeGame()">Start Game</button>
+              <button class="btn primary" id="pauseSnakeBtn">Pause Game</button>
+              <div id="snakeScore" class="mono">Score: 0</div>
+            </div>
+            <div class="direction-pad">
+              <button id="upSnake" class="btn">↑</button>
+              <button id="leftSnake" class="btn">←</button>
+              <button id="rightSnake" class="btn">→</button>
+              <button id="downSnake" class="btn">↓</button>
+            </div>
+          </div>
         </div>
       </div>
     </section>
