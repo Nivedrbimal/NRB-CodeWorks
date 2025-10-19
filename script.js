@@ -85,8 +85,6 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-
-// Dropdown toggle logic
 function toggleDropdown() {
   const dd = document.getElementById('operationDropdown');
   if (!dd) return;
@@ -107,7 +105,6 @@ if (opsToggle) {
   opsToggle.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleDropdown(); } });
 }
 
-// Close dropdown when clicking outside
 document.addEventListener('click', (e) => {
   const dd = document.getElementById('operationDropdown');
   if (!dd) return;
@@ -118,7 +115,6 @@ document.addEventListener('click', (e) => {
   }
 });
 
-// Helper to get chosen operations for quiz (returns array, default fallback)
 function getSelectedOperations() {
   const boxes = Array.from(document.querySelectorAll('.operation'));
   const ops = boxes.filter(cb => cb.checked).map(cb => cb.value);
@@ -132,7 +128,6 @@ window.addEventListener('load', () => {
   const sidebar = document.getElementById('sidebar');
   const main = document.getElementById('app');
 
-  // if intro not present, show immediately
   if (!intro) {
     header.classList.remove('hidden');
     sidebar.classList.remove('hidden');
@@ -156,19 +151,16 @@ window.addEventListener('load', () => {
     main && main.classList.add('visible');
 
     document.body.style.overflow = 'auto';
-    // set initial focus to app
     main && main.focus();
   }, 1250);
 });
 
 // ---------- TRIG EVALUATOR ----------
 function parseRadianInput(raw) {
-  // replace π with Math.PI
   let str = raw.replace(/π/g, 'Math.PI');
   
-  // evaluate fractions, e.g., "Math.PI/2"
   try {
-    return eval(str); // returns a number in radians
+    return eval(str); 
   } catch(e) {
     return NaN;
   }
@@ -708,10 +700,10 @@ const rightBtn = document.getElementById("rightSnake");
 const downBtn = document.getElementById("downSnake");
 const startBtn = document.getElementById("startSnakeBtn");
 const pauseBtn = document.getElementById("pauseSnakeBtn"); 
-
-let box = 15;
-canvas.width = 300;
-canvas.height = 300;
+const size = Math.floor(window.innerHeight * 0.65); 
+  canvas.width = size;
+  canvas.height = size;
+let box = Math.floor(size / 25);
 
 let snake, direction, food, score, foodsEaten;
 let specialFood = null;
