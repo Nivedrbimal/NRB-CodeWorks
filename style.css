@@ -29,7 +29,6 @@
 }
 
 html,body {
-  height: 100%;
   background: linear-gradient(45deg, rgb(23, 45, 80), rgb(72, 10, 113));
   color: var(--text);
 }
@@ -307,7 +306,8 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  min-height: calc(100vh - var(--header-height));
+  max-height: 100vh;
   text-align: center;
 }
 
@@ -316,7 +316,6 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 100vh;
 }
 
 .home-title {
@@ -326,10 +325,9 @@ body {
 
 #app {
   overflow:hidden;
-  margin-top: calc(var(--header-height) + 2px);
   padding: 1rem;
-  height: calc(100vh - var(--header-height) - 32px);
-  /* overflow-y: auto; */
+  padding-top: calc(var(--header-height) + 2px);
+  min-height: calc(100vh - var(--header-height));
   transition: margin-left 0.3s ease, opacity 0.4s ease;
 }
 .sidebar.collapsed ~ #app {
