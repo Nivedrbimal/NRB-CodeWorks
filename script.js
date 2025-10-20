@@ -158,10 +158,10 @@ window.addEventListener('load', () => {
 // ---------- TRIG EVALUATOR ----------
 function parseRadianInput(raw) {
   let str = raw.replace(/π/g, 'Math.PI');
-  
+
   try {
-    return eval(str); 
-  } catch(e) {
+    return eval(str);
+  } catch (e) {
     return NaN;
   }
 }
@@ -171,10 +171,10 @@ function updatePlaceholder() {
   const op = document.getElementById('triOp').value;
   if (['asin', 'acos', 'atan', 'acsc', 'asec', 'acot'].includes(op)) {
     input.placeholder = 'Enter value';
-  } 
+  }
   else if (['sinh', 'cosh', 'tanh', 'csch', 'sech', 'coth'].includes(op)) {
     input.placeholder = 'Enter a real number';
-  } 
+  }
   else {
     if (mode === 'deg' || mode === 'pol') {
       input.placeholder = 'Enter in degree(s)';
@@ -190,7 +190,7 @@ function trigClear() {
   document.getElementById('triVal').value = '';
   document.getElementById('triOp').value = 'sin';
   document.getElementById('triMode').value = 'deg';
-  updatePlaceholder(); 
+  updatePlaceholder();
 }
 function trigCompute() {
   const mode = document.getElementById('triMode').value;
@@ -208,7 +208,7 @@ function trigCompute() {
   const toRad = v => mode === 'deg' ? v * Math.PI / 180 : v;
   const fromRad = v => mode === 'deg' ? v * 180 / Math.PI : v;
   const pi = Math.PI;
-  
+
   try {
     const angle = toRad(x);
     let res = null;
@@ -235,116 +235,116 @@ function trigCompute() {
     }
     var rad = null;
     if (op === 'sin') {
-      if (angle === 0 || angle === 2*pi || angle === -2*pi) rad = '0';
-      else if (angle === pi/6 || angle === -11*pi/6) rad = '1/2';
-      else if (angle === pi/4 || angle === -7*pi/4) rad = '√2/2';
-      else if (angle === pi/3 || angle === -5*pi/3) rad = '√3/2';
-      else if (angle === pi/2 || angle === -3*pi/2) rad = '1';
-      else if (angle === 2*pi/3 || angle === -4*pi/3) rad = '√3/2';
-      else if (angle === 3*pi/4 || angle === -5*pi/4) rad = '√2/2';
-      else if (angle === 5*pi/6 || angle === -7*pi/6) rad = '1/2';
+      if (angle === 0 || angle === 2 * pi || angle === -2 * pi) rad = '0';
+      else if (angle === pi / 6 || angle === -11 * pi / 6) rad = '1/2';
+      else if (angle === pi / 4 || angle === -7 * pi / 4) rad = '√2/2';
+      else if (angle === pi / 3 || angle === -5 * pi / 3) rad = '√3/2';
+      else if (angle === pi / 2 || angle === -3 * pi / 2) rad = '1';
+      else if (angle === 2 * pi / 3 || angle === -4 * pi / 3) rad = '√3/2';
+      else if (angle === 3 * pi / 4 || angle === -5 * pi / 4) rad = '√2/2';
+      else if (angle === 5 * pi / 6 || angle === -7 * pi / 6) rad = '1/2';
       else if (angle === pi || angle === -pi) rad = '0';
-      else if (angle === 7*pi/6 || angle === -5*pi/6) rad = '-1/2';
-      else if (angle === 5*pi/4 || angle === -3*pi/4) rad = '-√2/2';
-      else if (angle === 4*pi/3 || angle === -2*pi/3) rad = '-√3/2';
-      else if (angle === 3*pi/2 || angle === -pi/2) rad = '-1';
-      else if (angle === 5*pi/3 || angle === -pi/3) rad = '-√3/2';
-      else if (angle === 7*pi/4 || angle === -pi/4) rad = '-√2/2';
-      else if (angle === 11*pi/6 || angle === -pi/6) rad = '-1/2';
+      else if (angle === 7 * pi / 6 || angle === -5 * pi / 6) rad = '-1/2';
+      else if (angle === 5 * pi / 4 || angle === -3 * pi / 4) rad = '-√2/2';
+      else if (angle === 4 * pi / 3 || angle === -2 * pi / 3) rad = '-√3/2';
+      else if (angle === 3 * pi / 2 || angle === -pi / 2) rad = '-1';
+      else if (angle === 5 * pi / 3 || angle === -pi / 3) rad = '-√3/2';
+      else if (angle === 7 * pi / 4 || angle === -pi / 4) rad = '-√2/2';
+      else if (angle === 11 * pi / 6 || angle === -pi / 6) rad = '-1/2';
     }
 
     // cos
     else if (op === 'cos') {
-      if (angle === 0 || angle === 2*pi || angle === -2*pi) rad = '1';
-      else if (angle === pi/6 || angle === -11*pi/6) rad = '√3/2';
-      else if (angle === pi/4 || angle === -7*pi/4) rad = '√2/2';
-      else if (angle === pi/3 || angle === -5*pi/3) rad = '1/2';
-      else if (angle === pi/2 || angle === -3*pi/2) rad = '0';
-      else if (angle === 2*pi/3 || angle === -4*pi/3) rad = '-1/2';
-      else if (angle === 3*pi/4 || angle === -5*pi/4) rad = '-√2/2';
-      else if (angle === 5*pi/6 || angle === -7*pi/6) rad = '-√3/2';
+      if (angle === 0 || angle === 2 * pi || angle === -2 * pi) rad = '1';
+      else if (angle === pi / 6 || angle === -11 * pi / 6) rad = '√3/2';
+      else if (angle === pi / 4 || angle === -7 * pi / 4) rad = '√2/2';
+      else if (angle === pi / 3 || angle === -5 * pi / 3) rad = '1/2';
+      else if (angle === pi / 2 || angle === -3 * pi / 2) rad = '0';
+      else if (angle === 2 * pi / 3 || angle === -4 * pi / 3) rad = '-1/2';
+      else if (angle === 3 * pi / 4 || angle === -5 * pi / 4) rad = '-√2/2';
+      else if (angle === 5 * pi / 6 || angle === -7 * pi / 6) rad = '-√3/2';
       else if (angle === pi || angle === -pi) rad = '-1';
-      else if (angle === 7*pi/6 || angle === -5*pi/6) rad = '-√3/2';
-      else if (angle === 5*pi/4 || angle === -3*pi/4) rad = '-√2/2';
-      else if (angle === 4*pi/3 || angle === -2*pi/3) rad = '-1/2';
-      else if (angle === 3*pi/2 || angle === -pi/2) rad = '0';
-      else if (angle === 5*pi/3 || angle === -pi/3) rad = '1/2';
-      else if (angle === 7*pi/4 || angle === -pi/4) rad = '√2/2';
-      else if (angle === 11*pi/6 || angle === -pi/6) rad = '√3/2';
+      else if (angle === 7 * pi / 6 || angle === -5 * pi / 6) rad = '-√3/2';
+      else if (angle === 5 * pi / 4 || angle === -3 * pi / 4) rad = '-√2/2';
+      else if (angle === 4 * pi / 3 || angle === -2 * pi / 3) rad = '-1/2';
+      else if (angle === 3 * pi / 2 || angle === -pi / 2) rad = '0';
+      else if (angle === 5 * pi / 3 || angle === -pi / 3) rad = '1/2';
+      else if (angle === 7 * pi / 4 || angle === -pi / 4) rad = '√2/2';
+      else if (angle === 11 * pi / 6 || angle === -pi / 6) rad = '√3/2';
     }
 
     // tan
     else if (op === 'tan') {
-      if (angle === 0 || angle === pi || angle === -pi || angle === 2*pi || angle === -2*pi) rad = '0';
-      else if (angle === pi/6 || angle === -11*pi/6) rad = '1/√3';
-      else if (angle === pi/4 || angle === -7*pi/4) rad = '1';
-      else if (angle === pi/3 || angle === -5*pi/3) rad = '√3';
-      else if (angle === pi/2 || angle === -3*pi/2 || angle === 3*pi/2 || angle === -pi/2) rad = 'undefined';
-      else if (angle === 2*pi/3 || angle === -4*pi/3) rad = '-√3';
-      else if (angle === 3*pi/4 || angle === -5*pi/4) rad = '-1';
-      else if (angle === 5*pi/6 || angle === -7*pi/6) rad = '-1/√3';
-      else if (angle === 7*pi/6 || angle === -5*pi/6) rad = '1/√3';
-      else if (angle === 5*pi/4 || angle === -3*pi/4) rad = '1';
-      else if (angle === 4*pi/3 || angle === -2*pi/3) rad = '√3';
-      else if (angle === 5*pi/3 || angle === -pi/3) rad = '-√3';
-      else if (angle === 7*pi/4 || angle === -pi/4) rad = '-1';
-      else if (angle === 11*pi/6 || angle === -pi/6) rad = '-1/√3';
+      if (angle === 0 || angle === pi || angle === -pi || angle === 2 * pi || angle === -2 * pi) rad = '0';
+      else if (angle === pi / 6 || angle === -11 * pi / 6) rad = '1/√3';
+      else if (angle === pi / 4 || angle === -7 * pi / 4) rad = '1';
+      else if (angle === pi / 3 || angle === -5 * pi / 3) rad = '√3';
+      else if (angle === pi / 2 || angle === -3 * pi / 2 || angle === 3 * pi / 2 || angle === -pi / 2) rad = 'undefined';
+      else if (angle === 2 * pi / 3 || angle === -4 * pi / 3) rad = '-√3';
+      else if (angle === 3 * pi / 4 || angle === -5 * pi / 4) rad = '-1';
+      else if (angle === 5 * pi / 6 || angle === -7 * pi / 6) rad = '-1/√3';
+      else if (angle === 7 * pi / 6 || angle === -5 * pi / 6) rad = '1/√3';
+      else if (angle === 5 * pi / 4 || angle === -3 * pi / 4) rad = '1';
+      else if (angle === 4 * pi / 3 || angle === -2 * pi / 3) rad = '√3';
+      else if (angle === 5 * pi / 3 || angle === -pi / 3) rad = '-√3';
+      else if (angle === 7 * pi / 4 || angle === -pi / 4) rad = '-1';
+      else if (angle === 11 * pi / 6 || angle === -pi / 6) rad = '-1/√3';
     }
 
     // csc
     else if (op === 'csc') {
-      if (angle === 0 || angle === pi || angle === -pi || angle === 2*pi || angle === -2*pi) rad = 'undefined';
-      else if (angle === pi/6 || angle === -11*pi/6) rad = '2';
-      else if (angle === pi/4 || angle === -7*pi/4) rad = '√2';
-      else if (angle === pi/3 || angle === -5*pi/3) rad = '2√3/3';
-      else if (angle === pi/2 || angle === -3*pi/2) rad = '1';
-      else if (angle === 2*pi/3 || angle === -4*pi/3) rad = '2√3/3';
-      else if (angle === 3*pi/4 || angle === -5*pi/4) rad = '√2';
-      else if (angle === 5*pi/6 || angle === -7*pi/6) rad = '2';
-      else if (angle === 7*pi/6 || angle === -5*pi/6) rad = '-2';
-      else if (angle === 5*pi/4 || angle === -3*pi/4) rad = '-√2';
-      else if (angle === 4*pi/3 || angle === -2*pi/3) rad = '-2√3/3';
-      else if (angle === 3*pi/2 || angle === -pi/2) rad = '-1';
-      else if (angle === 5*pi/3 || angle === -pi/3) rad = '-2√3/3';
-      else if (angle === 7*pi/4 || angle === -pi/4) rad = '-√2';
-      else if (angle === 11*pi/6 || angle === -pi/6) rad = '-2';
+      if (angle === 0 || angle === pi || angle === -pi || angle === 2 * pi || angle === -2 * pi) rad = 'undefined';
+      else if (angle === pi / 6 || angle === -11 * pi / 6) rad = '2';
+      else if (angle === pi / 4 || angle === -7 * pi / 4) rad = '√2';
+      else if (angle === pi / 3 || angle === -5 * pi / 3) rad = '2√3/3';
+      else if (angle === pi / 2 || angle === -3 * pi / 2) rad = '1';
+      else if (angle === 2 * pi / 3 || angle === -4 * pi / 3) rad = '2√3/3';
+      else if (angle === 3 * pi / 4 || angle === -5 * pi / 4) rad = '√2';
+      else if (angle === 5 * pi / 6 || angle === -7 * pi / 6) rad = '2';
+      else if (angle === 7 * pi / 6 || angle === -5 * pi / 6) rad = '-2';
+      else if (angle === 5 * pi / 4 || angle === -3 * pi / 4) rad = '-√2';
+      else if (angle === 4 * pi / 3 || angle === -2 * pi / 3) rad = '-2√3/3';
+      else if (angle === 3 * pi / 2 || angle === -pi / 2) rad = '-1';
+      else if (angle === 5 * pi / 3 || angle === -pi / 3) rad = '-2√3/3';
+      else if (angle === 7 * pi / 4 || angle === -pi / 4) rad = '-√2';
+      else if (angle === 11 * pi / 6 || angle === -pi / 6) rad = '-2';
     }
 
     // sec
     else if (op === 'sec') {
-      if (angle === pi/2 || angle === -3*pi/2 || angle === 3*pi/2 || angle === -pi/2) rad = 'undefined';
-      else if (angle === 0 || angle === 2*pi || angle === -2*pi) rad = '1';
-      else if (angle === pi/6 || angle === -11*pi/6) rad = '2√3/3';
-      else if (angle === pi/4 || angle === -7*pi/4) rad = '√2';
-      else if (angle === pi/3 || angle === -5*pi/3) rad = '2';
-      else if (angle === 2*pi/3 || angle === -4*pi/3) rad = '-2';
-      else if (angle === 3*pi/4 || angle === -5*pi/4) rad = '-√2';
-      else if (angle === 5*pi/6 || angle === -7*pi/6) rad = '-2√3/3';
+      if (angle === pi / 2 || angle === -3 * pi / 2 || angle === 3 * pi / 2 || angle === -pi / 2) rad = 'undefined';
+      else if (angle === 0 || angle === 2 * pi || angle === -2 * pi) rad = '1';
+      else if (angle === pi / 6 || angle === -11 * pi / 6) rad = '2√3/3';
+      else if (angle === pi / 4 || angle === -7 * pi / 4) rad = '√2';
+      else if (angle === pi / 3 || angle === -5 * pi / 3) rad = '2';
+      else if (angle === 2 * pi / 3 || angle === -4 * pi / 3) rad = '-2';
+      else if (angle === 3 * pi / 4 || angle === -5 * pi / 4) rad = '-√2';
+      else if (angle === 5 * pi / 6 || angle === -7 * pi / 6) rad = '-2√3/3';
       else if (angle === pi || angle === -pi) rad = '-1';
-      else if (angle === 7*pi/6 || angle === -5*pi/6) rad = '-2√3/3';
-      else if (angle === 5*pi/4 || angle === -3*pi/4) rad = '-√2';
-      else if (angle === 4*pi/3 || angle === -2*pi/3) rad = '-2';
-      else if (angle === 5*pi/3 || angle === -pi/3) rad = '2';
-      else if (angle === 7*pi/4 || angle === -pi/4) rad = '√2';
-      else if (angle === 11*pi/6 || angle === -pi/6) rad = '2√3/3';
+      else if (angle === 7 * pi / 6 || angle === -5 * pi / 6) rad = '-2√3/3';
+      else if (angle === 5 * pi / 4 || angle === -3 * pi / 4) rad = '-√2';
+      else if (angle === 4 * pi / 3 || angle === -2 * pi / 3) rad = '-2';
+      else if (angle === 5 * pi / 3 || angle === -pi / 3) rad = '2';
+      else if (angle === 7 * pi / 4 || angle === -pi / 4) rad = '√2';
+      else if (angle === 11 * pi / 6 || angle === -pi / 6) rad = '2√3/3';
     }
 
     // cot
     else if (op === 'cot') {
-      if (angle === 0 || angle === pi || angle === -pi || angle === 2*pi || angle === -2*pi) rad = 'undefined';
-      else if (angle === pi/6 || angle === -11*pi/6) rad = '√3/1';
-      else if (angle === pi/4 || angle === -7*pi/4) rad = '1';
-      else if (angle === pi/3 || angle === -5*pi/3) rad = '3√3/3';
-      else if (angle === pi/2 || angle === -3*pi/2 || angle === 3*pi/2 || angle === -pi/2) rad = '0';
-      else if (angle === 2*pi/3 || angle === -4*pi/3) rad = '-3√3/3';
-      else if (angle === 3*pi/4 || angle === -5*pi/4) rad = '-1';
-      else if (angle === 5*pi/6 || angle === -7*pi/6) rad = '-√3';
-      else if (angle === 7*pi/6 || angle === -5*pi/6) rad = '√3';
-      else if (angle === 5*pi/4 || angle === -3*pi/4) rad = '1';
-      else if (angle === 4*pi/3 || angle === -2*pi/3) rad = '3√3/1';
-      else if (angle === 5*pi/3 || angle === -pi/3) rad = '-3√3/3';
-      else if (angle === 7*pi/4 || angle === -pi/4) rad = '-1';
-      else if (angle === 11*pi/6 || angle === -pi/6) rad = '-√3';
+      if (angle === 0 || angle === pi || angle === -pi || angle === 2 * pi || angle === -2 * pi) rad = 'undefined';
+      else if (angle === pi / 6 || angle === -11 * pi / 6) rad = '√3/1';
+      else if (angle === pi / 4 || angle === -7 * pi / 4) rad = '1';
+      else if (angle === pi / 3 || angle === -5 * pi / 3) rad = '3√3/3';
+      else if (angle === pi / 2 || angle === -3 * pi / 2 || angle === 3 * pi / 2 || angle === -pi / 2) rad = '0';
+      else if (angle === 2 * pi / 3 || angle === -4 * pi / 3) rad = '-3√3/3';
+      else if (angle === 3 * pi / 4 || angle === -5 * pi / 4) rad = '-1';
+      else if (angle === 5 * pi / 6 || angle === -7 * pi / 6) rad = '-√3';
+      else if (angle === 7 * pi / 6 || angle === -5 * pi / 6) rad = '√3';
+      else if (angle === 5 * pi / 4 || angle === -3 * pi / 4) rad = '1';
+      else if (angle === 4 * pi / 3 || angle === -2 * pi / 3) rad = '3√3/1';
+      else if (angle === 5 * pi / 3 || angle === -pi / 3) rad = '-3√3/3';
+      else if (angle === 7 * pi / 4 || angle === -pi / 4) rad = '-1';
+      else if (angle === 11 * pi / 6 || angle === -pi / 6) rad = '-√3';
     }
 
     if (rad !== null) {
@@ -380,25 +380,25 @@ function quadeSolve() {
   while (changed && iter < 40) {
     changed = false; iter++;
     if (known(a) && known(b) && known(c) && !known(x1) && !known(x2)) {
-      let discriminant = b*b - 4*a*c;
-      if (discriminant >= 0) { x1 = (-b + Math.sqrt(discriminant)) / (2*a); x2 = (-b - Math.sqrt(discriminant)) / (2*a); changed = true; }
+      let discriminant = b * b - 4 * a * c;
+      if (discriminant >= 0) { x1 = (-b + Math.sqrt(discriminant)) / (2 * a); x2 = (-b - Math.sqrt(discriminant)) / (2 * a); changed = true; }
     }
     if (known(a) && known(x1) && known(x2)) {
       if (!known(b)) { b = -a * (x1 + x2); changed = true; }
       if (!known(c)) { c = a * (x1 * x2); changed = true; }
     }
     if (known(a) && known(x1)) {
-      if (!known(b) && known(c)) { b = -(a*x1*x1 + c)/x1; changed = true; }
-      if (!known(c) && known(b)) { c = -(a*x1*x1 + b*x1); changed = true; } 
+      if (!known(b) && known(c)) { b = -(a * x1 * x1 + c) / x1; changed = true; }
+      if (!known(c) && known(b)) { c = -(a * x1 * x1 + b * x1); changed = true; }
     }
-    if (!known(a) && known(b) && known(c) && known(x1)) { a = -(b*x1 + c)/(x1*x1); changed = true; }
-    if (known(a) && known(b) && !known(h)) { h = -b/(2*a); changed = true; }
-    if (known(a) && known(h) && !known(k) && known(c)) { k = a*h*h + b*h + c; changed = true; }
+    if (!known(a) && known(b) && known(c) && known(x1)) { a = -(b * x1 + c) / (x1 * x1); changed = true; }
+    if (known(a) && known(b) && !known(h)) { h = -b / (2 * a); changed = true; }
+    if (known(a) && known(h) && !known(k) && known(c)) { k = a * h * h + b * h + c; changed = true; }
     if (known(a) && known(h) && !known(b)) { b = -2 * a * h; changed = true; }
     if (known(a) && known(b) && known(h) && known(k) && !known(c)) { c = k - (a * h * h + b * h); changed = true; }
-    if (known(a) && known(b) && known(px) && known(py) && !known(c)) { c = py - (a*px*px + b*px); changed = true; }
-    if (known(a) && known(c) && known(px) && known(py) && !known(b)) { b = (py - c - a*px*px)/px; changed = true; }
-    if (known(b) && known(c) && known(px) && known(py) && !known(a)) { a = (py - b*px - c)/(px*px); changed = true; }
+    if (known(a) && known(b) && known(px) && known(py) && !known(c)) { c = py - (a * px * px + b * px); changed = true; }
+    if (known(a) && known(c) && known(px) && known(py) && !known(b)) { b = (py - c - a * px * px) / px; changed = true; }
+    if (known(b) && known(c) && known(px) && known(py) && !known(a)) { a = (py - b * px - c) / (px * px); changed = true; }
   }
 
   const out = `Iterations: ${iter}\n` +
@@ -699,10 +699,10 @@ const upBtn = document.getElementById("upSnake");
 const rightBtn = document.getElementById("rightSnake");
 const downBtn = document.getElementById("downSnake");
 const startBtn = document.getElementById("startSnakeBtn");
-const pauseBtn = document.getElementById("pauseSnakeBtn"); 
-const size = Math.floor(window.innerHeight * 0.65); 
-  canvas.width = size;
-  canvas.height = size;
+const pauseBtn = document.getElementById("pauseSnakeBtn");
+const size = Math.floor(window.innerHeight * 0.65);
+canvas.width = size;
+canvas.height = size;
 let box = Math.floor(size / 25);
 
 let snake, direction, food, score, foodsEaten;
@@ -833,3 +833,207 @@ function collision(head, array) {
   return array.some(segment => head.x === segment.x && head.y === segment.y);
 }
 startBtn.addEventListener("click", startSnakeGame);
+
+
+
+// ---------- UTILITIES -------------
+
+// --- Unit definitions ---
+const unitGroups = {
+  length: `
+    <option value="mmUnit">Millimeter (mm)</option>
+    <option value="cmUnit">Centimeter (cm)</option>
+    <option value="mUnit">Meter (m)</option>
+    <option value="kmUnit">Kilometer (km)</option>
+    <option value="inUnit">Inch (in)</option>
+    <option value="ftUnit">Foot (ft)</option>
+    <option value="ydUnit">Yard (yd)</option>
+    <option value="miUnit">Mile (mi)</option>
+    <option value="nmiUnit">Nautical mile (nmi)</option>
+    <option value="µmUnit">Micrometer (µm)</option>
+    <option value="nmUnit">Nanometer (nm)</option>
+    <option value="ÅUnit">Angstrom (Å)</option>
+    <option value="lyUnit">Light-year (ly)</option>
+    <option value="auUnit">Astronomical unit (au)</option>
+    <option value="pcUnit">Parsec (pc)</option>
+  `,
+  mass: `
+    <option value="mgUnit">Milligram (mg)</option>
+    <option value="gUnit">Gram (g)</option>
+    <option value="kgUnit">Kilogram (kg)</option>
+    <option value="tUnit">Tonne (t)</option>
+    <option value="ozUnit">Ounce (oz)</option>
+    <option value="lbUnit">Pound (lb)</option>
+    <option value="stUnit">Stone (st)</option>
+    <option value="slugUnit">Slug (slug)</option>
+  `,
+  area: `
+    <option value="mm2Unit">Square millimeter (mm²)</option>
+    <option value="cm2Unit">Square centimeter (cm²)</option>
+    <option value="m2Unit">Square meter (m²)</option>
+    <option value="km2Unit">Square kilometer (km²)</option>
+    <option value="in2Unit">Square inch (in²)</option>
+    <option value="ft2Unit">Square foot (ft²)</option>
+    <option value="yd2Unit">Square yard (yd²)</option>
+    <option value="acreUnit">Acre</option>
+    <option value="haUnit">Hectare (ha)</option>
+  `,
+  volume: `
+    <option value="mlUnit">Milliliter (mL)</option>
+    <option value="lUnit">Liter (L)</option>
+    <option value="m3Unit">Cubic meter (m³)</option>
+    <option value="cm3Unit">Cubic centimeter (cm³)</option>
+    <option value="in3Unit">Cubic inch (in³)</option>
+    <option value="ft3Unit">Cubic foot (ft³)</option>
+    <option value="yd3Unit">Cubic yard (yd³)</option>
+    <option value="galUnit">Gallon (gal)</option>
+    <option value="qtUnit">Quart (qt)</option>
+    <option value="ptUnit">Pint (pt)</option>
+    <option value="cupUnit">Cup (cup)</option>
+    <option value="tbspUnit">Tablespoon (tbsp)</option>
+    <option value="tspUnit">Teaspoon (tsp)</option>
+  `,
+  temperature: `
+    <option value="cUnit">Celsius (°C)</option>
+    <option value="fUnit">Fahrenheit (°F)</option>
+    <option value="kUnit">Kelvin (K)</option>
+    <option value="rUnit">Rankine (°R)</option>
+  `,
+  energy: `
+    <option value="jUnit">Joule (J)</option>
+    <option value="kjUnit">Kilojoule (kJ)</option>
+    <option value="calUnit">Calorie (cal)</option>
+    <option value="kcalUnit">Kilocalorie (kcal)</option>
+    <option value="whUnit">Watt-hour (Wh)</option>
+    <option value="kwhUnit">Kilowatt-hour (kWh)</option>
+    <option value="evUnit">Electronvolt (eV)</option>
+    <option value="btuUnit">British thermal unit (BTU)</option>
+  `,
+  speed: `
+    <option value="mpsUnit">Meter/second (m/s)</option>
+    <option value="kmphUnit">Kilometer/hour (km/h)</option>
+    <option value="mphUnit">Mile/hour (mph)</option>
+    <option value="fpsUnit">Foot/second (ft/s)</option>
+    <option value="knotUnit">Knot (kn)</option>
+  `,
+  time: `
+    <option value="nsUnit">Nanosecond (ns)</option>
+    <option value="µsUnit">Microsecond (µs)</option>
+    <option value="msUnit">Millisecond (ms)</option>
+    <option value="sUnit">Second (s)</option>
+    <option value="minUnit">Minute (min)</option>
+    <option value="hrUnit">Hour (hr)</option>
+    <option value="dayUnit">Day</option>
+    <option value="wkUnit">Week</option>
+    <option value="moUnit">Month</option>
+    <option value="yrUnit">Year</option>
+  `,
+  power: `
+    <option value="wUnit">Watt (W)</option>
+    <option value="kwUnit">Kilowatt (kW)</option>
+    <option value="mwUnit">Megawatt (MW)</option>
+    <option value="hpUnit">Horsepower (hp)</option>
+    <option value="calpsUnit">Calorie/second (cal/s)</option>
+    <option value="btuhrUnit">BTU/hour</option>
+  `
+};
+
+// --- Reference elements ---
+const categorySelect = document.getElementById("unitCategory");
+const fromUnit = document.getElementById("fromUnit");
+const toUnit = document.getElementById("toUnit");
+
+// --- Update dropdowns based on category ---
+function updateUnits() {
+  const selectedCategory = categorySelect.value;
+  const options = unitGroups[selectedCategory] || "";
+  fromUnit.innerHTML = options;
+  toUnit.innerHTML = options;
+}
+
+updateUnits();
+categorySelect.addEventListener("change", updateUnits);
+const conversionRates = {
+  length: {
+    mmUnit: 0.001,
+    cmUnit: 0.01,
+    mUnit: 1,
+    kmUnit: 1000,
+    inUnit: 0.0254,
+    ftUnit: 0.3048,
+    ydUnit: 0.9144,
+    miUnit: 1609.34
+  },
+  mass: {
+    mgUnit: 0.000001,
+    gUnit: 0.001,
+    kgUnit: 1,
+    tUnit: 1000,
+    lbUnit: 0.453592,
+    ozUnit: 0.0283495
+  },
+  temperature: {
+    cUnit: "c",
+    fUnit: "f",
+    kUnit: "k",
+    rUnit: "r"
+  }
+};
+
+// --- Compute conversion ---
+function unitCompute() {
+  const category = categorySelect.value;
+  const from = fromUnit.value;
+  const to = toUnit.value;
+  const value = parseFloat(document.getElementById("unitVal").value);
+  const outputEl = document.getElementById("unitOut");
+
+  if (isNaN(value)) {
+    outputEl.textContent = "Please enter a valid number.";
+    return;
+  }
+
+  let result;
+
+  if (category === "temperature") {
+    // Temperature conversions
+    result = convertTemperature(value, from, to);
+  } else {
+    // Other categories
+    const rates = conversionRates[category];
+    if (!rates[from] || !rates[to]) {
+      outputEl.textContent = "Conversion not defined.";
+      return;
+    }
+    const valueInBase = value * rates[from]; // convert to base unit
+    result = valueInBase / rates[to];        // convert to target unit
+  }
+
+  outputEl.textContent = `${value} ${from} = ${result} ${to}`;
+}
+
+// --- Temperature converter ---
+function convertTemperature(val, from, to) {
+  let celsius;
+  switch (from) {
+    case "cUnit": celsius = val; break;
+    case "fUnit": celsius = (val - 32) * 5/9; break;
+    case "kUnit": celsius = val - 273.15; break;
+    case "rUnit": celsius = (val - 491.67) * 5/9; break;
+  }
+  switch (to) {
+    case "cUnit": return celsius;
+    case "fUnit": return celsius * 9/5 + 32;
+    case "kUnit": return celsius + 273.15;
+    case "rUnit": return (celsius + 273.15) * 9/5;
+  }
+}
+
+function unitClear() {
+  document.getElementById("unitCategory").value = "length";
+  document.getElementById("unitVal").value = "";
+  document.getElementById("fromUnit").innerHTML = unitGroups.length;
+  document.getElementById("toUnit").innerHTML = unitGroups.length;
+  document.getElementById("unitOut").textContent = "";
+}
+
