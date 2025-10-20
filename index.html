@@ -147,24 +147,30 @@
             <input id="quadC" type="number" step="any" placeholder="Value of 'c'" aria-label="quad c input" />
           </label>
           <label><span class="muted">Enter value of 'x₁', leave blank if unknown</span>
-            <input id="quadX1" type="number" step="any" placeholder="first solution for x'" aria-label="quad x₁ input" />
+            <input id="quadX1" type="number" step="any" placeholder="first solution for x'"
+              aria-label="quad x₁ input" />
           </label>
           <label><span class="muted">Enter value of 'x₂', leave blank if unknown</span>
-            <input id="quadX2" type="number" step="any" placeholder="second solution for x'" aria-label="quad x₂ input" />
+            <input id="quadX2" type="number" step="any" placeholder="second solution for x'"
+              aria-label="quad x₂ input" />
           </label>
         </div>
         <div class="grid">
           <label><span class="muted">Enter value of 'h', leave blank if unknown</span>
-            <input id="quadH" type="number" step="any" placeholder="x-coordinate of vertex'" aria-label="quad h input" />
+            <input id="quadH" type="number" step="any" placeholder="x-coordinate of vertex'"
+              aria-label="quad h input" />
           </label>
           <label><span class="muted">Enter value of 'k', leave blank if unknown</span>
-            <input id="quadK" type="number" step="any" placeholder="y-coordinate of vertex'" aria-label="quad k input" />
+            <input id="quadK" type="number" step="any" placeholder="y-coordinate of vertex'"
+              aria-label="quad k input" />
           </label>
           <label><span class="muted">Enter value of 'x', leave blank if unknown</span>
-            <input id="quadPx" type="number" step="any" placeholder="x-coordinate of known point'" aria-label="quad x input" />
+            <input id="quadPx" type="number" step="any" placeholder="x-coordinate of known point'"
+              aria-label="quad x input" />
           </label>
           <label><span class="muted">Enter value of 'y', leave blank if unknown</span>
-            <input id="quadPy" type="number" step="any" placeholder="y-coordinate of known point'" aria-label="quad y input" />
+            <input id="quadPy" type="number" step="any" placeholder="y-coordinate of known point'"
+              aria-label="quad y input" />
           </label>
 
         </div>
@@ -346,10 +352,43 @@
     <!-- UTILITIES -->
     <section id="panel-utilities" class="panel hidden" aria-labelledby="utilTitle">
       <h2 id="utilTitle" class="title">Utilities</h2>
-      <div class="card">
-        <h3>Working in progress</h3>
-        <p class="muted">Currently in progress please wait</p>
+      <div class="card" role="region" aria-labelledby="unitConvertTitle">
+        <h3 id="unitConvertTitle">Unit Converter</h3>
+        <p class="muted">Converts units to another unit of its kind</p>
+
+        <div class="grid">
+          <label><span class="muted">Category</span>
+            <select id="unitCategory" onchange="updateUnits()">
+              <option value="length">Length</option>
+              <option value="mass">Mass</option>
+              <option value="area">Area</option>
+              <option value="volume">Volume</option>
+              <option value="temperature">Temperature</option>
+              <option value="energy">Energy</option>
+              <option value="speed">Speed</option>
+              <option value="time">Time</option>
+              <option value="power">Power</option>
+            </select>
+          </label>
+          <label><span class="muted">Value</span>
+            <input id="unitVal" type="text" step="any" placeholder="Enter unit value" aria-label="unit input" />
+          </label>
+          <label><span class="muted">Convert From:</span>
+            <select id="fromUnit"></select>
+          </label>
+          <label><span class="muted">Convert To:</span>
+            <select id="toUnit"></select>
+          </label>
+        </div>
+
+        <div class="row">
+          <button class="btn" onclick="unitCompute()">Compute</button>
+          <button class="btn" onclick="unitClear()">Clear</button>
+        </div>
+
+        <div id="unitOut" class="output mono" role="status" aria-live="polite"></div>
       </div>
+
     </section>
 
     <!-- ABOUT -->
