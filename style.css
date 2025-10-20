@@ -328,6 +328,7 @@ body {
   padding: 1rem;
   padding-top: calc(var(--header-height) + 2px);
   min-height: calc(100vh - var(--header-height));
+  margin-left: var(--sidebar-width-expanded);
   transition: margin-left 0.3s ease, opacity 0.4s ease;
 }
 .sidebar.collapsed ~ #app {
