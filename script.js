@@ -742,18 +742,14 @@ upBtn.addEventListener("click", () => { if (direction !== "DOWN") direction = "U
 rightBtn.addEventListener("click", () => { if (direction !== "LEFT") direction = "RIGHT"; });
 downBtn.addEventListener("click", () => { if (direction !== "UP") direction = "DOWN"; });
 document.addEventListener("keydown", (event) => {
-  const key = event.keyCode;
-  if (key === 37 && direction !== "RIGHT") direction = "LEFT";
-  else if (key === 38 && direction !== "DOWN") direction = "UP";
-  else if (key === 39 && direction !== "LEFT") direction = "RIGHT";
-  else if (key === 40 && direction !== "UP") direction = "DOWN";
-});
-document.addEventListener("keydown", (event) => {
-  const key = event.key.toLowerCase(); 
-  if (key === "a" && direction !== "RIGHT") direction = "LEFT";
-  else if (key === "w" && direction !== "DOWN") direction = "UP";
-  else if (key === "d" && direction !== "LEFT") direction = "RIGHT";
-  else if (key === "s" && direction !== "UP") direction = "DOWN";
+  const key = event.key.toLowerCase();
+  if (["arrowup", "arrowdown", "arrowleft", "arrowright", "w", "a", "s", "d"].includes(key)) {
+    event.preventDefault();
+  }
+  if ((key === "a" || key === "arrowleft") && direction !== "RIGHT") direction = "LEFT";
+  else if ((key === "w" || key === "arrowup") && direction !== "DOWN") direction = "UP";
+  else if ((key === "d" || key === "arrowright") && direction !== "LEFT") direction = "RIGHT";
+  else if ((key === "s" || key === "arrowdown") && direction !== "UP") direction = "DOWN";
 });
 
 pauseBtn.textContent = "Pause";
