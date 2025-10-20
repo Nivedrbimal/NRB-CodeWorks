@@ -748,6 +748,14 @@ document.addEventListener("keydown", (event) => {
   else if (key === 39 && direction !== "LEFT") direction = "RIGHT";
   else if (key === 40 && direction !== "UP") direction = "DOWN";
 });
+document.addEventListener("keydown", (event) => {
+  const key = event.key.toLowerCase(); 
+  if (key === "a" && direction !== "RIGHT") direction = "LEFT";
+  else if (key === "w" && direction !== "DOWN") direction = "UP";
+  else if (key === "d" && direction !== "LEFT") direction = "RIGHT";
+  else if (key === "s" && direction !== "UP") direction = "DOWN";
+});
+
 pauseBtn.textContent = "Pause";
 pauseBtn.addEventListener("click", () => {
   if (!paused) {
