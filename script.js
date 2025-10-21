@@ -4,25 +4,6 @@ const isNum = v => v !== null && v !== '' && !Number.isNaN(Number(v));
 const toNum = v => isNum(v) ? Number(v) : null;
 const fmt = n => (n === null || n === undefined || !Number.isFinite(n)) ? '—' : (Math.abs(n) < 1e-8 ? n.toExponential(4) : Number(n.toPrecision(12)).toString());
 
-function typeOut(el, text, options = {}) {
-  const speed = options.speed ?? 16;
-  const disable = options.disable ?? false;
-  if (disable) { el.textContent = text; return Promise.resolve(); }
-  el.textContent = '';
-  el.classList.add('typing-caret');
-  return new Promise(res => {
-    let i = 0;
-    const timer = setInterval(() => {
-      el.textContent = text.slice(0, ++i);
-      if (i >= text.length) {
-        clearInterval(timer);
-        el.classList.remove('typing-caret');
-        res();
-      }
-    }, speed);
-  });
-}
-
 // ---------- Navigation ----------
 const topLinks = document.querySelectorAll(".top-link");
 function switchTopPanel(e) {
@@ -704,40 +685,40 @@ function createNextPracticeInput() {
   input.placeholder = `#${piIndex + 1}`;
   piComment.textContent = 'Start typing...';
   input.addEventListener("input", () => {
-  const entered = input.value.trim();
-  if (entered === "") {
-    input.style.borderColor = "";
-    return;
-  }
-  if (!/^\d$/.test(entered)) {
-    piComment.textContent = "Please enter a number.";
-    input.value = "";
-    input.style.borderColor = "orange";
-    return;
-  }
-  if (entered === pi[piIndex]) {
-    input.style.borderColor = "green";
-    input.style.transition = "border-color 0.3s";
-    piIndex++;
-    setTimeout(() => {
+    const entered = input.value.trim();
+    if (entered === "") {
       input.style.borderColor = "";
-      input.disabled = true;
-      if (piIndex < pi.length) createNextPracticeInput();
-      else piComment.textContent = `You completed all ${pi.length} digits!`;
-    }, 300);
-  }
-  else {
-    input.style.borderColor = "red";
-    input.style.transition = "border-color 0.3s";
-    mistakesAllowed--;
-    if (mistakesAllowed <= 0) {
-      piComment.textContent = `You’ve reached the mistake limit. Final digit count: ${piIndex}`;
-      disableAllInputs();
-    } else {
-      piComment.textContent = `Oops, you got that one wrong. Mistakes left: ${mistakesAllowed}. Try again!`;
+      return;
     }
-  }
-});
+    if (!/^\d$/.test(entered)) {
+      piComment.textContent = "Please enter a number.";
+      input.value = "";
+      input.style.borderColor = "orange";
+      return;
+    }
+    if (entered === pi[piIndex]) {
+      input.style.borderColor = "green";
+      input.style.transition = "border-color 0.3s";
+      piIndex++;
+      setTimeout(() => {
+        input.style.borderColor = "";
+        input.disabled = true;
+        if (piIndex < pi.length) createNextPracticeInput();
+        else piComment.textContent = `You completed all ${pi.length} digits!`;
+      }, 300);
+    }
+    else {
+      input.style.borderColor = "red";
+      input.style.transition = "border-color 0.3s";
+      mistakesAllowed--;
+      if (mistakesAllowed <= 0) {
+        piComment.textContent = `You’ve reached the mistake limit. Final digit count: ${piIndex}`;
+        disableAllInputs();
+      } else {
+        piComment.textContent = `Oops, you got that one wrong. Mistakes left: ${mistakesAllowed}. Try again!`;
+      }
+    }
+  });
   inputContainer.appendChild(input);
   input.focus();
 }
@@ -753,9 +734,8 @@ function getSelectedOperations() {
   document.querySelectorAll('.operation:checked').forEach(cb => {
     ops.push(cb.value);
   });
-  return ops.length > 0 ? ops : ['+']; // fallback to + if none selected
+  return ops.length > 0 ? ops : ['+'];
 }
-
 function fg2_start() {
   const min = toNum(document.getElementById('fg_min').value) ?? 0;
   const max = toNum(document.getElementById('fg_max').value) ?? 10;
@@ -771,20 +751,16 @@ function fg2_start() {
   fg2_state = { min, max, opsPer, n, idx: 0, score: 0, allowed };
   fg2_next();
 }
-
 function fg2_reset() {
   fg2_state = null;
   document.getElementById('fg2_area').textContent = 'Reset. Configure and press Start.';
 }
-
 function randInt(a, b) {
   return Math.floor(Math.random() * (b - a + 1)) + a;
 }
-
 function randChoice(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
 }
-
 function makeExpr(min, max, ops, allowedOps) {
   const nums = [];
   for (let i = 0; i < ops + 1; i++) nums.push(randInt(min, max));
@@ -804,14 +780,12 @@ function makeExpr(min, max, ops, allowedOps) {
 
   return expr;
 }
-
 function evalExpr(s) {
   if (!/^[0-9+\-*/%^().\s]+$/.test(s)) throw new Error('Invalid tokens');
   const safe = s.replace(/\^/g, '**');
   // eslint-disable-next-line no-new-func
   return Function(`"use strict"; return (${safe});`)();
 }
-
 function fg2_next() {
   if (!fg2_state) return;
 
@@ -845,7 +819,6 @@ function fg2_next() {
   const ansInput = document.getElementById('fg2_answer');
   if (ansInput) ansInput.focus();
 }
-
 function fg2_submit() {
   const ansInput = document.getElementById('fg2_answer');
   const ans = ansInput ? Number(ansInput.value) : NaN;
@@ -1043,6 +1016,7 @@ startBtn.addEventListener("click", startSnakeGame);
 
 // ---------- UTILITIES -------------
 
+// -------- UNIT CONVERTER ----------
 const unitGroups = {
   length: `
     <option value="mmUnit">Millimeter (mm)</option>
@@ -1313,7 +1287,58 @@ function unitClear() {
 }
 
 
+// -------- PASSWORD GENERATOR --------
+const pwdToggle = document.getElementById('pwdCharacterTypesToggle');
+const pwdContent = document.getElementById('pwdCharacterTypesContent');
+pwdToggle.addEventListener('click', () => {
+  const expanded = pwdToggle.getAttribute('aria-expanded') === 'true';
+  pwdToggle.setAttribute('aria-expanded', !expanded);
+  pwdContent.style.display = expanded ? 'none' : 'block';
+  pwdContent.setAttribute('aria-hidden', expanded);
+});
+function passwordGenerate() {
+  const length = parseInt(document.getElementById('pwdLength').value);
+  if (isNaN(length) || length <= 0) {
+    ('Please enter a valid password length.');
+    return;
+  }
 
+  const types = document.querySelectorAll('.characters:checked');
+  if (types.length === 0) {
+    document.getElementById('pwdOut').textContent = 'Please select at least one character type.';
+    return;
+  }
+
+  const charSets = {
+    upper: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+    lower: 'abcdefghijklmnopqrstuvwxyz',
+    numbers: '0123456789',
+    symbols: '!@#$%^&*()_+-----=[]{}|;:,.<>?/~`'
+  };
+
+  let allChars = '';
+  types.forEach(t => allChars += charSets[t.value]);
+
+  let password = '';
+  for (let i = 0; i < length; i++) {
+    password += allChars.charAt(Math.floor(Math.random() * allChars.length));
+  }
+  document.getElementById('pwdOut').textContent = password;
+}
+function passwordClear() {
+  document.getElementById('pwdOut').textContent = '';
+  document.getElementById('pwdLength').value = '';
+  document.querySelectorAll('.characters').forEach(c => c.checked = true);
+}
+function copyPassword() {
+  const password = document.getElementById('pwdOut').textContent;
+  if (!password) return;
+  navigator.clipboard.writeText(password).then(() => {
+    alert('Password copied to clipboard!');
+  }).catch(() => {
+    alert('Failed to copy password.');
+  });
+}
 
 // -------- INFO ----------
 
@@ -1330,7 +1355,7 @@ function updateColor(varName, color) {
 window.addEventListener('load', () => {
   const savedAccent1 = localStorage.getItem('accent1');
   const savedAccent2 = localStorage.getItem('accent2');
-  
+
   if (savedAccent1) {
     accent1Picker.value = savedAccent1;
     updateColor('--accent1', savedAccent1);
@@ -1369,20 +1394,20 @@ background2Picker.addEventListener('input', (e) => {
   localStorage.setItem('background2', e.target.value);
 });
 resetBtn.addEventListener('click', () => {
-  const defaultAccent1 = '#3c78d8ff';
-  const defaultAccent2 = '#9900ffff';
+  const defaultAccent1 = '#3c78d8';
+  const defaultAccent2 = '#9900ff';
   accent1Picker.value = defaultAccent1;
   accent2Picker.value = defaultAccent2;
   updateColor('--accent1', defaultAccent1);
   updateColor('--accent2', defaultAccent2);
   localStorage.removeItem('accent1');
   localStorage.removeItem('accent2');
-  const defaultBackGround1 = 'rgb(23, 45, 80)';
-  const defaultBackGround2 = 'rgb(72, 10, 113)';
+  const defaultBackGround1 = '#172D50';
+  const defaultBackGround2 = '#480A71';
   background1Picker.value = defaultBackGround1;
   background2Picker.value = defaultBackGround2;
   updateColor('--background1', defaultBackGround1);
   updateColor('--background2', defaultBackGround2);
-  localStorage.removeItem('--background1');
-  localStorage.removeItem('--background2');
+  localStorage.removeItem('background1');
+  localStorage.removeItem('background2');
 });
