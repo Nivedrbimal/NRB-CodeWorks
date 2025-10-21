@@ -21,8 +21,6 @@ function switchTopPanel(e) {
 }
 topLinks.forEach(link => link.addEventListener("click", switchTopPanel));
 document.getElementById("panel-home").classList.add("visible-panel");
-
-
 document.addEventListener("DOMContentLoaded", () => {
   const sidebar = document.getElementById("sidebar");
   const toggleSidebarResponsive = document.getElementById("toggleSidebarResponsive");
@@ -31,7 +29,6 @@ document.addEventListener("DOMContentLoaded", () => {
     sidebar.classList.toggle("open");
   });
 });
-
 document.addEventListener("click", (e) => {
   if (
     sidebar.classList.contains("open") &&
@@ -41,7 +38,6 @@ document.addEventListener("click", (e) => {
     sidebar.classList.remove("open");
   }
 });
-
 function navTo(id) {
   document.querySelectorAll('.panel').forEach(s => {
     if (s.id === id) {
@@ -60,12 +56,10 @@ function navTo(id) {
   const app = document.getElementById('app');
   if (app) app.focus();
 }
-
 document.addEventListener('click', (e) => {
   const mb = e.target.closest('.menu-btn');
   if (mb) navTo(mb.dataset.target);
 });
-
 document.addEventListener("DOMContentLoaded", () => {
   const sidebar = document.getElementById("sidebar");
   const toggle = document.getElementById("toggleSidebar");
@@ -74,50 +68,12 @@ document.addEventListener("DOMContentLoaded", () => {
     sidebar.classList.toggle("collapsed");
   });
 });
-
-function toggleDropdown() {
-  const dd = document.getElementById('operationDropdown');
-  if (!dd) return;
-  dd.classList.toggle('open');
-  const content = document.getElementById('opsContent');
-  const toggle = document.getElementById('opsToggle');
-  if (dd.classList.contains('open')) {
-    content.setAttribute('aria-hidden', 'false');
-    toggle.setAttribute('aria-expanded', 'true');
-  } else {
-    content.setAttribute('aria-hidden', 'true');
-    toggle.setAttribute('aria-expanded', 'false');
-  }
-}
-const opsToggle = document.getElementById('opsToggle');
-if (opsToggle) {
-  opsToggle.addEventListener('click', toggleDropdown);
-  opsToggle.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleDropdown(); } });
-}
-
-document.addEventListener('click', (e) => {
-  const dd = document.getElementById('operationDropdown');
-  if (!dd) return;
-  if (!dd.contains(e.target)) {
-    dd.classList.remove('open');
-    document.getElementById('opsContent').setAttribute('aria-hidden', 'true');
-    document.getElementById('opsToggle').setAttribute('aria-expanded', 'false');
-  }
-});
-
-function getSelectedOperations() {
-  const boxes = Array.from(document.querySelectorAll('.operation'));
-  const ops = boxes.filter(cb => cb.checked).map(cb => cb.value);
-  return ops.length ? ops : ['+', '-', '*', '/'];
-}
-
 // ---------- INTRO SCREEN ----------
 window.addEventListener('load', () => {
   const intro = document.getElementById('intro');
   const header = document.getElementById('mainHeader');
   const sidebar = document.getElementById('sidebar');
   const main = document.getElementById('app');
-
   if (!intro) {
     header.classList.remove('hidden');
     sidebar.classList.remove('hidden');
@@ -128,7 +84,6 @@ window.addEventListener('load', () => {
     document.body.style.overflow = 'auto';
     return;
   }
-
   setTimeout(() => { intro.classList.add('fade-out'); }, 1250);
   setTimeout(() => {
     if (intro && intro.parentNode) intro.parentNode.removeChild(intro);
@@ -145,6 +100,8 @@ window.addEventListener('load', () => {
   }, 1250);
 });
 
+// =========== MATHEMATICS ============
+
 // -------- GENERAL CALCULATOR --------
 function genCalcCompute() {
 
@@ -153,7 +110,6 @@ function genCalcClear() {
   document.getElementById("genCalcVal").value = '';
   document.getElementById("genCalcOut").textContent = '';
 }
-
 
 // ---------- TRIG EVALUATOR ----------
 function parseRadianInput(raw) {
@@ -358,7 +314,6 @@ function trigCompute() {
 }
 
 // -------- QUADRATIC EQUATION ---------
-
 function quadeClear() {
   ['quadA', 'quadB', 'quadC', 'quadX1', 'quadX2', 'quadH', 'quadK', 'quadPx', 'quadPy'].forEach(id => document.getElementById(id).value = '');
   document.getElementById('quadOut').textContent = '';
@@ -414,6 +369,7 @@ function quadeSolve() {
   document.getElementById('quadOut').textContent = out;
 }
 
+// =============== PHYSICS ===============
 
 // ---------- KINEMATICS SOLVER ----------
 function kinematics_clear() {
@@ -538,7 +494,7 @@ function waves_solve() {
   document.getElementById('wav_out').textContent = out;
 }
 
-// ---------- GAMES ----------
+// ========== GAMES ==========
 
 // --------- Pi Game ---------
 const pi = '141592653589793238462643383279502884197169399375105820974944592307816406286208998628034825342117067982148086513282306647093844609550582231725359408128481117450284102701938521105559644622948954930381964428810975665933446128475648233786783165271201909145648566923460348610454326648213393607260249141';
@@ -780,6 +736,39 @@ function makeExpr(min, max, ops, allowedOps) {
 
   return expr;
 }
+function toggleDropdown() {
+  const dd = document.getElementById('operationDropdown');
+  if (!dd) return;
+  dd.classList.toggle('open');
+  const content = document.getElementById('opsContent');
+  const toggle = document.getElementById('opsToggle');
+  if (dd.classList.contains('open')) {
+    content.setAttribute('aria-hidden', 'false');
+    toggle.setAttribute('aria-expanded', 'true');
+  } else {
+    content.setAttribute('aria-hidden', 'true');
+    toggle.setAttribute('aria-expanded', 'false');
+  }
+}
+const opsToggle = document.getElementById('opsToggle');
+if (opsToggle) {
+  opsToggle.addEventListener('click', toggleDropdown);
+  opsToggle.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleDropdown(); } });
+}
+document.addEventListener('click', (e) => {
+  const dd = document.getElementById('operationDropdown');
+  if (!dd) return;
+  if (!dd.contains(e.target)) {
+    dd.classList.remove('open');
+    document.getElementById('opsContent').setAttribute('aria-hidden', 'true');
+    document.getElementById('opsToggle').setAttribute('aria-expanded', 'false');
+  }
+});
+function getSelectedOperations() {
+  const boxes = Array.from(document.querySelectorAll('.operation'));
+  const ops = boxes.filter(cb => cb.checked).map(cb => cb.value);
+  return ops.length ? ops : ['+', '-', '*', '/'];
+}
 function evalExpr(s) {
   if (!/^[0-9+\-*/%^().\s]+$/.test(s)) throw new Error('Invalid tokens');
   const safe = s.replace(/\^/g, '**');
@@ -848,7 +837,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
-// ---------- NUMBER GUESSING ----------
+// ---------- Number Guessing ----------
 let ng_secret = null, ng_tries = 0;
 function ng_start() {
   ng_secret = randInt(1, 100); ng_tries = 0; document.getElementById('ng_out').textContent = 'I picked a number 1–100. Start guessing!';
@@ -877,7 +866,6 @@ const size = Math.floor(window.innerHeight * 0.65);
 canvas.width = size;
 canvas.height = size;
 let box = Math.floor(size / 25);
-
 let snake, direction, food, score, foodsEaten;
 let specialFood = null;
 let specialFoodTimer = null;
@@ -1014,7 +1002,7 @@ function collision(head, array) {
 }
 startBtn.addEventListener("click", startSnakeGame);
 
-// ---------- UTILITIES -------------
+// ========== UTILITIES =============
 
 // -------- UNIT CONVERTER ----------
 const unitGroups = {
@@ -1340,7 +1328,7 @@ function copyPassword() {
   });
 }
 
-// -------- INFO ----------
+// ======== INFO ==========
 
 // ------ Customize -------
 const accent1Picker = document.getElementById('accent1Picker');
