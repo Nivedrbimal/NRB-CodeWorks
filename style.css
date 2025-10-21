@@ -3,6 +3,8 @@
   --panel: #071019;
   --muted: #9aa3b2;
   --text: #e6eef6;
+  --background1:rgb(23, 45, 80);
+  --background2:rgb(72, 10, 113);
   --accent1: #3c78d8ff;
   --accent2: #9900ffff;
   --accent3:#2a7fff;
@@ -29,7 +31,7 @@
 }
 
 html,body {
-  background: linear-gradient(45deg, rgb(23, 45, 80), rgb(72, 10, 113));
+  background: linear-gradient(45deg, var(--background1), var(--background2));
   color: var(--text);
 }
 
@@ -533,8 +535,7 @@ input[type="number"],select,input[type="text"] {
 }
 .pi-digit-input {
   width:fit-content;
-  width: 45px;
-  height: 45px;
+  height: 35px;
   text-align: center;
   border: 1px solid #ccc;
   border-radius: 8px;
