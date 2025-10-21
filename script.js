@@ -1,8 +1,3 @@
-
-// Uses DOMContentLoaded and defer script in HTML
-
-
-
 document.body.style.overflow = 'hidden';
 // ---------- Utilities ----------
 const isNum = v => v !== null && v !== '' && !Number.isNaN(Number(v));
@@ -29,6 +24,23 @@ function typeOut(el, text, options = {}) {
 }
 
 // ---------- Navigation ----------
+const topLinks = document.querySelectorAll(".top-link");
+function switchTopPanel(e) {
+  const targetPanelId = e.target.getAttribute("data-target");
+  const allPanels = document.querySelectorAll(".panel");
+  allPanels.forEach(panel => {
+    panel.classList.remove("visible-panel");
+    panel.classList.add("hidden");
+  });
+  const activePanel = document.getElementById(targetPanelId);
+  if (activePanel) {
+    activePanel.classList.remove("hidden");
+    activePanel.classList.add("visible-panel");
+  }
+}
+topLinks.forEach(link => link.addEventListener("click", switchTopPanel));
+document.getElementById("panel-home").classList.add("visible-panel");
+
 
 document.addEventListener("DOMContentLoaded", () => {
   const sidebar = document.getElementById("sidebar");
@@ -61,12 +73,9 @@ function navTo(id) {
       s.querySelectorAll('input, button, select, textarea').forEach(el => el.setAttribute('tabindex', '-1'));
     }
   });
-
   document.querySelectorAll('.menu-btn').forEach(b => b.classList.remove('active'));
   const btn = document.querySelector(`.menu-btn[data-target="${id}"]`);
   if (btn) btn.classList.add('active');
-
-  // move focus to main container for keyboard users
   const app = document.getElementById('app');
   if (app) app.focus();
 }
@@ -154,6 +163,16 @@ window.addEventListener('load', () => {
     main && main.focus();
   }, 1250);
 });
+
+// -------- GENERAL CALCULATOR --------
+function genCalcCompute() {
+
+}
+function genCalcClear() {
+  document.getElementById("genCalcVal").value = '';
+  document.getElementById("genCalcOut").textContent = '';
+}
+
 
 // ---------- TRIG EVALUATOR ----------
 function parseRadianInput(raw) {
@@ -357,13 +376,12 @@ function trigCompute() {
   }
 }
 
-// ---------- QUADRATIC EQUATION ---------
+// -------- QUADRATIC EQUATION ---------
 
 function quadeClear() {
   ['quadA', 'quadB', 'quadC', 'quadX1', 'quadX2', 'quadH', 'quadK', 'quadPx', 'quadPy'].forEach(id => document.getElementById(id).value = '');
   document.getElementById('quadOut').textContent = '';
 }
-
 function quadeSolve() {
   let a = toNum(document.getElementById('quadA').value);
   let b = toNum(document.getElementById('quadB').value);
@@ -539,10 +557,196 @@ function waves_solve() {
   document.getElementById('wav_out').textContent = out;
 }
 
-// ---------- GAMES: fg2 Quiz ----------
-let fg2_state = null;
+// ---------- GAMES ----------
 
-// get selected operations from checkboxes
+// --------- Pi Game ---------
+const pi = '141592653589793238462643383279502884197169399375105820974944592307816406286208998628034825342117067982148086513282306647093844609550582231725359408128481117450284102701938521105559644622948954930381964428810975665933446128475648233786783165271201909145648566923460348610454326648213393607260249141';
+let piIndex = 0;
+let mistakesAllowed = 3;
+function changePiMode() {
+  const piStart = document.getElementById("piStart");
+  const piReset = document.getElementById("piReset");
+  const piComment = document.getElementById("piComment");
+  const mode = document.getElementById("piMode").value;
+  const piTestHolder = document.getElementById("piTesterHolder");
+  const piPracticeHolder = document.getElementById("piPracticeHolder");
+  const piRevealHolder = document.getElementById("piRevealHolder");
+  [piTestHolder, piPracticeHolder, piRevealHolder].forEach(el => {
+    el.classList.add('piHidden');
+    el.classList.remove('piVisible');
+  });
+  if (mode === 'selectPi') {
+    [piTestHolder, piPracticeHolder, piRevealHolder].forEach(el => {
+      el.classList.add('piHidden');
+      el.classList.remove('piVisible');
+    });
+    piReset.classList.add('pi-reset-hidden');
+    piReset.classList.remove('pi-reset-visible');
+    piStart.classList.add('pi-start-hidden');
+    piStart.classList.remove('pi-start-visible');
+    piComment.classList.add('pi-comment-hidden');
+    piComment.classList.remove('pi-comment-visible');
+    document.getElementById("piComment").textContent = "";
+    document.getElementById("piTestInput").value = "";
+  }
+  else if (mode === 'testPi') {
+    piTestHolder.classList.remove('piHidden');
+    piTestHolder.classList.add('piVisible');
+    piReset.classList.remove('pi-reset-hidden');
+    piReset.classList.add('pi-reset-visible');
+    piStart.classList.remove('pi-start-hidden');
+    piStart.classList.add('pi-start-visible');
+    piComment.classList.remove('pi-comment-hidden');
+    piComment.classList.add('pi-comment-visible');
+    document.getElementById("piComment").textContent = "";
+    document.getElementById("piTestInput").value = "";
+  } else if (mode === 'pracPi') {
+    piPracticeHolder.classList.remove('piHidden');
+    piPracticeHolder.classList.add('piVisible');
+    piReset.classList.remove('pi-reset-hidden');
+    piReset.classList.add('pi-reset-visible');
+    piStart.classList.remove('pi-start-hidden');
+    piStart.classList.add('pi-start-visible');
+    piComment.classList.remove('pi-comment-hidden');
+    piComment.classList.add('pi-comment-visible');
+    document.getElementById("piComment").textContent = "";
+    document.getElementById("piTestInput").value = "";
+  } else {
+    piRevealHolder.classList.remove('piHidden');
+    piRevealHolder.classList.add('piVisible');
+    piReset.classList.add('pi-reset-hidden');
+    piReset.classList.remove('pi-reset-visible');
+    piStart.classList.add('pi-start-hidden');
+    piStart.classList.remove('pi-start-visible');
+    piComment.classList.add('pi-comment-hidden');
+    piComment.classList.remove('pi-comment-visible');
+    document.getElementById("piComment").textContent = "";
+    document.getElementById("piTestInput").value = "";
+  }
+}
+function piReset() {
+  [document.getElementById("piTesterHolder"), document.getElementById("piPracticeHolder"), document.getElementById("piRevealHolder")].forEach(el => {
+    el.classList.add('piHidden');
+    el.classList.remove('piVisible');
+  });
+  document.getElementById("piMode").value = 'selectPi';
+  document.getElementById("piReset").classList.add('pi-reset-hidden');
+  document.getElementById("piStart").classList.add('pi-start-hidden');
+  document.getElementById("piStart").textContent = 'Start';
+  document.getElementById("piComment").classList.add('pi-comment-hidden');
+  document.getElementById("piComment").classList.remove('pi-comment-visible');
+  document.getElementById("piComment").textContent = "";
+  document.getElementById("piTestInput").value = "";
+  document.getElementById("piInputs").innerHTML = "";
+  piIndex = 0;
+  mistakesAllowed = 3;
+}
+function piStart() {
+  const piStart = document.getElementById("piStart");
+  const mode = document.getElementById("piMode").value;
+  if (piStart.textContent === 'Start') {
+    document.getElementById("piTestInput").disabled = false;
+    if (mode === 'testPi') {
+      startPiTest();
+    }
+    else {
+      startPiPractice()
+    }
+    piStart.textContent = 'Restart';
+  }
+  else {
+    piStart.textContent = 'Start';
+    document.getElementById("piComment").textContent = "";
+    document.getElementById("piTestInput").value = "";
+    document.getElementById("piInputs").innerHTML = "";
+  }
+}
+function startPiTest() {
+  const piTestInput = document.getElementById("piTestInput");
+  const piComment = document.getElementById("piComment");
+  let startTime = 0;
+  piIndex = 0;
+  startTime = Date.now();
+  piComment.textContent = 'Start typing...';
+  piTestInput.value = '';
+  piTestInput.focus();
+  piTestInput.oninput = () => {
+    const val = piTestInput.value;
+    if (val[val.length - 1] === pi[piIndex]) {
+      piIndex++;
+    } else {
+      const timeTaken = ((Date.now() - startTime) / 1000).toFixed(2);
+      piComment.textContent = `Wrong digit at position ${piIndex + 1}. Time: ${timeTaken}s`;
+      piTestInput.disabled = true;
+      return;
+    }
+    if (piIndex >= pi.length) {
+      const totalTime = ((Date.now() - startTime) / 1000).toFixed(2);
+      piComment.textContent = `Perfect! You typed all ${pi.length} digits correctly in ${totalTime}s!`;
+      piTestInput.disabled = true;
+    }
+  };
+}
+function startPiPractice() {
+  mistakesAllowed = parseInt(document.getElementById("mistakeLimit").value || '3');
+  piIndex = 0;
+  document.getElementById("piInputs").innerHTML = "";
+  createNextPracticeInput();
+}
+function createNextPracticeInput() {
+  const inputContainer = document.getElementById("piInputs");
+  const input = document.createElement("input");
+  const piComment = document.getElementById("piComment");
+  input.type = "text";
+  input.inputMode = "numeric";
+  input.className = "pi-digit-input";
+  input.placeholder = `#${piIndex + 1}`;
+  piComment.textContent = 'Start typing...';
+  input.addEventListener("input", () => {
+  const entered = input.value.trim();
+  if (entered === "") {
+    input.style.borderColor = "";
+    return;
+  }
+  if (!/^\d$/.test(entered)) {
+    piComment.textContent = "Please enter a number.";
+    input.value = "";
+    input.style.borderColor = "orange";
+    return;
+  }
+  if (entered === pi[piIndex]) {
+    input.style.borderColor = "green";
+    input.style.transition = "border-color 0.3s";
+    piIndex++;
+    setTimeout(() => {
+      input.style.borderColor = "";
+      input.disabled = true;
+      if (piIndex < pi.length) createNextPracticeInput();
+      else piComment.textContent = `You completed all ${pi.length} digits!`;
+    }, 300);
+  }
+  else {
+    input.style.borderColor = "red";
+    input.style.transition = "border-color 0.3s";
+    mistakesAllowed--;
+    if (mistakesAllowed <= 0) {
+      piComment.textContent = `You’ve reached the mistake limit. Final digit count: ${piIndex}`;
+      disableAllInputs();
+    } else {
+      piComment.textContent = `Oops, you got that one wrong. Mistakes left: ${mistakesAllowed}. Try again!`;
+    }
+  }
+});
+  inputContainer.appendChild(input);
+  input.focus();
+}
+function disableAllInputs() {
+  document.querySelectorAll(".pi-digit-input").forEach(inp => inp.disabled = true);
+}
+
+
+// -------- Math Quiz ---------
+let fg2_state = null;
 function getSelectedOperations() {
   const ops = [];
   document.querySelectorAll('.operation:checked').forEach(cb => {
@@ -590,7 +794,6 @@ function makeExpr(min, max, ops, allowedOps) {
     let op = randChoice(allowedOps);
     let val = nums[i + 1];
 
-    // 🚫 Prevent division/modulo by zero
     if ((op === '/' || op === '%') && val === 0) {
       val = 1;
     }
@@ -657,8 +860,6 @@ function fg2_submit() {
 
   setTimeout(fg2_next, 700);
 }
-
-// ---------- Dropdown Toggle ----------
 document.addEventListener('DOMContentLoaded', () => {
   const opsToggle = document.getElementById('opsToggle');
   const opsContent = document.getElementById('opsContent');
@@ -672,8 +873,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 });
-
-
 
 // ---------- NUMBER GUESSING ----------
 let ng_secret = null, ng_tries = 0;
@@ -741,17 +940,20 @@ leftBtn.addEventListener("click", () => { if (direction !== "RIGHT") direction =
 upBtn.addEventListener("click", () => { if (direction !== "DOWN") direction = "UP"; });
 rightBtn.addEventListener("click", () => { if (direction !== "LEFT") direction = "RIGHT"; });
 downBtn.addEventListener("click", () => { if (direction !== "UP") direction = "DOWN"; });
-document.addEventListener("keydown", (event) => {
-  const key = event.key.toLowerCase();
-  if (["arrowup", "arrowdown", "arrowleft", "arrowright", "w", "a", "s", "d"].includes(key)) {
-    event.preventDefault();
-  }
-  if ((key === "a" || key === "arrowleft") && direction !== "RIGHT") direction = "LEFT";
-  else if ((key === "w" || key === "arrowup") && direction !== "DOWN") direction = "UP";
-  else if ((key === "d" || key === "arrowright") && direction !== "LEFT") direction = "RIGHT";
-  else if ((key === "s" || key === "arrowdown") && direction !== "UP") direction = "DOWN";
-});
-
+document.addEventListener(
+  "keydown",
+  (event) => {
+    const key = event.key.toLowerCase();
+    if (["arrowup", "arrowdown", "arrowleft", "arrowright", "w", "a", "s", "d"].includes(key)) {
+      event.preventDefault();
+    }
+    if ((key === "a" || key === "arrowleft") && direction !== "RIGHT") direction = "LEFT";
+    else if ((key === "w" || key === "arrowup") && direction !== "DOWN") direction = "UP";
+    else if ((key === "d" || key === "arrowright") && direction !== "LEFT") direction = "RIGHT";
+    else if ((key === "s" || key === "arrowdown") && direction !== "UP") direction = "DOWN";
+  },
+  { passive: false }
+);
 pauseBtn.textContent = "Pause";
 pauseBtn.addEventListener("click", () => {
   if (!paused) {
@@ -838,11 +1040,8 @@ function collision(head, array) {
 }
 startBtn.addEventListener("click", startSnakeGame);
 
-
-
 // ---------- UTILITIES -------------
 
-// --- Unit definitions ---
 const unitGroups = {
   length: `
     <option value="mmUnit">Millimeter (mm)</option>
@@ -941,20 +1140,15 @@ const unitGroups = {
     <option value="btuhrUnit">BTU/hour</option>
   `
 };
-
-// --- Reference elements ---
 const categorySelect = document.getElementById("unitCategory");
 const fromUnit = document.getElementById("fromUnit");
 const toUnit = document.getElementById("toUnit");
-
-// --- Update dropdowns based on category ---
 function updateUnits() {
   const selectedCategory = categorySelect.value;
   const options = unitGroups[selectedCategory] || "";
   fromUnit.innerHTML = options;
   toUnit.innerHTML = options;
 }
-
 updateUnits();
 categorySelect.addEventListener("change", updateUnits);
 const conversionRates = {
@@ -976,15 +1170,84 @@ const conversionRates = {
     lbUnit: 0.453592,
     ozUnit: 0.0283495
   },
+  area: {
+    mm2Unit: 0.001,
+    cm2Unit: 0.01,
+    m2Unit: 1,
+    km2Unit: 1000,
+    in2Unit: 1550,
+    ft2Unit: 10.7639,
+    yd2Unit: 1.19599,
+    acreUnit: 0.000247105,
+    haUnit: 0.0001
+  },
+  volume: {
+    mlUnit: 0.001,
+    lUnit: 1,
+    m3Unit: 1000,
+    cm3Unit: 0.001,
+    in3Unit: 0.0163871,
+    ft3Unit: 28.3168,
+    yd3Unit: 764.555,
+    galUnit: 3.78541,
+    qtUnit: 0.946353,
+    ptUnit: 0.473176,
+    cupUnit: 0.24,
+    tbspUnit: 0.015,
+    tspUnit: 0.005
+  },
+  angle: {
+    asUnit: 4.848e-6,
+    degUnit: 0.0174533,
+    radUnit: 1,
+    gradUnit: 0.015708,
+    mradUnit: 0.001,
+    maUnit: 0.000290888
+  },
   temperature: {
     cUnit: "c",
     fUnit: "f",
     kUnit: "k",
     rUnit: "r"
+  },
+  energy: {
+    jUnit: 1,
+    kjUnit: 1000,
+    calUnit: 4.184,
+    kcalUnit: 4184,
+    whUnit: 3600,
+    kwhUnit: 3.6e6,
+    evUnit: 1.602e-19,
+    btuUnit: 1055.06
+  },
+  speed: {
+    mpsUnit: 1,
+    kmphUnit: 0.277778,
+    mphUnit: 0.44704,
+    fpsUnit: 0.3048,
+    knotUnit: 0.514444
+  },
+  time: {
+    nsUnit: 1e-9,
+    µsUnit: 1e-6,
+    msUnit: 0.001,
+    sUnit: 1,
+    minUnit: 60,
+    hrUnit: 3600,
+    dayUnit: 86400,
+    wkUnit: 604800,
+    moUnit: 2.628e6,
+    yrUnit: 3.154e7
+  },
+  power: {
+    wUnit: 1,
+    kwUnit: 1000,
+    mwUnit: 1e6,
+    hpUnit: 745.7,
+    calpsUnit: 4.184,
+    btuhrUnit: 0.293071
   }
 };
-
-// --- Compute conversion ---
 function unitCompute() {
   const category = categorySelect.value;
   const from = fromUnit.value;
@@ -1000,39 +1263,46 @@ function unitCompute() {
   let result;
 
   if (category === "temperature") {
-    // Temperature conversions
     result = convertTemperature(value, from, to);
-  } else {
-    // Other categories
+  }
+  else {
     const rates = conversionRates[category];
     if (!rates[from] || !rates[to]) {
       outputEl.textContent = "Conversion not defined.";
       return;
     }
-    const valueInBase = value * rates[from]; // convert to base unit
-    result = valueInBase / rates[to];        // convert to target unit
+    const valueInBase = value * rates[from];
+    result = valueInBase / rates[to];
   }
 
-  outputEl.textContent = `${value} ${from} = ${result} ${to}`;
-}
+  const fromText = fromUnit.options[fromUnit.selectedIndex].text.match(/\(([^)]+)\)/);
+  const toText = toUnit.options[toUnit.selectedIndex].text.match(/\(([^)]+)\)/);
 
-// --- Temperature converter ---
+  const fromAbbr = fromText ? fromText[1] : fromUnit.value;
+  const toAbbr = toText ? toText[1] : toUnit.value;
+
+  const formatted =
+    Math.abs(result) >= 0.0001 && Math.abs(result) < 10000
+      ? result.toFixed(4)
+      : result.toExponential(4);
+
+  outputEl.textContent = `${value} ${fromAbbr} = ${formatted} ${toAbbr}`;
+}
 function convertTemperature(val, from, to) {
   let celsius;
   switch (from) {
     case "cUnit": celsius = val; break;
-    case "fUnit": celsius = (val - 32) * 5/9; break;
+    case "fUnit": celsius = (val - 32) * 5 / 9; break;
     case "kUnit": celsius = val - 273.15; break;
-    case "rUnit": celsius = (val - 491.67) * 5/9; break;
+    case "rUnit": celsius = (val - 491.67) * 5 / 9; break;
   }
   switch (to) {
     case "cUnit": return celsius;
-    case "fUnit": return celsius * 9/5 + 32;
+    case "fUnit": return celsius * 9 / 5 + 32;
     case "kUnit": return celsius + 273.15;
-    case "rUnit": return (celsius + 273.15) * 9/5;
+    case "rUnit": return (celsius + 273.15) * 9 / 5;
   }
 }
-
 function unitClear() {
   document.getElementById("unitCategory").value = "length";
   document.getElementById("unitVal").value = "";
@@ -1040,4 +1310,3 @@ function unitClear() {
   document.getElementById("toUnit").innerHTML = unitGroups.length;
   document.getElementById("unitOut").textContent = "";
 }
-
