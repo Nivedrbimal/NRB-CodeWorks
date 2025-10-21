@@ -319,7 +319,8 @@
           <label id="piTesterHolder" class="piHidden"><span class="muted">Type the digits of pi.</span>
             <input id="piTestInput" type="text" placeholder="Digits after 3." aria-label="pi input" />
           </label>
-          <label id="piPracticeHolder" class="piHidden"><span class="muted">Type the maximum number of mistakes to allow.</span>
+          <label id="piPracticeHolder" class="piHidden"><span class="muted">Type the maximum number of mistakes to
+              allow.</span>
             <input id="mistakeLimit" type="number" placeholder="Allowed mistakes" min="1" step="any">
             <span class="muted">Type the digits of pi one by one.</span>
             <div id="piInputs" class="pi-inputs"></div>
@@ -466,9 +467,27 @@
 
       <!-- Customization -->
       <div class="card" id="customize">
-        <h3 class="muted">Customize the website your own way (Coming Soon!!!)</h3>
-        <p class="muted"> Choose your theme or create your own theme</p>
+        <h3>Customize the website your own way.</h3>
+        <p class="muted">Choose your theme or create your own theme</p>
+        <div class="row">
+        <div id="color-pickers">
+          <label>Main color first shade:
+            <input type="color" id="accent1Picker" value="#3c78d8ff">
+          </label>
+          <label>Main color second shade:
+            <input type="color" id="accent2Picker" value="#9900ffff">
+          </label>
+          <label>Background color first shade:
+            <input type="color" id="background1Picker" value="#172D50">
+          </label>
+          <label>Background color second shade:
+            <input type="color" id="background2Picker" value="#480A71">
+          </label>
+          <button id="resetColors">Reset</button>
+        </div>
+        </div>
       </div>
+
     </section>
 
   </main>
