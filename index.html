@@ -54,7 +54,7 @@
       <button data-target="panel-utilities" class="menu-btn" aria-controls="panel-utilities">
         <i class="icon"><img src="iconUtilities.png" class="icon-img"></i><span>Utilities</span>
       </button>
-      <button data-target="panel-info" class="menu-btn" aria-controls="panel-inof">
+      <button data-target="panel-info" class="menu-btn" aria-controls="panel-info">
         <i class="icon"><img src="iconInfo.png" class="icon-img"></i><span>Info</span>
       </button>
     </nav>
@@ -150,7 +150,7 @@
       </div>
 
       <!-- Quadratic Solver -->
-      <div class="card" role="region" aria-labelledby="trigTitle">
+      <div class="card" role="region" aria-labelledby="quadeTitle">
         <h3 id="quadeTitle">Quadratic Equation</h3>
         <p class="muted">Finds the unknown values when given knowns.</p>
         <div class="grid">
@@ -164,11 +164,11 @@
             <input id="quadC" type="number" step="any" placeholder="Value of 'c'" aria-label="quad c input" />
           </label>
           <label><span class="muted">Enter value of 'x₁', leave blank if unknown</span>
-            <input id="quadX1" type="number" step="any" placeholder="first solution for x'"
+            <input id="quadX1" type="number" step="any" placeholder="first solution for x₁"
               aria-label="quad x₁ input" />
           </label>
           <label><span class="muted">Enter value of 'x₂', leave blank if unknown</span>
-            <input id="quadX2" type="number" step="any" placeholder="second solution for x'"
+            <input id="quadX2" type="number" step="any" placeholder="second solution for x₂"
               aria-label="quad x₂ input" />
           </label>
         </div>
@@ -414,7 +414,6 @@
       <div class="card" role="region" aria-labelledby="unitConvertTitle">
         <h3 id="unitConvertTitle">Unit Converter</h3>
         <p class="muted">Converts units to another unit of its kind</p>
-
         <div class="grid">
           <label><span class="muted">Category</span>
             <select id="unitCategory" onchange="updateUnits()">
@@ -440,13 +439,43 @@
             <select id="toUnit"></select>
           </label>
         </div>
-
         <div class="row">
           <button class="btn" onclick="unitCompute()">Compute</button>
           <button class="btn" onclick="unitClear()">Clear</button>
         </div>
-
         <div id="unitOut" class="output mono" role="status" aria-live="polite"></div>
+      </div>
+
+      <!-- Password Generator -->
+      <div class="card" role="region" aria-labelledby="passwordGeneratorTitle">
+        <h3 id="passwordGeneratorTitle">Password Generator</h3>
+        <p class="muted">Decide which characters to include and the length and a strong password will be given.</p>
+        <div class="dropdown" id="charactersDropdown">
+          <span class="muted">Allowed Character Types:</span>
+          <div class="dropdown-button" id="pwdCharacterTypesToggle" role="button" tabindex="0" aria-expanded="false">
+            Select Character Types
+          </div>
+          <div class="dropdown-content" id="pwdCharacterTypesContent" aria-hidden="true">
+            <label><input type="checkbox" id="pwdUpper" value="upper" class="characters" checked> Capital
+              Letters</label><br>
+            <label><input type="checkbox" id="pwdLower" value="lower" class="characters" checked> Lowercase
+              Letters</label><br>
+            <label><input type="checkbox" id="pwdSymbols" value="symbols" class="characters" checked>
+              Symbols</label><br>
+            <label><input type="checkbox" id="pwdNumbers" value="numbers" class="characters" checked> Numbers</label>
+          </div>
+          <div class="grid">
+            <label><span class="muted">Enter number of characters required</span>
+              <input id="pwdLength" type="text" step="any" placeholder="Length" aria-label="pw length input" />
+            </label>
+          </div>
+          <div class="row">
+            <button id="pwdGenerate" class="btn" onclick="passwordGenerate()">Generate</button>
+            <button id="pwdClear" class="btn" onclick="passwordClear()">Clear</button>
+            <button id="pwdCopy" class="btn" onclick="copyPassword()">Copy</button>
+          </div>
+          <div id="pwdOut" class="output mono" role="status" aria-live="polite"></div>
+        </div>
       </div>
 
     </section>
@@ -457,11 +486,11 @@
 
       <!-- About -->
       <div class="card">
-        <h3 class="muted">NRB CodeWorks — Math & Science tools built for learning.</h3>
-        <p class="muted">Hi! I’m NRB, a student who enjoys creating and experimenting with code, design, and
+        <h3>NRB CodeWorks — Math & Science tools built for learning.</h3>
+        <p class="muted">Hi! I'm NRB, a student who enjoys creating and experimenting with code, design, and
           technology. This website is my personal project space — a place where I build interactive tools, games, and
           learning experiments as I continue improving my programming skills. My goal is to make coding fun, creative,
-          and accessible for anyone who visits. Whether it’s a math quiz, a simple game, or a web design experiment,
+          and accessible for anyone who visits. Whether it's a math quiz, a simple game, or a web design experiment,
           each project here is built with curiosity and the drive to learn something new.</p>
       </div>
 
@@ -470,26 +499,25 @@
         <h3>Customize the website your own way.</h3>
         <p class="muted">Choose your theme or create your own theme</p>
         <div id="color-pickers" class="grid">
-          <label>Main color first shade:
-            <input type="color" id="accent1Picker" value="#3c78d8ff">
+          <label><span class="muted">Main color first shade:</span><br>
+            <input class="color-picker" type="color" step="any" id="accent1Picker" value="#3c78d8">
           </label>
-          <label>Main color second shade:
-            <input type="color" id="accent2Picker" value="#9900ffff">
+          <label><span class="muted">Main color second shade:</span><br>
+            <input class="color-picker" type="color" step="any" id="accent2Picker" value="#9900ff">
           </label>
-          <label>Background color first shade:
-            <input type="color" id="background1Picker" value="#172D50">
+          <label><span class="muted">Background color first shade:</span><br>
+            <input class="color-picker" type="color" step="any" id="background1Picker" value="#172D50">
           </label>
-          <label>Background color second shade:
-            <input type="color" id="background2Picker" value="#480A71">
+          <label><span class="muted">Background color second shade:</span><br>
+            <input class="color-picker" type="color" step="any" id="background2Picker" value="#480A71">
           </label>
+        </div>
+        <div class="row">
           <button id="resetColors" class="btn">Reset</button>
         </div>
       </div>
-
     </section>
-
   </main>
-
   <script src="script.js" defer></script>
 </body>
 
