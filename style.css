@@ -134,17 +134,18 @@ body {
   -webkit-text-fill-color: transparent;
 }
 
-.top-nav a {
+.top-nav button {
   margin: 0 0.7rem;
   background: var(--gradient-primary);
   -webkit-background-clip:text; 
   -webkit-text-fill-color: transparent;
   text-decoration: none;
+  font-size:var(--header-height)-70px;
+  border:none;
   font-weight: 500;
 }
 
-
-.top-nav a:hover {
+.top-nav button:hover {
   background:white;
   -webkit-background-clip:text; 
   -webkit-text-fill-color: transparent;
@@ -331,6 +332,7 @@ body {
   margin-left: var(--sidebar-width-expanded);
   transition: margin-left 0.3s ease, opacity 0.4s ease;
 }
+
 .sidebar.collapsed ~ #app {
   margin-left: var(--sidebar-width-collapsed);
 }
@@ -338,6 +340,8 @@ body {
 .panel {
   overflow:hidden;
   margin-bottom: 20px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
 .hidden {
@@ -494,6 +498,49 @@ input[type="number"],select,input[type="text"] {
   font-family: var(--mono);
   font-size: 13px;
 }
+/*------ Pi Game ------*/
+.pi-restart-hidden {
+  display: none;
+}
+.pi-restart-visible {
+  display: visible;
+}
+.pi-start-hidden {
+  display: none;
+}
+.pi-start-visible {
+  display: visible;
+}
+.pi-comment-hidden {
+  display: none;
+}
+.pi-comment-visible {
+  display: visible;
+}
+.piHidden {
+  display:none;
+}
+.piVisible {
+  display:visible;
+}
+.pi-inputs {
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  flex-direction: row !important;
+  align-items: flex-start !important;
+  justify-content: flex-start !important;
+  gap: 6px; 
+}
+.pi-digit-input {
+  width:fit-content;
+  width: 45px;
+  height: 45px;
+  text-align: center;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 0.3s;
+}
 
 .dropdown {
   position: relative;
@@ -604,7 +651,6 @@ input[type="number"],select,input[type="text"] {
 #downSnake { bottom: 5px; left: 50%; transform: translateX(-50%); }
 #leftSnake { top: 50%; left: 5px; transform: translateY(-50%); }
 #rightSnake { top: 50%; right: 5px; transform: translateY(-50%); }
-
 #snakeScore {
   overflow:hidden;
   margin-top: 8px;
@@ -629,7 +675,7 @@ input[type="number"],select,input[type="text"] {
 }
 
 
-
+/* ====  Responsive ====  */
 
 @media only screen and (max-width:800px)  {
   .main-header {
