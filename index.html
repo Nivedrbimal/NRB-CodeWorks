@@ -10,7 +10,7 @@
 </head>
 
 <body>
-  <!-- Intro screen (NEW) -->
+  <!-- Intro Screen -->
   <div id="intro" class="intro-screen" role="dialog" aria-labelledby="intro-text" aria-modal="true">
     <div class="intro-content">
       <img src="faviconNRB.ico" alt="" class="intro-logo" />
@@ -18,23 +18,22 @@
       <p class="sr-only" id="intro-desc">Intro screen will auto-close and reveal the site.</p>
     </div>
   </div>
-
+  <!-- Header -->
   <header class="main-header hidden" id="mainHeader" role="banner">
     <div class="logo-area" aria-hidden="false">
       <img class="logo" src="faviconNRB.ico" alt="NRB CodeWorks Logo">
       <h1>NRB CodeWorks</h1>
     </div>
 
-    <nav class="top-nav" role="navigation" aria-label="Top links">
-      <a href="#" class="top-link">Home</a>
-      <a href="#" class="top-link">Projects</a>
-      <a href="#" class="top-link">Tools</a>
-      <a href="#" class="top-link">About</a>
+    <nav id="topNav" class="top-nav" role="navigation" aria-label="Top links">
+      <button data-target="panel-home" class="top-link">Home</button>
+      <button data-target="panel-utilities" class="top-link">Tools</button>
+      <button data-target="panel-info" class="top-link">Info</button>
     </nav>
     <button id="toggleSidebarResponsive" class="sidebar-toggle-responsive"
       aria-label="Toggle responsive sidebar">☰</button>
   </header>
-
+  <!-- Sidebar -->
   <aside class="sidebar collapsed hidden" id="sidebar" role="navigation" aria-label="Main menu">
     <nav class="menu" id="mainMenu">
       <button data-target="panel-home" class="menu-btn active" aria-controls="panel-home">
@@ -55,16 +54,17 @@
       <button data-target="panel-utilities" class="menu-btn" aria-controls="panel-utilities">
         <i class="icon"><img src="iconUtilities.png" class="icon-img"></i><span>Utilities</span>
       </button>
-      <button data-target="panel-about" class="menu-btn" aria-controls="panel-about">
-        <i class="icon"><img src="iconAbout.png" class="icon-img"></i><span>About</span>
+      <button data-target="panel-info" class="menu-btn" aria-controls="panel-inof">
+        <i class="icon"><img src="iconInfo.png" class="icon-img"></i><span>Info</span>
       </button>
     </nav>
     <button id="toggleSidebar" class="toggle-btn" aria-label="Toggle sidebar">☰</button>
   </aside>
 
-
+  <!-- App -->
   <main id="app" class="hidden" role="main" tabindex="-1">
-    <!-- Home panel -->
+
+    <!-- HOME -->
     <section id="panel-home" class="panel visible-panel" aria-labelledby="homeTitle">
       <div class="home-panel">
         <div class="home-content">
@@ -82,7 +82,23 @@
     <section id="panel-math" class="panel hidden" aria-labelledby="mathTitle">
       <h2 id="mathTitle" class="title">Math Calculators</h2>
 
-      <!-- Trig evaluator -->
+      <!-- General Calculator -->
+      <div class="card" role="region" aria-labelledby="genCalcTitle">
+        <h3 id="genCalcTitle">General Calculator</h3>
+        <p class="muted">Supports basic operations, exponents, trigonometry, pi, </p>
+        <div class="grid">
+          <label><span class="muted">Equation</span>
+            <input id="genCalcVal" type="text" step="any" placeholder="Enter equation" aria-label="equation input" />
+          </label>
+        </div>
+        <div class="row">
+          <button class="btn primary" onclick="genCalcCompute()">Compute</button>
+          <button class="btn" onclick="genCalcClear()">Clear</button>
+        </div>
+        <div id="genCalcOut" class="output mono" role="status" aria-live="polite"></div>
+      </div>
+
+      <!-- Trig Evaluator -->
       <div class="card" role="region" aria-labelledby="trigTitle">
         <h3 id="trigTitle">Trigonometric evaluator</h3>
         <p class="muted">Supports basic, inverse and hyperbolic trigonometric functions. Choose degrees, radians or
@@ -133,6 +149,7 @@
         <div id="triOut" class="output mono" role="status" aria-live="polite"></div>
       </div>
 
+      <!-- Quadratic Solver -->
       <div class="card" role="region" aria-labelledby="trigTitle">
         <h3 id="quadeTitle">Quadratic Equation</h3>
         <p class="muted">Finds the unknown values when given knowns.</p>
@@ -283,10 +300,47 @@
     <section id="panel-games" class="panel hidden" aria-labelledby="gamesTitle">
       <h2 id="gamesTitle" class="title">Games</h2>
 
+      <!-- Pi Game -->
       <div class="card" role="region" aria-labelledby="piTitle">
-        <h3 id="piTitle">Pi Memory Game - working in progress</h3>
+        <h3 id="piTitle">Pi Memory Game</h3>
+        <p class="muted">
+          Type the digits of π one by one. Test yourself to see how much you can remember in a row, use the practice
+          mode to set a tries or reveal it to see the value of pi.
+        </p><br>
+        <label><span class="muted">Mode</span>
+          <select id="piMode" aria-label="pi mode" onchange="changePiMode()">
+            <option value="selectPi">Select Mode</option>
+            <option value="testPi">Test</option>
+            <option value="pracPi">Practice</option>
+            <option value="revPi">Reveal</option>
+          </select>
+        </label>
+        <div class="grid">
+          <label id="piTesterHolder" class="piHidden"><span class="muted">Type the digits of pi.</span>
+            <input id="piTestInput" type="text" placeholder="Digits after 3." aria-label="pi input" />
+          </label>
+          <label id="piPracticeHolder" class="piHidden"><span class="muted">Type the maximum number of mistakes to allow.</span>
+            <input id="mistakeLimit" type="number" placeholder="Allowed mistakes" min="1" step="any">
+            <span class="muted">Type the digits of pi one by one.</span>
+            <div id="piInputs" class="pi-inputs"></div>
+          </label>
+          <label id="piRevealHolder" class="piHidden">
+            <span class="muted">These are the first 300 digits of pi.</span>
+            <div class="output mono">
+              3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679<br>
+              8214808651328230664709384460955058223172535940812848111745028410270193852110555964462294895493038196<br>
+              4428810975665933446128475648233786783165271201909145648566923460348610454326648213393607260249141
+            </div>
+          </label>
+        </div>
+        <div class="row">
+          <button id="piStart" class="btn pi-start-hidden" onclick="piStart()">Start</button>
+          <button id="piReset" class="btn pi-reset-hidden" onclick="piReset()">Reset</button>
+        </div>
+        <div id="piComment" class="output mono pi-comment-hidden" role="status" aria-live="polite"></div>
       </div>
 
+      <!-- Math Quiz -->
       <div class="card" role="region" aria-labelledby="quizTitle">
         <h3 id="quizTitle">Math Quiz</h3>
         <div class="grid">
@@ -318,6 +372,7 @@
         <div id="fg2_area" class="output mono" role="status" aria-live="polite">Configure and press Start.</div>
       </div>
 
+      <!-- Number Guesser -->
       <div class="card" role="region" aria-labelledby="ngTitle">
         <h3 id="ngTitle">Number Guessing</h3>
         <div class="row">
@@ -328,6 +383,7 @@
         <div id="ng_out" class="output mono" role="status" aria-live="polite">Press "New Game" to start (1–100).</div>
       </div>
 
+      <!-- Snake Game -->
       <div class="card" role="region" aria-labelledby="snakeTitle">
         <h3 id="snakeTitle">Snake Game</h3>
         <div class=" row snake-game-container">
@@ -352,6 +408,8 @@
     <!-- UTILITIES -->
     <section id="panel-utilities" class="panel hidden" aria-labelledby="utilTitle">
       <h2 id="utilTitle" class="title">Utilities</h2>
+
+      <!-- Unit Converter -->
       <div class="card" role="region" aria-labelledby="unitConvertTitle">
         <h3 id="unitConvertTitle">Unit Converter</h3>
         <p class="muted">Converts units to another unit of its kind</p>
@@ -363,6 +421,7 @@
               <option value="mass">Mass</option>
               <option value="area">Area</option>
               <option value="volume">Volume</option>
+              <option value="angle">Angle</option>
               <option value="temperature">Temperature</option>
               <option value="energy">Energy</option>
               <option value="speed">Speed</option>
@@ -391,18 +450,27 @@
 
     </section>
 
-    <!-- ABOUT -->
-    <section id="panel-about" class="panel hidden" aria-labelledby="aboutTitle">
-      <h2 id="aboutTitle" class="title">About Me</h2>
+    <!-- INFO -->
+    <section id="panel-info" class="panel hidden" aria-labelledby="infoTitle">
+      <h2 id="infoTitle" class="title">Info</h2>
+
+      <!-- About -->
       <div class="card">
-        <h4 class="muted">NRB CodeWorks — Math & Science tools built for learning.</h4>
-        <h4 class="muted">Hi! I’m NRB, a student who enjoys creating and experimenting with code, design, and
+        <h3 class="muted">NRB CodeWorks — Math & Science tools built for learning.</h3>
+        <p class="muted">Hi! I’m NRB, a student who enjoys creating and experimenting with code, design, and
           technology. This website is my personal project space — a place where I build interactive tools, games, and
           learning experiments as I continue improving my programming skills. My goal is to make coding fun, creative,
           and accessible for anyone who visits. Whether it’s a math quiz, a simple game, or a web design experiment,
-          each project here is built with curiosity and the drive to learn something new.</h4>
+          each project here is built with curiosity and the drive to learn something new.</p>
+      </div>
+
+      <!-- Customization -->
+      <div class="card" id="customize">
+        <h3 class="muted">Customize the website your own way (Coming Soon!!!)</h3>
+        <p class="muted"> Choose your theme or create your own theme</p>
       </div>
     </section>
+
   </main>
 
   <script src="script.js" defer></script>
