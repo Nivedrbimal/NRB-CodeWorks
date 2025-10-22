@@ -424,7 +424,9 @@ label {
   -webkit-text-fill-color: transparent;
 }
 
-input[type="number"],select,input[type="text"] {
+input[type="number"],
+select,
+input[type="text"] {
   width: 100%;
   padding: 8px;
   border-radius: 8px;
@@ -496,6 +498,297 @@ input[type="color"] {
   font-family: var(--mono);
   font-size: 13px;
 }
+
+/*Chemistry Section*/
+
+.periodic-table {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: clamp(2px, 0.6vw, 8px);
+}
+
+.ptColumn {
+  display: flex;
+  flex-direction: column;
+  padding: clamp(0.5px, 1.3vw, 2px);
+  gap: clamp(2px, 0.6vw, 8px);
+  width: clamp(15px, 4vw, 60px);
+  justify-content: center;
+}
+
+.element-box-legend {
+  border: 0.5px solid rgba(255, 255, 255, 0.03);
+  align-content: center;
+  width: 180px;
+  height: 30px;
+  border-radius: clamp(1.75px,0.466vw, 7px);
+  padding: 3px;
+  background: #07141c;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.element-box-legend:hover {
+  transform: scale(1.03);
+  box-shadow: 0 0 12px rgba(60, 120, 216, 0.4);
+}
+
+.element-type {
+  text-align: center;
+}
+
+.legend-row {
+  display: flex;
+  flex-direction: row;
+  padding: clamp(2px, 0.333vw, 5px);
+  justify-content: space-around;
+}
+
+.element-box {
+  aspect-ratio: 6/7;
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  z-index: 1;
+  border: clamp(0.25px, 0.033vw, 1px) solid rgba(255, 255, 255, 0.03);
+  align-content: center;
+  width: clamp(15px, 4vw, 60px);
+  border-radius: 7px;
+  padding: clamp(0.5px, 1.333vw, 2px);
+  background: #07141c;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.element-box:hover:not(.highlighted) {
+  transform: scale(2);
+  z-index: 10 ;
+  box-shadow: 0 0 12px rgba(60, 120, 216, 0.4);
+}
+
+.element-box.highlighted {
+  transform: scale(1.1);
+  z-index: 5;
+}
+
+.element-column {
+  font-size: clamp(2.75px, 0.733vw, 11px);
+  text-align: center;
+  font-weight: 200;
+}
+
+.element-symbol {
+  text-align: center;
+  font-size: clamp(4px, 1.067vw, 16px);
+  font-weight: 700;
+}
+
+.element-name {
+  text-align: center;
+  font-size: clamp(2.25px, 0.6vw, 9px);
+}
+
+.element-mass {
+  text-align: center;
+  font-size: clamp(2.25px, 0.6vw, 9px);
+}
+
+.element-number {
+  font-size: clamp(2.25px, 0.6vw, 9px);
+  text-align: left;
+}
+
+.side-text {
+  z-index: 1;
+  background: none;
+  font-size: clamp(2.25px, 0.6vw, 9px);
+  text-align: center;
+  align-content: center;
+  width: clamp(15px, 4vw, 60px);
+  aspect-ratio: 6/7;
+  padding: clamp(0.5px, 1.333vw, 2px);
+}
+
+.element-type-gases {
+  font-size: clamp(2.25px, 0.6vw, 9px);
+  text-align: center;
+  background: #fe7676;
+  border-radius: clamp(2px, 0.333vw, 5px);
+}
+
+.element-type-liquids {
+  font-size: clamp(2.25px, 0.6vw, 9px);
+  text-align: center;
+  background: #76a3fe;
+  border-radius: clamp(2px, 0.333vw, 5px);
+}
+
+.element-type-solids {
+  font-size: clamp(2.25px, 0.6vw, 9px);
+  text-align: center;
+  background: #fef076;
+  border-radius: clamp(2px, 0.333vw, 5px);
+}
+
+.element-type-artificial {
+  font-size: clamp(2.25px, 0.6vw, 9px);
+  text-align: center;
+  background: #76feca;
+  border-radius: clamp(2px, 0.333vw, 5px);
+}
+
+.noElement {
+  z-index: 1;
+  background: none;
+  text-align: center;
+  align-content: center;
+  aspect-ratio: 6/7;
+  width: clamp(15px, 4vw, 60px);
+  padding: clamp(0.5px, 1.333vw, 2px);
+}
+
+.alkaliMetalsLegend {
+  background-color: #d8f8ff;
+  border-color: #00758c;
+  color: #00758c;
+  stroke: #00758c;
+}
+
+.metalloidsLegend {
+  background-color: #fef7e0;
+  border-color: #945700;
+  color: #945700;
+  stroke: #945700;
+}
+
+.actinidesLegend {
+  background-color: #ffe6d4;
+  border-color: #c73200;
+  color: #c73200;
+  stroke: #c73200;
+}
+
+.alkalineEarthMetalsLegend {
+  background-color: #ffe7e7;
+  border-color: #d60024;
+  color: #d60024;
+  stroke: #d60024;
+}
+
+.reactiveNonMetalsLegend {
+  background-color: #e2eeff;
+  border-color: #0060f0;
+  color: #0060f0;
+  stroke: #0060f0;
+}
+
+.unknownElementsLegend {
+  background-color: #e7e7ea;
+  border-color: #3f374f;
+  color: #3f374f;
+  stroke: #3f374f;
+}
+
+.transitionMetalsLegend {
+  background-color: #f3e8fd;
+  border-color: #6232ec;
+  color: #6232ec;
+  stroke: #6232ec;
+}
+
+.nobleGasesLegend {
+  background-color: #ffe7eb;
+  border-color: #cd1d5e;
+  color: #cd1d5e;
+  stroke: #cd1d5e;
+}
+
+.postTransitionMetalsLegend {
+  background-color: #d6f9e8;
+  border-color: #227754;
+  color: #227754;
+  stroke: #227754;
+}
+
+.lanthanidesLegend {
+  background-color: #dff3ff;
+  border-color: #003355;
+  color: #003355;
+  stroke: #003355;
+}
+
+.alkaliMetals {
+  background-color: #d8f8ff;
+  border-color: #00758c;
+  color: #00758c;
+  stroke: #00758c;
+}
+
+.metalloids {
+  background-color: #fef7e0;
+  border-color: #945700;
+  color: #945700;
+  stroke: #945700;
+}
+
+.actinides {
+  background-color: #ffe6d4;
+  border-color: #c73200;
+  color: #c73200;
+  stroke: #c73200;
+}
+
+.alkalineEarthMetals {
+  background-color: #ffe7e7;
+  border-color: #d60024;
+  color: #d60024;
+  stroke: #d60024;
+}
+
+.reactiveNonMetals {
+  background-color: #e2eeff;
+  border-color: #0060f0;
+  color: #0060f0;
+  stroke: #0060f0;
+}
+
+.unknownElements {
+  background-color: #e7e7ea;
+  border-color: #3f374f;
+  color: #3f374f;
+  stroke: #3f374f;
+}
+
+.transitionMetals {
+  background-color: #f3e8fd;
+  border-color: #6232ec;
+  color: #6232ec;
+  stroke: #6232ec;
+}
+
+.nobleGases {
+  background-color: #ffe7eb;
+  border-color: #cd1d5e;
+  color: #cd1d5e;
+  stroke: #cd1d5e;
+}
+
+.postTransitionMetals {
+  background-color: #d6f9e8;
+  border-color: #227754;
+  color: #227754;
+  stroke: #227754;
+}
+
+.lanthanides {
+  background-color: #dff3ff;
+  border-color: #003355;
+  color: #003355;
+  stroke: #003355;
+}
+
+
 
 /*------ Pi Game ------*/
 .pi-restart-hidden {
@@ -650,7 +943,7 @@ input[type="color"] {
   border-radius: 50%;
   padding: 4px;
   background: var(--gradient-primary);
-  mask: linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
   pointer-events: none;
@@ -791,5 +1084,79 @@ input[type="color"] {
 
   .snake-controls {
     gap: 5px;
+  }
+
+  .periodic-table {
+    justify-content: center;
+    gap: clamp(0px, 0.1vw, 20px);
+  }
+
+  .ptColumn {
+    width: clamp(12px, 4vw, 60px);
+    gap: clamp(0px, 0.1vw, 20px);
+  }
+
+  .element-box,
+  .noElement,
+  .side-text {
+    border-radius: 3px;
+    width: clamp(12px, 4vw, 60px);
+    height: clamp(14px, 5vw, 70px);
+    font-size: clamp(1px, 0.9vw, 14px) !important;
+  }
+
+  .element-symbol {
+    font-size: 2vw;
+  }
+
+  .element-number {
+    font-size: 1vw;
+  }
+
+  .element-name,
+  .element-mass,
+  .element-type-gases,
+  .element-type-liquids,
+  .element-type-solids,
+  .element-type-artificial {
+    display:none;
+    opacity: 0;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+
+  .element-box:hover:not(.highlighted) .element-symbol {
+    font-size: clamp(4px, 1.25vw, 20px) !important;
+  }
+
+  .element-box:hover:not(.highlighted) .element-number {
+    font-size: clamp(3px, 0.5vw, 14px);
+  }
+
+  .element-box:hover:not(.highlighted) .element-name,
+  .element-box:hover:not(.highlighted) .element-mass,
+  .element-box:hover:not(.highlighted) .element-type-gases,
+  .element-box:hover:not(.highlighted) .element-type-liquids,
+  .element-box:hover:not(.highlighted) .element-type-solids,
+  .element-box:hover:not(.highlighted) .element-type-artificial {
+    border-radius: 1px;
+    text-align: center !important;
+    align-items: center !important;
+    display:block;
+    opacity: 1;
+    font-size: clamp(2px, 0.4vw, 14px) !important;
+    transition: opacity 0.1s ease, transform 0.1s ease;
+  }
+
+  .element-box:hover:not(.highlighted) {
+    transform: scale(5);
+    gap: 0px !important;
+    z-index: 10;
+    padding: 0.5px !important
+  }
+
+  .element-box-legend {
+    width: clamp(40px, 20vw, 180px);
+    height: clamp(10px, 5vw, 30px);
+    font-size: clamp(6px, 1.75vw, 14px) !important;
   }
 }
