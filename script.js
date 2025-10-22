@@ -494,6 +494,19 @@ function waves_solve() {
   document.getElementById('wav_out').textContent = out;
 }
 
+// ======== CHEMISTRY ========
+function highlightElementGroup(type) {
+  const elements = document.querySelectorAll(`.${type}`);
+  const alreadyHighlighted = Array.from(elements).some(el => el.classList.contains('highlighted'));
+  document.querySelectorAll('.element-box').forEach(el => el.classList.remove('highlighted'));
+  if (!alreadyHighlighted) {
+    elements.forEach(el => el.classList.add('highlighted'));
+  }
+}
+
+
+
+
 // ========== GAMES ==========
 
 // --------- Pi Game ---------
