@@ -649,8 +649,8 @@ const elementData = {
 
 function ptInfoClear() {
   document.getElementById("ptOut").textContent = "";
-  document.getElementById("ptInfoBtn").classList.add('pt-info-btn-hidden');
-  document.getElementById("ptInfoBtn").classList.remove('pt-info-btn-visible');
+  document.getElementById("ptInfoBtn").classList.add('ptInfoBtnHidden');
+  document.getElementById("ptInfoBtn").classList.remove('ptInfoBtnVisible');
 }
 
 

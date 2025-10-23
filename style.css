@@ -513,7 +513,7 @@ input[type="color"] {
   flex-direction: column;
   padding: clamp(0.5px, 1.3vw, 2px);
   gap: clamp(2px, 0.6vw, 8px);
-  width: clamp(15px, 4vw, 60px);
+  width: clamp(15px, 4vw, 65px);
   justify-content: center;
 }
 
@@ -553,7 +553,8 @@ input[type="color"] {
   z-index: 1;
   border: clamp(0.25px, 0.033vw, 1px) solid rgba(255, 255, 255, 0.03);
   align-content: center;
-  width: clamp(15px, 4vw, 60px);
+  width: clamp(15px, 4vw, 65px);
+  gap: 2px;
   border-radius: 7px;
   padding: clamp(0.5px, 1.333vw, 2px);
   background: #07141c;
@@ -605,7 +606,7 @@ input[type="color"] {
   font-size: clamp(2.25px, 0.6vw, 9px);
   text-align: center;
   align-content: center;
-  width: clamp(15px, 4vw, 60px);
+  width: clamp(15px, 4vw, 65px);
   aspect-ratio: 6/7;
   padding: clamp(0.5px, 1.333vw, 2px);
 }
@@ -644,7 +645,7 @@ input[type="color"] {
   text-align: center;
   align-content: center;
   aspect-ratio: 6/7;
-  width: clamp(15px, 4vw, 60px);
+  width: clamp(15px, 4vw, 65px);
   padding: clamp(0.5px, 1.333vw, 2px);
 }
 
