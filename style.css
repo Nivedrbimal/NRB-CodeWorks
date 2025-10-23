@@ -1105,13 +1105,14 @@ input[type="color"] {
   .noElement,
   .side-text {
     aspect-ratio: 6/7 !important;
+    gap:0px !important;
     border-radius: 3px;
     width: clamp(12px, 4vw, 60px);
     height: 5vw;
   }
 
   .element-symbol {
-    font-size: 2vw;
+    font-size: 1.5vw;
     line-height: 1;
   }
 
@@ -1132,11 +1133,12 @@ input[type="color"] {
   }
 
   .element-box:hover:not(.highlighted) .element-symbol {
-    line-height:0.75;
+    line-height:0.5;
   }
 
   .element-box:hover:not(.highlighted) .element-number {
     line-height:1;
+    font-size: clamp(2px, 0.4, 14px) !important;
   }
 
   .element-box:hover:not(.highlighted) .element-name,
