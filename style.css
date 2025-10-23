@@ -1112,7 +1112,7 @@ input[type="color"] {
 
   .element-symbol {
     font-size: 2vw;
-    line-height: 1.5;
+    line-height: 1;
   }
 
   .element-number {
@@ -1155,7 +1155,7 @@ input[type="color"] {
 
   .element-box:hover:not(.highlighted) {
     transform: scale(5);
-    gap: 1px !important;
+    gap: 0px !important;
     z-index: 10;
     padding: 1px !important
   }
