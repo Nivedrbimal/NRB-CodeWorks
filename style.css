@@ -1112,7 +1112,7 @@ input[type="color"] {
   }
 
   .element-symbol {
-    font-size: 1.5vw;
+    font-size: 2vw;
     line-height: 1;
   }
 
@@ -1133,12 +1133,12 @@ input[type="color"] {
   }
 
   .element-box:hover:not(.highlighted) .element-symbol {
-    line-height:0.5;
+    line-height:q;
   }
 
   .element-box:hover:not(.highlighted) .element-number {
     line-height:1;
-    font-size: clamp(2px, 0.4, 14px) !important;
+    font-size: clamp(2px, 0.7vw, 14px) !important;
   }
 
   .element-box:hover:not(.highlighted) .element-name,
