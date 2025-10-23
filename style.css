@@ -1133,7 +1133,7 @@ input[type="color"] {
   }
 
   .element-box:hover:not(.highlighted) .element-symbol {
-    line-height:q;
+    line-height:1;
   }
 
   .element-box:hover:not(.highlighted) .element-number {
@@ -1154,7 +1154,9 @@ input[type="color"] {
     font-size: clamp(2px, 0.4, 14px) !important;
     transition: opacity 0.1s ease, transform 0.1s ease;
   }
-
+  .element-box:hover:not(.highlighted) .element-symbol {
+    margin-top:1px;
+  }
   .element-box:hover:not(.highlighted) {
     transform: scale(5);
     gap: 0px !important;
