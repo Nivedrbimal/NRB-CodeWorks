@@ -1133,7 +1133,7 @@ input[type="color"] {
   }
 
   .element-box:hover:not(.highlighted) .element-symbol {
-    line-height:q;
+    line-height:1;
   }
 
   .element-box:hover:not(.highlighted) .element-number {
