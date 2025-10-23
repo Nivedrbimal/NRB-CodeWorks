@@ -1133,12 +1133,10 @@ input[type="color"] {
 
   .element-box:hover:not(.highlighted) .element-symbol {
     font-size: clamp(4px, 1.25vw, 20px) !important;
-    line-height: 1.5;
   }
 
   .element-box:hover:not(.highlighted) .element-number {
     font-size: clamp(3px, 0.5vw, 14px);
-    line-height: 1;
   }
 
   .element-box:hover:not(.highlighted) .element-name,
@@ -1147,7 +1145,6 @@ input[type="color"] {
   .element-box:hover:not(.highlighted) .element-type-liquids,
   .element-box:hover:not(.highlighted) .element-type-solids,
   .element-box:hover:not(.highlighted) .element-type-artificial {
-    line-height: 1;
     border-radius: 1px;
     text-align: center !important;
     align-items: center !important;
@@ -1166,7 +1163,7 @@ input[type="color"] {
 
   .element-box-legend {
     width: clamp(45px, 12vw, 180px);
-    height: clamp(7.5px, 4vw, 30px);
-    font-size: clamp(6px, 1.75vw, 14px) !important;
+    height: clamp(7.5px, 4, 30px);
+    font-size: clamp(6px, 1.75, 14px) !important;
   }
 }
