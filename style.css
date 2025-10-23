@@ -1005,6 +1005,11 @@ input[type="color"] {
 /* ====  Responsive ====  */
 
 @media screen and (max-width:800px) {
+  html, body {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
   .main-header {
     height: var(--header-height-responsive);
   }
@@ -1107,12 +1112,12 @@ input[type="color"] {
 
   .element-symbol {
     font-size: 2vw;
-    line-height: 2vw;
+    line-height: 2;
   }
 
   .element-number {
     font-size: 1vw;
-    line-height: 1vw;
+    line-height: 1;
   }
 
   .element-name,
