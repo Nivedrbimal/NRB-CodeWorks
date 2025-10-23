@@ -1102,7 +1102,7 @@ input[type="color"] {
     border-radius: 3px;
     width: clamp(12px, 4vw, 60px);
     height: clamp(14px, 5vw, 70px);
-    font-size: clamp(1px, 0.9vw, 14px) !important;
+    font-size: clamp(1px, 0.9vw, 14px);
   }
 
   .element-symbol {
@@ -1126,12 +1126,12 @@ input[type="color"] {
 
   .element-box:hover:not(.highlighted) .element-symbol {
     font-size: clamp(4px, 1.25vw, 20px) !important;
-    height:7.69vw;
+    line-height: 1.5vw;
   }
 
   .element-box:hover:not(.highlighted) .element-number {
     font-size: clamp(3px, 0.5vw, 14px);
-    height:3.21vw;
+    line-height: 0.5vw;
   }
 
   .element-box:hover:not(.highlighted) .element-name,
@@ -1140,7 +1140,7 @@ input[type="color"] {
   .element-box:hover:not(.highlighted) .element-type-liquids,
   .element-box:hover:not(.highlighted) .element-type-solids,
   .element-box:hover:not(.highlighted) .element-type-artificial {
-    height:3.21vw;
+    line-height: 0.5vw;
     border-radius: 1px;
     text-align: center !important;
     align-items: center !important;
