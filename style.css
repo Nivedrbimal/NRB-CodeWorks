@@ -1133,12 +1133,12 @@ input[type="color"] {
 
   .element-box:hover:not(.highlighted) .element-symbol {
     font-size: clamp(4px, 1.25vw, 20px) !important;
-    line-height: 1.5vw;
+    line-height: 1.5;
   }
 
   .element-box:hover:not(.highlighted) .element-number {
     font-size: clamp(3px, 0.5vw, 14px);
-    line-height: 0.5vw;
+    line-height: 0.5;
   }
 
   .element-box:hover:not(.highlighted) .element-name,
@@ -1147,7 +1147,7 @@ input[type="color"] {
   .element-box:hover:not(.highlighted) .element-type-liquids,
   .element-box:hover:not(.highlighted) .element-type-solids,
   .element-box:hover:not(.highlighted) .element-type-artificial {
-    line-height: 0.5vw;
+    line-height: 0.5;
     border-radius: 1px;
     text-align: center !important;
     align-items: center !important;
