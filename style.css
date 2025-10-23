@@ -1105,6 +1105,7 @@ input[type="color"] {
   .noElement,
   .side-text {
     aspect-ratio: 6/7 !important;
+    gap:0px !important;
     border-radius: 3px;
     width: clamp(12px, 4vw, 60px);
     height: 5vw;
