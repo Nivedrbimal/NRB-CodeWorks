@@ -1099,9 +1099,9 @@ input[type="color"] {
   .element-box,
   .noElement,
   .side-text {
+    aspect-ratio: 6/7;
     border-radius: 3px;
     width: clamp(12px, 4vw, 60px);
-    height: clamp(14px, 5vw, 70px);
     font-size: clamp(1px, 0.9vw, 14px);
   }
 
