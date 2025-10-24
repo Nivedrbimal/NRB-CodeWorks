@@ -868,7 +868,27 @@ function shapes2DCompute() {
 }
 function shapes2DClear() {
   document.querySelectorAll('.shapes-2d-visible input').forEach(input => input.value = '');
+  document.getElementById('shape2D').value = 'select';
   document.getElementById('shapes2DOut').textContent = '';
+  const grids = [
+    'shapes2DCircleGrid',
+    'shapes2DTriangleGrid',
+    'shapes2DSquareGrid',
+    'shapes2DRectangleGrid',
+    'shapes2DParallelogramGrid',
+    'shapes2DTrapezoidGrid',
+    'shapes2DRhombusGrid',
+    'shapes2DKiteGrid',
+    'shapes2DEllipseGrid',
+    'shapes2DRegularPolygonGrid'
+  ];
+  grids.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.classList.remove('shapes-2d-visible');
+      el.classList.add('shapes-2d-hidden');
+    }
+  });
 }
 
 // =============== PHYSICS ===============
@@ -1532,6 +1552,7 @@ let specialFood = null;
 let highScore = localStorage.getItem("snakeHighScore") || 0;
 document.getElementById("snakeHighScore").textContent = "High score = " + highScore;
 let specialFoodTimer = null;
+let specialFoodTime = 5000;
 let paused = false;
 let lastFrameTime = 0;
 let moveDelay = 200;
@@ -1561,11 +1582,11 @@ function randomFood() {
 }
 function spawnSpecialFood() {
   specialFood = {
-    x: Math.floor(Math.random() * 18 + 1) * box,
-    y: Math.floor(Math.random() * 18 + 1) * box
+    x: Math.floor(Math.random() * 25) * box,
+    y: Math.floor(Math.random() * 25) * box
   };
   clearTimeout(specialFoodTimer);
-  specialFoodTimer = setTimeout(() => (specialFood = null), 2500);
+  specialFoodTimer = setTimeout(() => (specialFood = null), specialFoodTime);
 }
 function hitSpecialFood(snakeX, snakeY) {
   if (!specialFood) return false;
@@ -1631,7 +1652,7 @@ function updateGame() {
   if (snakeX === food.x && snakeY === food.y) {
     score += 5;
     foodsEaten++;
-    moveDelay -= 10;
+    moveDelay -= 2.5;
     food = randomFood();
     if (foodsEaten % 10 === 0) spawnSpecialFood();
   } else {
