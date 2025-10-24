@@ -499,6 +499,14 @@ input[type="color"] {
   font-size: 13px;
 }
 
+/* Math Section */
+
+.shapes-2d-hidden {
+  display: none;
+}
+.shapes-2d-visible {
+  display: block;
+}
 /*Chemistry Section*/
 
 .periodic-table {
@@ -993,10 +1001,16 @@ input[type="color"] {
 
 #snakeScore {
   overflow: hidden;
-  margin-top: 8px;
   color: #fff;
   font-weight: bold;
   font-size: 1.1em;
+}
+
+#snakeHighScore {
+    overflow: hidden;
+    color: #fff;
+    font-weight: bold;
+    font-size: 1.1em;
 }
 
 .sr-only {

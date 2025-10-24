@@ -369,6 +369,508 @@ function quadeSolve() {
   document.getElementById('quadOut').textContent = out;
 }
 
+// --------- 2D Shapes -----------
+function showShape2DInputs() {
+  const shape = document.getElementById('shape2D').value;
+  document.querySelectorAll('.shapes-2d').forEach(el => {
+    el.classList.add('shapes-2d-hidden');
+    el.classList.remove('shapes-2d-visible');
+  });
+
+  switch (shape) {
+    case 'circle':
+    case 'semicircle':
+      document.getElementById('shapes2DCircleGrid').classList.remove('shapes-2d-hidden');
+      document.getElementById('shapes2DCircleGrid').classList.add('shapes-2d-visible');
+      break;
+    case 'triangle':
+      document.getElementById('shapes2DTriangleGrid').classList.remove('shapes-2d-hidden');
+      document.getElementById('shapes2DTriangleGrid').classList.add('shapes-2d-visible');
+      break;
+    case 'square':
+      document.getElementById('shapes2DSquareGrid').classList.remove('shapes-2d-hidden');
+      document.getElementById('shapes2DSquareGrid').classList.add('shapes-2d-visible');
+      break;
+    case 'rectangle':
+      document.getElementById('shapes2DRectangleGrid').classList.remove('shapes-2d-hidden');
+      document.getElementById('shapes2DRectangleGrid').classList.add('shapes-2d-visible');
+      break;
+    case 'parallelogram':
+      document.getElementById('shapes2DParallelogramGrid').classList.remove('shapes-2d-hidden');
+      document.getElementById('shapes2DParallelogramGrid').classList.add('shapes-2d-visible');
+      break;
+    case 'trapezoid':
+      document.getElementById('shapes2DTrapezoidGrid').classList.remove('shapes-2d-hidden');
+      document.getElementById('shapes2DTrapezoidGrid').classList.add('shapes-2d-visible');
+      break;
+    case 'kite':
+      document.getElementById('shapes2DInputsKites').classList.remove('shapes-2d-hidden');
+      document.getElementById('shapes2DInputsKites').classList.add('shapes-2d-visible');
+      break;
+    case 'ellipse':
+      document.getElementById('shapes2DEllipseGrid').classList.remove('shapes-2d-hidden');
+      document.getElementById('shapes2DEllipseGrid').classList.add('shapes-2d-visible');
+      break;
+    case 'regularPolygon':
+      document.getElementById('shapes2DRegularPolygonGrid').classList.remove('shapes-2d-hidden');
+      document.getElementById('shapes2DRegularPolygonGrid').classList.add('shapes-2d-visible');
+      break;
+  }
+}
+function solveShape2D(shape, inputs) {
+  let changed = true, iter = 0;
+  const known = (x) => x !== null && x !== undefined && !isNaN(x);
+
+  while (changed && iter < 60) {
+    changed = false; iter++;
+
+    switch (shape) {
+      // ==================== CIRCLE ====================
+      case "circle":
+        if (!known(inputs.d) && known(inputs.r)) { inputs.d = 2 * inputs.r; changed = true; }
+        if (!known(inputs.r) && known(inputs.d)) { inputs.r = inputs.d / 2; changed = true; }
+        if (!known(inputs.c) && known(inputs.r)) { inputs.c = 2 * Math.PI * inputs.r; changed = true; }
+        if (!known(inputs.r) && known(inputs.c)) { inputs.r = inputs.c / (2 * Math.PI); changed = true; }
+        if (!known(inputs.a) && known(inputs.r)) { inputs.a = Math.PI * inputs.r ** 2; changed = true; }
+        if (!known(inputs.r) && known(inputs.a)) { inputs.r = Math.sqrt(inputs.a / Math.PI); changed = true; }
+        if (!known(inputs.arcLength) && known(inputs.centralAngle) && known(inputs.r)) { inputs.arcLength = (inputs.centralAngle / 360) * 2 * Math.PI * inputs.r; changed = true; }
+        if (!known(inputs.centralAngle) && known(inputs.arcLength) && known(inputs.r) && inputs.r !== 0) { inputs.centralAngle = (inputs.arcLength / (2 * Math.PI * inputs.r)) * 360; changed = true; }
+        if (!known(inputs.sectorArea) && known(inputs.centralAngle) && known(inputs.r)) { inputs.sectorArea = (inputs.centralAngle / 360) * Math.PI * inputs.r ** 2; changed = true; }
+        if (!known(inputs.centralAngle) && known(inputs.sectorArea) && known(inputs.r) && inputs.r !== 0) { inputs.centralAngle = (inputs.sectorArea / (Math.PI * inputs.r ** 2)) * 360; changed = true; }
+        break;
+
+      // ==================== TRIANGLE ====================
+      case "triangle":
+        if (!known(inputs.angleA) && known(inputs.s1) && known(inputs.s2) && known(inputs.angleB) && (inputs.tp === 'acute' || inputs.tp === 'right')) { inputs.angleA = Math.asin(inputs.s1 * Math.sin(inputs.angleB * Math.PI / 180) / inputs.s2) * 180 / Math.PI; changed = true; }
+        if (!known(inputs.angleA) && known(inputs.s1) && known(inputs.s3) && known(inputs.angleC) && (inputs.tp === 'acute' || inputs.tp === 'right')) { inputs.angleA = Math.asin(inputs.s1 * Math.sin(inputs.angleC * Math.PI / 180) / inputs.s3) * 180 / Math.PI; changed = true; }
+        if (!known(inputs.angleB) && known(inputs.s2) && known(inputs.s1) && known(inputs.angleA) && (inputs.tp === 'acute' || inputs.tp === 'right')) { inputs.angleB = Math.asin(inputs.s2 * Math.sin(inputs.angleA * Math.PI / 180) / inputs.s1) * 180 / Math.PI; changed = true; }
+        if (!known(inputs.angleB) && known(inputs.s2) && known(inputs.s3) && known(inputs.angleC) && (inputs.tp === 'acute' || inputs.tp === 'right')) { inputs.angleB = Math.asin(inputs.s2 * Math.sin(inputs.angleC * Math.PI / 180) / inputs.s3) * 180 / Math.PI; changed = true; }
+        if (!known(inputs.angleC) && known(inputs.s3) && known(inputs.s1) && known(inputs.angleA) && (inputs.tp === 'acute' || inputs.tp === 'right')) { inputs.angleC = Math.asin(inputs.s3 * Math.sin(inputs.angleA * Math.PI / 180) / inputs.s1) * 180 / Math.PI; changed = true; }
+        if (!known(inputs.angleC) && known(inputs.s3) && known(inputs.s2) && known(inputs.angleB) && (inputs.tp === 'acute' || inputs.tp === 'right')) { inputs.angleC = Math.asin(inputs.s3 * Math.sin(inputs.angleB * Math.PI / 180) / inputs.s2) * 180 / Math.PI; changed = true; }
+        if (!known(inputs.angleA) && known(inputs.angleB) && known(inputs.angleC)) { inputs.angleA = 180 - (inputs.angleB + inputs.angleC); changed = true; }
+        if (!known(inputs.angleB) && known(inputs.angleA) && known(inputs.angleC)) { inputs.angleB = 180 - (inputs.angleA + inputs.angleC); changed = true; }
+        if (!known(inputs.angleC) && known(inputs.angleA) && known(inputs.angleB)) { inputs.angleC = 180 - (inputs.angleA + inputs.angleB); changed = true; }
+        if (!known(inputs.sp) && known(inputs.s1) && known(inputs.s2) && known(inputs.s3)) { inputs.sp = (inputs.s1 + inputs.s2 + inputs.s3) / 2; changed = true; }
+        if (!known(inputs.tp) && known(inputs.angleA) && known(inputs.angleB) && known(inputs.angleC) && (inputs.angleA < 90 && inputs.angleB < 90 && inputs.angleC < 90)) { inputs.tp = 'acute'; changed = true; }
+        if (!known(inputs.tp) && ((known(inputs.angleA) && inputs.angleA === 90) || (known(inputs.angleB) && inputs.angleB === 90) || (known(inputs.angleC) && inputs.angleC === 90))) { inputs.tp = 'right'; changed = true; }
+        if (!known(inputs.tp) && ((known(inputs.angleA) && inputs.angleA > 90) || (known(inputs.angleB) && inputs.angleB > 90) || (known(inputs.angleC) && inputs.angleC > 90))) { inputs.tp = 'obtuse'; changed = true; }
+        if (!known(inputs.s1) && known(inputs.s2) && known(inputs.s3) && (inputs.tp === 'right')) { inputs.s1 = Math.sqrt(inputs.s3 ** 2 - inputs.s2 ** 2); changed = true; }
+        if (!known(inputs.s2) && known(inputs.s1) && known(inputs.s3) && (inputs.tp === 'right')) { inputs.s2 = Math.sqrt(inputs.s3 ** 2 - inputs.s1 ** 2); changed = true; }
+        if (!known(inputs.s3) && known(inputs.s1) && known(inputs.s2) && (inputs.tp === 'right')) { inputs.s3 = Math.sqrt(inputs.s1 ** 2 + inputs.s2 ** 2); changed = true; }
+        if (!known(inputs.s1) && known(inputs.s2) && known(inputs.s3) && (inputs.angleC === 90)) { inputs.s1 = Math.sqrt(inputs.s3 ** 2 - inputs.s2 ** 2); changed = true; }
+        if (!known(inputs.s2) && known(inputs.s1) && known(inputs.s3) && (inputs.angleC === 90)) { inputs.s2 = Math.sqrt(inputs.s3 ** 2 - inputs.s1 ** 2); changed = true; }
+        if (!known(inputs.s3) && known(inputs.s1) && known(inputs.s2) && (inputs.angleC === 90)) { inputs.s3 = Math.sqrt(inputs.s1 ** 2 + inputs.s2 ** 2); changed = true; }
+        if (!known(inputs.angleA) && known(inputs.s1) && known(inputs.s2) && known(inputs.s3) && known(inputs.tp) && (inputs.s1 > inputs.s2) && (inputs.s1 > inputs.s3) && inputs.tp === 'right') { inputs.angleA = 90; changed = true; }
+        if (!known(inputs.angleB) && known(inputs.s1) && known(inputs.s2) && known(inputs.s3) && known(inputs.tp) && (inputs.s2 > inputs.s1) && (inputs.s1 > inputs.s3) && inputs.tp === 'right') { inputs.angleB = 90; changed = true; }
+        if (!known(inputs.angleC) && known(inputs.s1) && known(inputs.s2) && known(inputs.s3) && known(inputs.tp) && (inputs.s3 > inputs.s1) && (inputs.s3 > inputs.s2) && inputs.tp === 'right') { inputs.angleC = 90; changed = true; }
+        if (!known(inputs.tT) && known(inputs.s1) && (inputs.s2) && (inputs.s3) && (inputs.s1 + inputs.s2 <= inputs.s3 || inputs.s1 + inputs.s3 <= inputs.s2 || inputs.s2 + inputs.s3 <= inputs.s1)) { inputs.tT = "Invalid"; }
+        if (!known(inputs.tT) && known(inputs.s1) && known(inputs.s2) && known(inputs.s3) && inputs.s1 === inputs.s2 && inputs.s2 === inputs.s3) { inputs.tT = 'equilateral'; changed = true; }
+        if (!known(inputs.tT) && known(inputs.s1) && known(inputs.s2) && known(inputs.s3) && ((inputs.s1 === inputs.s2 && inputs.s1 !== inputs.s3) || (inputs.s2 === inputs.s3 && inputs.s2 !== inputs.s1) || (inputs.s1 === inputs.s3 && inputs.s1 !== inputs.s2))) { inputs.tT = 'isosceles'; changed = true; }
+        if (!known(inputs.tT) && known(inputs.s1) && known(inputs.s2) && known(inputs.s3) && (inputs.s1 !== inputs.s2 && inputs.s2 !== inputs.s3 && inputs.s1 !== inputs.s3)) { inputs.tT = 'scalene'; changed = true; }
+        if (known(inputs.tT) && inputs.tT === 'equilateral' && known(inputs.s1) && !known(inputs.s2)) { inputs.s2 = inputs.s1; changed = true; }
+        if (known(inputs.tT) && inputs.tT === 'equilateral' && known(inputs.s1) && !known(inputs.s3)) { inputs.s3 = inputs.s1; changed = true; }
+        if (known(inputs.tT) && inputs.tT === 'equilateral' && known(inputs.s2) && !known(inputs.s1)) { inputs.s1 = inputs.s2; changed = true; }
+        if (known(inputs.tT) && inputs.tT === 'equilateral' && known(inputs.s2) && !known(inputs.s3)) { inputs.s3 = inputs.s2; changed = true; }
+        if (known(inputs.tT) && inputs.tT === 'equilateral' && known(inputs.s3) && !known(inputs.s1)) { inputs.s1 = inputs.s3; changed = true; }
+        if (known(inputs.tT) && inputs.tT === 'equilateral' && known(inputs.s3) && !known(inputs.s2)) { inputs.s2 = inputs.s3; changed = true; }
+        if (known(inputs.tT) && inputs.tT === 'isosceles' && known(inputs.s1) && known(inputs.s2) && inputs.s1 === inputs.s2 && !known(inputs.s3)) { }
+        if (known(inputs.tT) && inputs.tT === 'isosceles' && known(inputs.s1) && known(inputs.s3) && inputs.s1 === inputs.s3 && !known(inputs.s2)) { }
+        if (known(inputs.tT) && inputs.tT === 'isosceles' && known(inputs.s2) && known(inputs.s3) && inputs.s2 === inputs.s3 && !known(inputs.s1)) { }
+        if (known(inputs.tT) && inputs.tT === 'equilateral' && !known(inputs.angleA)) { inputs.angleA = 60; changed = true; }
+        if (known(inputs.tT) && inputs.tT === 'equilateral' && !known(inputs.angleB)) { inputs.angleB = 60; changed = true; }
+        if (known(inputs.tT) && inputs.tT === 'equilateral' && !known(inputs.angleC)) { inputs.angleC = 60; changed = true; }
+        if (!known(inputs.p) && known(inputs.s1) && known(inputs.s2) && known(inputs.s3)) { inputs.p = inputs.s1 + inputs.s2 + inputs.s3; changed = true; }
+        if (!known(inputs.a) && known(inputs.s1) && known(inputs.s2) && known(inputs.s3)) { let s = (inputs.s1 + inputs.s2 + inputs.s3) / 2; inputs.a = Math.sqrt(s * (s - inputs.s1) * (s - inputs.s2) * (s - inputs.s3)); changed = true; }
+        if (!known(inputs.b) && known(inputs.s1)) { inputs.b = inputs.s1; changed = true; }
+        if (!known(inputs.s1) && known(inputs.b)) { inputs.s1 = inputs.b; changed = true; }
+        if (known(inputs.tT) && inputs.tT === 'equilateral' && known(inputs.s1) && !known(inputs.h1)) { inputs.h1 = (Math.sqrt(3) / 2) * inputs.s1; changed = true; }
+        if (known(inputs.tT) && inputs.tT === 'equilateral' && known(inputs.s1) && !known(inputs.a)) { inputs.a = (Math.sqrt(3) / 4) * inputs.s1 ** 2; changed = true; }
+        if (known(inputs.tT) && inputs.tT === 'equilateral' && known(inputs.s1) && !known(inputs.inR)) { inputs.inR = inputs.s1 / (2 * Math.sqrt(3)); changed = true; }
+        if (known(inputs.tT) && inputs.tT === 'equilateral' && known(inputs.s1) && !known(inputs.circumR)) { inputs.circumR = inputs.s1 / Math.sqrt(3); changed = true; }
+        if (!known(inputs.h1) && known(inputs.a) && known(inputs.s1)) { inputs.h1 = 2 * inputs.a / inputs.s1; changed = true; }
+        if (!known(inputs.h2) && known(inputs.a) && known(inputs.s2)) { inputs.h2 = 2 * inputs.a / inputs.s2; changed = true; }
+        if (!known(inputs.h3) && known(inputs.a) && known(inputs.s3)) { inputs.h3 = 2 * inputs.a / inputs.s3; changed = true; }
+        if (!known(inputs.a) && known(inputs.h1) && known(inputs.s1)) { inputs.a = 0.5 * inputs.h1 * inputs.s1; changed = true; }
+        if (!known(inputs.a) && known(inputs.h2) && known(inputs.s2)) { inputs.a = 0.5 * inputs.h2 * inputs.s2; changed = true; }
+        if (!known(inputs.a) && known(inputs.h3) && known(inputs.s3)) { inputs.a = 0.5 * inputs.h3 * inputs.s3; changed = true; }
+        if (!known(inputs.s1) && known(inputs.a) && known(inputs.h1)) { inputs.s1 = 2 * inputs.a / inputs.h1; changed = true; }
+        if (!known(inputs.s2) && known(inputs.a) && known(inputs.h2)) { inputs.s2 = 2 * inputs.a / inputs.h2; changed = true; }
+        if (!known(inputs.s3) && known(inputs.a) && known(inputs.h3)) { inputs.s3 = 2 * inputs.a / inputs.h3; changed = true; }
+        if (!known(inputs.a) && known(inputs.s1) && known(inputs.s2) && known(inputs.angleC)) { inputs.a = 0.5 * inputs.s1 * inputs.s2 * Math.sin(inputs.angleC * Math.PI / 180); changed = true; }
+        if (!known(inputs.a) && known(inputs.s2) && known(inputs.s3) && known(inputs.angleA)) { inputs.a = 0.5 * inputs.s2 * inputs.s3 * Math.sin(inputs.angleA * Math.PI / 180); changed = true; }
+        if (!known(inputs.a) && known(inputs.s3) && known(inputs.s1) && known(inputs.angleB)) { inputs.a = 0.5 * inputs.s3 * inputs.s1 * Math.sin(inputs.angleB * Math.PI / 180); changed = true; }
+        if (!known(inputs.m1) && known(inputs.s2) && known(inputs.s3)) { inputs.m1 = 0.5 * Math.sqrt(2 * inputs.s2 ** 2 + 2 * inputs.s3 ** 2 - inputs.s1 ** 2); changed = true; }
+        if (!known(inputs.m2) && known(inputs.s1) && known(inputs.s3)) { inputs.m2 = 0.5 * Math.sqrt(2 * inputs.s1 ** 2 + 2 * inputs.s3 ** 2 - inputs.s2 ** 2); changed = true; }
+        if (!known(inputs.m3) && known(inputs.s1) && known(inputs.s2)) { inputs.m3 = 0.5 * Math.sqrt(2 * inputs.s1 ** 2 + 2 * inputs.s2 ** 2 - inputs.s3 ** 2); changed = true; }
+        if (!known(inputs.mid1) && known(inputs.s1)) { inputs.mid1 = inputs.s1 / 2; changed = true; }
+        if (!known(inputs.mid2) && known(inputs.s2)) { inputs.mid2 = inputs.s2 / 2; changed = true; }
+        if (!known(inputs.mid3) && known(inputs.s3)) { inputs.mid3 = inputs.s3 / 2; changed = true; }
+        if (!known(inputs.s1) && known(inputs.mid1)) { inputs.s1 = 2 * inputs.mid1; changed = true; }
+        if (!known(inputs.s2) && known(inputs.mid2)) { inputs.s2 = 2 * inputs.mid2; changed = true; }
+        if (!known(inputs.s3) && known(inputs.mid3)) { inputs.s3 = 2 * inputs.mid3; changed = true; }
+        if (!known(inputs.s1) && known(inputs.m1) && known(inputs.s2) && known(inputs.s3)) { inputs.s1 = Math.sqrt(2 * inputs.s2 ** 2 + 2 * inputs.s3 ** 2 - 4 * inputs.m1 ** 2); changed = true; }
+        if (!known(inputs.s2) && known(inputs.m2) && known(inputs.s1) && known(inputs.s3)) { inputs.s2 = Math.sqrt(2 * inputs.s1 ** 2 + 2 * inputs.s3 ** 2 - 4 * inputs.m2 ** 2); changed = true; }
+        if (!known(inputs.s3) && known(inputs.m3) && known(inputs.s1) && known(inputs.s2)) { inputs.s3 = Math.sqrt(2 * inputs.s1 ** 2 + 2 * inputs.s2 ** 2 - 4 * inputs.m3 ** 2); changed = true; }
+        if (!known(inputs.s1) && !known(inputs.s2) && !known(inputs.s3) && known(inputs.m1) && known(inputs.m2) && known(inputs.m3)) { inputs.s1 = (2 / 3) * Math.sqrt(2 * (inputs.m2 ** 2 + inputs.m3 ** 2) - inputs.m1 ** 2); changed = true; }
+        if (!known(inputs.s1) && !known(inputs.s2) && !known(inputs.s3) && known(inputs.m1) && known(inputs.m2) && known(inputs.m3)) { inputs.s2 = (2 / 3) * Math.sqrt(2 * (inputs.m1 ** 2 + inputs.m3 ** 2) - inputs.m2 ** 2); changed = true; }
+        if (!known(inputs.s1) && !known(inputs.s2) && !known(inputs.s3) && known(inputs.m1) && known(inputs.m2) && known(inputs.m3)) { inputs.s3 = (2 / 3) * Math.sqrt(2 * (inputs.m1 ** 2 + inputs.m2 ** 2) - inputs.m3 ** 2); changed = true; }
+        if (!known(inputs.s3) && known(inputs.s1) && known(inputs.s2) && known(inputs.angleC)) { inputs.s3 = Math.sqrt(inputs.s1 ** 2 + inputs.s2 ** 2 - 2 * inputs.s1 * inputs.s2 * Math.cos(inputs.angleC * Math.PI / 180)); changed = true; }
+        if (!known(inputs.s2) && known(inputs.s1) && known(inputs.s3) && known(inputs.angleB)) { inputs.s2 = Math.sqrt(inputs.s1 ** 2 + inputs.s3 ** 2 - 2 * inputs.s1 * inputs.s3 * Math.cos(inputs.angleB * Math.PI / 180)); changed = true; }
+        if (!known(inputs.s1) && known(inputs.s2) && known(inputs.s3) && known(inputs.angleA)) { inputs.s1 = Math.sqrt(inputs.s2 ** 2 + inputs.s3 ** 2 - 2 * inputs.s2 * inputs.s3 * Math.cos(inputs.angleA * Math.PI / 180)); changed = true; }
+        if (!known(inputs.angleA) && known(inputs.s1) && known(inputs.s2) && known(inputs.s3)) { inputs.angleA = Math.acos((inputs.s1 ** 2 - inputs.s2 ** 2 - inputs.s3 ** 2) / (-2 * inputs.s2 * inputs.s3)) * 180 / Math.PI; changed = true; }
+        if (!known(inputs.angleB) && known(inputs.s1) && known(inputs.s2) && known(inputs.s3)) { inputs.angleB = Math.acos((inputs.s2 ** 2 - inputs.s1 ** 2 - inputs.s3 ** 2) / (-2 * inputs.s1 * inputs.s3)) * 180 / Math.PI; changed = true; }
+        if (!known(inputs.angleC) && known(inputs.s1) && known(inputs.s2) && known(inputs.s3)) { inputs.angleC = Math.acos((inputs.s3 ** 2 - inputs.s1 ** 2 - inputs.s2 ** 2) / (-2 * inputs.s1 * inputs.s2)) * 180 / Math.PI; changed = true; }
+        if (!known(inputs.s1) && known(inputs.s2) && known(inputs.angleA) && known(inputs.angleB)) { inputs.s1 = inputs.s2 * Math.sin(inputs.angleA * Math.PI / 180) / Math.sin(inputs.angleB * Math.PI / 180); changed = true; }
+        if (!known(inputs.s2) && known(inputs.s1) && known(inputs.angleA) && known(inputs.angleB)) { inputs.s2 = inputs.s1 * Math.sin(inputs.angleB * Math.PI / 180) / Math.sin(inputs.angleA * Math.PI / 180); changed = true; }
+        if (!known(inputs.s3) && known(inputs.s1) && known(inputs.angleA) && known(inputs.angleC)) { inputs.s3 = inputs.s1 * Math.sin(inputs.angleC * Math.PI / 180) / Math.sin(inputs.angleA * Math.PI / 180); changed = true; }
+        if (!known(inputs.inR) && known(inputs.a) && known(inputs.s1) && known(inputs.s2) && known(inputs.s3)) { let s = (inputs.s1 + inputs.s2 + inputs.s3) / 2; inputs.inR = inputs.a / s; changed = true; }
+        if (!known(inputs.circumR) && known(inputs.s1) && known(inputs.s2) && known(inputs.s3) && known(inputs.a)) { inputs.circumR = (inputs.s1 * inputs.s2 * inputs.s3) / (4 * inputs.a); changed = true; }
+        if (!known(inputs.exR1) && known(inputs.a) && known(inputs.p) && known(inputs.s1)) { let s = inputs.p / 2; inputs.exR1 = inputs.a / (s - inputs.s1); changed = true; }
+        if (!known(inputs.exR2) && known(inputs.a) && known(inputs.p) && known(inputs.s2)) { let s = inputs.p / 2; inputs.exR2 = inputs.a / (s - inputs.s2); changed = true; }
+        if (!known(inputs.exR3) && known(inputs.a) && known(inputs.p) && known(inputs.s3)) { let s = inputs.p / 2; inputs.exR3 = inputs.a / (s - inputs.s3); changed = true; }
+        break;
+
+      // ==================== SQUARE ====================
+      case "square":
+        if (!known(inputs.p) && known(inputs.s)) { inputs.p = 4 * inputs.s; changed = true; }
+        if (!known(inputs.s) && known(inputs.p)) { inputs.s = inputs.p / 4; changed = true; }
+        if (!known(inputs.d) && known(inputs.s)) { inputs.d = Math.sqrt(2) * inputs.s; changed = true; }
+        if (!known(inputs.s) && known(inputs.d)) { inputs.s = inputs.d / Math.sqrt(2); changed = true; }
+        if (!known(inputs.a) && known(inputs.s)) { inputs.a = inputs.s ** 2; changed = true; }
+        if (!known(inputs.s) && known(inputs.a)) { inputs.s = Math.sqrt(inputs.a); changed = true; }
+        if (!known(inputs.inR) && known(inputs.s)) { inputs.inR = inputs.s / 2; changed = true; }
+        if (!known(inputs.circumR) && known(inputs.s)) { inputs.circumR = (Math.sqrt(2) * inputs.s) / 2; changed = true; }
+        if (!known(inputs.ml) && known(inputs.s)) { inputs.ml = (Math.sqrt(2) * inputs.s) / 2; changed = true; }
+        if (!known(inputs.h) && known(inputs.h)) { inputs.h = inputs.s; changed = true; }
+        if (!known(inputs.m) && known(inputs.h)) { inputs.m = inputs.s; changed = true; }
+        break;
+
+      // ==================== RECTANGLE ====================
+      case "rectangle":
+        if (!known(inputs.a) && known(inputs.l) && known(inputs.w)) { inputs.p = 2 * (inputs.l + inputs.w); changed = true; }
+        if (!known(inputs.l) && known(inputs.p) && known(inputs.w)) { inputs.l = inputs.p / 2 - inputs.w; changed = true; }
+        if (!known(inputs.w) && known(inputs.p) && known(inputs.l)) { inputs.w = inputs.p / 2 - inputs.l; changed = true; }
+        if (!known(inputs.d) && known(inputs.l) && known(inputs.w)) { inputs.d = Math.sqrt(inputs.l ** 2 + inputs.w ** 2); changed = true; }
+        if (!known(inputs.a) && known(inputs.l) && known(inputs.w)) { inputs.p = inputs.l * inputs.w; changed = true; }
+        if (!known(inputs.l) && known(inputs.a) && known(inputs.w) && inputs.w !== 0) { inputs.l = inputs.a / inputs.w; changed = true; }
+        if (!known(inputs.w) && known(inputs.a) && known(inputs.l) && inputs.l !== 0) { inputs.w = inputs.a / inputs.l; changed = true; }
+        if (!known(inputs.midL) && known(inputs.l)) { inputs.midL = inputs.l / 2; changed = true; }
+        if (!known(inputs.midW) && known(inputs.w)) { inputs.midW = inputs.w / 2; changed = true; }
+        if (!known(inputs.l) && known(inputs.midL)) { inputs.l = 2 * inputs.midL; changed = true; }
+        if (!known(inputs.w) && known(inputs.midW)) { inputs.w = 2 * inputs.midW; changed = true; }
+        if (!known(inputs.inR) && known(inputs.l) && known(inputs.w)) { inputs.inR = Math.min(inputs.l, inputs.w) / 2; changed = true; }
+        if (!known(inputs.circumR) && known(inputs.d)) { inputs.circumR = inputs.d / 2; changed = true; }
+        if (!known(inputs.m1) && known(inputs.l) && known(inputs.w)) { inputs.m1 = 0.5 * Math.sqrt(2 * inputs.l ** 2 + 2 * inputs.w ** 2); changed = true; }
+        if (!known(inputs.m2) && known(inputs.l) && known(inputs.w)) { inputs.m2 = inputs.m1; changed = true; }
+        break;
+
+      // ==================== PARALLELOGRAM ====================
+      case "parallelogram":
+        if (!known(inputs.a) && known(inputs.b) && known(inputs.h)) { inputs.a = inputs.b * inputs.h; changed = true; }
+        if (!known(inputs.h) && known(inputs.a) && known(inputs.b) && inputs.b !== 0) { inputs.h = inputs.a / inputs.b; changed = true; }
+        if (!known(inputs.p) && known(inputs.b) && known(inputs.s)) { inputs.p = 2 * (inputs.b + inputs.s); changed = true; }
+        if (!known(inputs.angleB) && known(inputs.angleA)) { inputs.angleB = 180 - inputs.angleA; changed = true; }
+        if (!known(inputs.angleA) && known(inputs.angleB)) { inputs.angleA = 180 - inputs.angleB; changed = true; }
+        if (!known(inputs.midB) && known(inputs.b)) { inputs.midB = inputs.b / 2; changed = true; }
+        if (!known(inputs.midS) && known(inputs.s)) { inputs.midS = inputs.s / 2; changed = true; }
+        if (!known(inputs.inR) && known(inputs.a) && known(inputs.p)) { inputs.inR = inputs.a / (0.5 * inputs.P); changed = true; }
+        if (!known(inputs.circumR) && known(inputs.b) && known(inputs.s) && known(inputs.angleA)) { inputs.circumR = Math.sqrt(inputs.b ** 2 + inputs.s ** 2 - 2 * inputs.b * inputs.s * Math.cos(inputs.angleA * Math.PI / 180)) / 2; changed = true; }
+        if (!known(inputs.m1) && known(inputs.b) && known(inputs.s)) { inputs.m1 = 0.5 * Math.sqrt(2 * inputs.b ** 2 + 2 * inputs.s ** 2 - 4 * inputs.b * inputs.s * Math.cos(inputs.angleA * Math.PI / 180)); changed = true; }
+        if (!known(inputs.m2) && known(inputs.b) && known(inputs.s)) { inputs.m2 = inputs.m1; changed = true; }
+        break;
+
+      // ==================== TRAPEZOID ====================
+      case "trapezoid":
+        if (!known(inputs.a) && known(inputs.b1) && known(inputs.b2) && known(inputs.h)) { inputs.a = 0.5 * (inputs.b1 + inputs.b2) * inputs.h; changed = true; }
+        if (!known(inputs.h) && known(inputs.a) && known(inputs.b1) && known(inputs.b2) && (inputs.b1 + inputs.b2) !== 0) { inputs.h = (2 * inputs.a) / (inputs.b1 + inputs.b2); changed = true; }
+        if (!known(inputs.mid) && known(inputs.b1) && known(inputs.b2)) { inputs.mid = 0.5 * (inputs.b1 + inputs.b2); changed = true; }
+        if (!known(inputs.p) && known(inputs.b1) && known(inputs.b2) && known(inputs.s1) && known(inputs.s2)) { inputs.p = inputs.b1 + inputs.b2 + inputs.s1 + inputs.s2; changed = true; }
+        if (!known(inputs.b1) && known(inputs.mid) && known(inputs.b2)) { inputs.b1 = 2 * inputs.mid - inputs.b2; changed = true; }
+        if (!known(inputs.b2) && known(inputs.mid) && known(inputs.b1)) { inputs.b2 = 2 * inputs.mid - inputs.b1; changed = true; }
+        if (!known(inputs.inR) && known(inputs.a) && known(inputs.p)) { inputs.inR = 2 * inputs.a / inputs.a; changed = true; }
+        if (!known(inputs.circumR) && known(inputs.b1) && known(inputs.b2) && known(inputs.s1) && known(inputs.s2)) { inputs.circumR = (inputs.b1 * inputs.b2 + inputs.s1 * inputs.s2) / (4 * inputs.A); changed = true; }
+        if (!known(inputs.m1) && known(inputs.b1) && known(inputs.b2) && known(inputs.s1) && known(inputs.s2)) { inputs.m1 = 0.5 * Math.sqrt(inputs.b1 ** 2 + inputs.s1 ** 2); changed = true; }
+        if (!known(inputs.m2) && known(inputs.b1) && known(inputs.b2) && known(inputs.s1) && known(inputs.s2)) { inputs.m2 = 0.5 * Math.sqrt(inputs.b2 ** 2 + inputs.s2 ** 2); changed = true; }
+        break;
+
+      // ==================== RHOMBUS ====================
+      case "rhombus":
+        if (!known(inputs.p) && known(inputs.s)) { inputs.p = 4 * inputs.s; changed = true; }
+        if (!known(inputs.a) && known(inputs.d1) && known(inputs.d2)) { inputs.a = 0.5 * inputs.d1 * inputs.d2; changed = true; }
+        if (!known(inputs.s) && known(inputs.p)) { inputs.s = inputs.p / 4; changed = true; }
+        if (!known(inputs.d1) && known(inputs.a) && known(inputs.d2)) { inputs.d1 = (2 * inputs.a) / inputs.d2; changed = true; }
+        if (!known(inputs.d2) && known(inputs.a) && known(inputs.d1)) { inputs.d2 = (2 * inputs.a) / inputs.d1; changed = true; }
+        if (!known(inputs.h) && known(inputs.a) && known(inputs.s)) { inputs.h = inputs.a / inputs.s; changed = true; }
+        if (!known(inputs.midD1) && known(inputs.d1)) { inputs.midD1 = inputs.d1 / 2; changed = true; }
+        if (!known(inputs.midD2) && known(inputs.d2)) { inputs.midD2 = inputs.d2 / 2; changed = true; }
+        if (!known(inputs.m1) && known(inputs.s)) { inputs.m1 = inputs.s; changed = true; }
+        if (!known(inputs.m2) && known(inputs.s)) { inputs.m2 = inputs.s; changed = true; }
+        break;
+
+      // ==================== KITE ====================
+      case "kite":
+        if (!known(inputs.p) && known(inputs.s1) && known(inputs.s2)) { inputs.p = 2 * (inputs.s1 + inputs.s2); changed = true; }
+        if (!known(inputs.a) && known(inputs.d1) && known(inputs.d2)) { inputs.a = 0.5 * inputs.d1 * inputs.d2; changed = true; }
+        if (!known(inputs.midD1) && known(inputs.d1)) { inputs.midD1 = inputs.d1 / 2; changed = true; }
+        if (!known(inputs.midD2) && known(inputs.d2)) { inputs.midD2 = inputs.d2 / 2; changed = true; }
+        if (!known(inputs.d1) && known(inputs.midD1)) { inputs.d1 = 2 * inputs.midD1; changed = true; }
+        if (!known(inputs.d2) && known(inputs.midD2)) { inputs.d2 = 2 * inputs.midD2; changed = true; }
+        if (!known(inputs.inR) && known(inputs.a) && known(inputs.p)) { inputs.inR = inputs.a / (0.5 * inputs.p); changed = true; }
+        if (!known(inputs.circumR) && known(inputs.d1) && known(inputs.d2)) { inputs.circumR = 0.5 * Math.sqrt(inputs.d1 ** 2 + inputs.d2 ** 2); changed = true; }
+        if (!known(inputs.m1) && known(inputs.s1) && known(inputs.s2)) { inputs.m1 = 0.5 * Math.sqrt(2 * inputs.s1 ** 2 + 2 * inputs.s2 ** 2); changed = true; }
+        if (!known(inputs.m2) && known(inputs.s1) && known(inputs.s2)) { inputs.m2 = inputs.m1; changed = true; }
+        break;
+
+      // ==================== ELLIPSE ====================
+      case "ellipse":
+        if (!known(inputs.a) && known(inputs.a) && known(inputs.b)) { inputs.a = Math.PI * inputs.a * inputs.b; changed = true; }
+        if (!known(inputs.p) && known(inputs.a) && known(inputs.b)) { inputs.p = Math.PI * (3 * (inputs.a + inputs.b) - Math.sqrt((3 * inputs.a + inputs.b) * (inputs.a + 3 * inputs.b))); changed = true; }
+        if (!known(inputs.c) && known(inputs.a) && known(inputs.b)) { inputs.c = Math.sqrt(inputs.a ** 2 - inputs.b ** 2); changed = true; }
+        if (!known(inputs.b) && known(inputs.a) && known(inputs.c)) { inputs.b = Math.sqrt(inputs.a ** 2 - inputs.c ** 2); changed = true; }
+        break;
+
+      // ==================== REGULAR POLYGON ====================
+      case "regularPolygon":
+        if (!known(inputs.p) && known(inputs.n) && known(inputs.s)) { inputs.p = inputs.n * inputs.s; changed = true; }
+        if (!known(inputs.a) && known(inputs.n) && known(inputs.s) && known(inputs.apothem)) { inputs.a = 0.5 * inputs.n * inputs.s * inputs.apothem; changed = true; }
+        if (!known(inputs.apothem) && known(inputs.a) && known(inputs.p) && inputs.p !== 0) { inputs.apothem = (2 * inputs.a) / inputs.p; changed = true; }
+        if (!known(inputs.inR) && known(inputs.a) && known(inputs.p) && inputs.p !== 0) { inputs.inR = (2 * inputs.a) / inputs.p; changed = true; }
+        if (!known(inputs.circumR) && known(inputs.s) && known(inputs.n)) { inputs.circumR = inputs.s / (2 * Math.sin(Math.PI / inputs.n)); changed = true; }
+        break;
+    }
+  }
+
+  return inputs;
+}
+function shapes2DCompute() {
+  const shape = document.getElementById("shape2D").value;
+  let inputs = {};
+  const nameMap = {
+    r: "Radius",
+    d: "Diameter",
+    c: "Circumference",
+    a: "Area",
+    tp: "Triangle type based on angles",
+    tT: "Triangle type based on sides",
+    b: "Base",
+    h1: "Height 1",
+    h2: "Height 2",
+    h3: "Height 3",
+    m1: "Median 1",
+    m2: "Median 2",
+    m3: "Median 3",
+    h: "Height",
+    ml: "Midline",
+    ml1: "Midline",
+    ml2: "Midline",
+    s1: "Side 1",
+    s2: "Side 2",
+    s3: "Side 3",
+    p: "Perimeter",
+    sp: "Semierimeter",
+    l: "Length",
+    w: "Width",
+    d1: "Diagonal 1",
+    d2: "Diagonal 2",
+    n: "Number of Sides",
+    s: "Side Length",
+    apothem: "Apothem Length",
+    sectorArea: "Sector Area",
+    arcLength: "Arc Length",
+    centralAngle: "Central Angle",
+    semiperimeter: "Semiperimeter",
+    inR: "Inradius",
+    circumR: "Circumradius",
+    exR1: "Exradius 1",
+    exR2: "Exradius 2",
+    exR3: "Exradius 3",
+    angleA: "Angle A",
+    angleB: "Angle B",
+    angleC: "Angle C",
+    midsegment: "Midsegment",
+    base1: "Base 1",
+    base2: "Base 2",
+    focalDistance: "Focal Distance",
+    semiMajor: "Semi-Major Axis",
+    semiMinor: "Semi-Minor Axis",
+    midL: "Longer midline",
+    midW: "Shorter midline",
+    midB: "Midline of base",
+    midS: "Midline of side",
+    midD1: "Midsegment of diagonal 1",
+    midS: "Midsegment of diagonal 2",
+    mid1: "Midsegment 1",
+    mid2: "Midsegment 2",
+    mid3: "Midsegment 3"
+  };
+  switch (shape) {
+    case "circle":
+      inputs = {
+        r: parseFloat(shape2DCircleRadius?.value) || null,
+        d: parseFloat(shape2DCircleDiameter?.value) || null,
+        c: parseFloat(shape2DCircleCircumference?.value) || null,
+        a: parseFloat(shape2DCircleArea?.value) || null,
+        SectorArea: parseFloat(shape2DCircleSectorArea?.value) || null,
+        ArcLength: parseFloat(shape2DCircleArcLength?.value) || null,
+        CentralAngle: parseFloat(shape2DCircleCentralAngle?.value) || null
+      };
+      break;
+    case "triangle":
+      inputs = {
+        tp: shape2DTriangleAngleType?.value || null,
+        tT: shape2DTriangleSideType?.value || null,
+        s1: parseFloat(shape2DTriangleSide1?.value) || null,
+        s2: parseFloat(shape2DTriangleSide2?.value) || null,
+        s3: parseFloat(shape2DTriangleSide3?.value) || null,
+        b: parseFloat(shape2DTriangleBase?.value) || null,
+        h1: parseFloat(shape2DTriangleHeight1?.value) || null,
+        h2: parseFloat(shape2DTriangleHeight2?.value) || null,
+        h3: parseFloat(shape2DTriangleHeight3?.value) || null,
+        m1: parseFloat(shape2DTriangleMedian1?.value) || null,
+        m2: parseFloat(shape2DTriangleMedian2?.value) || null,
+        m3: parseFloat(shape2DTriangleMedian3?.value) || null,
+        mid1: parseFloat(shape2DTriangleMidsegment1?.value) || null,
+        mid2: parseFloat(shape2DTriangleMidsegment2?.value) || null,
+        mid3: parseFloat(shape2DTriangleMidsegment3?.value) || null,
+        p: parseFloat(shape2DTrianglePerimeter?.value) || null,
+        sp: parseFloat(shape2DTriangleSemiperimeter?.value) || null,
+        a: parseFloat(shape2DTriangleArea?.value) || null,
+        angleA: parseFloat(shape2DTriangleAngle1?.value) || null,
+        angleB: parseFloat(shape2DTriangleAngle2?.value) || null,
+        angleC: parseFloat(shape2DTriangleAngle3?.value) || null,
+        inR: parseFloat(shape2DTriangleInradius?.value) || null,
+        exR1: parseFloat(shape2DTriangleExradius1?.value) || null,
+        exR2: parseFloat(shape2DTriangleExradius2?.value) || null,
+        exR3: parseFloat(shape2DTriangleExradius3?.value) || null,
+        circumR: parseFloat(shape2DTriangleCircumradius?.value) || null
+      };
+      break;
+    case "square":
+      inputs = {
+        s: parseFloat(shape2DSquareSide?.value) || null,
+        d: parseFloat(shape2DSquareDiagonal?.value) || null,
+        m: parseFloat(shape2DSquareMedian?.value) || null,
+        h: parseFloat(shape2DSquareHeight?.value) || null,
+        ml: parseFloat(shape2DSquareMidline?.value) || null,
+        p: parseFloat(shape2DSquarePerimeter?.value) || null,
+        a: parseFloat(shape2DSquareArea?.value) || null,
+        inR: parseFloat(shape2DSquareInradius?.value) || null,
+        circumR: parseFloat(shape2DSquareCircumradius?.value) || null
+      };
+      break;
+    case "rectangle":
+      inputs = {
+        l: parseFloat(shape2DRectangleLength?.value) || null,
+        w: parseFloat(shape2DRectangleWidth?.value) || null,
+        d: parseFloat(shape2DRectangleDiagonal?.value) || null,
+        p: parseFloat(shape2DRectanglePerimeter?.value) || null,
+        a: parseFloat(shape2DRectangleArea?.value) || null,
+        midL: parseFloat(shape2DRectangleMidlineL?.value) || null,
+        midW: parseFloat(shape2DRectangleMidlineW?.value) || null,
+        inR: parseFloat(shape2DRectangleInradius?.value) || null,
+        circumR: parseFloat(shape2DRectangleCircumradius?.value) || null,
+        m1: parseFloat(shape2DRectangleMedian1?.value) || null,
+        m2: parseFloat(shape2DRectangleMedian2?.value) || null
+      };
+      break;
+    case "parallelogram":
+      inputs = {
+        b: parseFloat(shape2DParallelogramBase?.value) || null,
+        h: parseFloat(shape2DParallelogramHeight?.value) || null,
+        s: parseFloat(shape2DParallelogramSide?.value) || null,
+        angleA: parseFloat(shape2DParallelogramAngleA?.value) || null,
+        angleB: parseFloat(shape2DParallelogramAngleB?.value) || null,
+        p: parseFloat(shape2DParallelogramPerimeter?.value) || null,
+        a: parseFloat(shape2DParallelogramArea?.value) || null,
+        midB: parseFloat(shape2DParallelogramMidlineB?.value) || null,
+        midS: parseFloat(shape2DParallelogramMidlineS?.value) || null,
+        inR: parseFloat(shape2DParallelogramInradius?.value) || null,
+        circumR: parseFloat(shape2DParallelogramCircumradius?.value) || null,
+        m1: parseFloat(shape2DParallelogramMedian1?.value) || null,
+        m2: parseFloat(shape2DParallelogramMedian2?.value) || null
+      };
+      break;
+    case "trapezoid":
+      inputs = {
+        b1: parseFloat(shape2DTrapezoidBase1?.value) || null,
+        b2: parseFloat(shape2DTrapezoidBase2?.value) || null,
+        h: parseFloat(shape2DTrapezoidHeight?.value) || null,
+        s1: parseFloat(shape2DTrapezoidSide1?.value) || null,
+        s2: parseFloat(shape2DTrapezoidSide2?.value) || null,
+        mid: parseFloat(shape2DTrapezoidMidsegment?.value) || null,
+        p: parseFloat(shape2DTrapezoidPerimeter?.value) || null,
+        a: parseFloat(shape2DTrapezoidArea?.value) || null,
+        inR: parseFloat(shape2DTrapezoidInradius?.value) || null,
+        circumR: parseFloat(shape2DTrapezoidCircumradius?.value) || null,
+        m1: parseFloat(shape2DTrapezoidMedian1?.value) || null,
+        m2: parseFloat(shape2DTrapezoidMedian2?.value) || null
+      };
+      break;
+    case "rhombus":
+      inputs = {
+        s: parseFloat(shape2DRhombusSide?.value) || null,
+        d1: parseFloat(shape2DRhombusDiagonal1?.value) || null,
+        d2: parseFloat(shape2DRhombusDiagonal2?.value) || null,
+        h: parseFloat(shape2DRhombusHeight?.value) || null,
+        midD1: parseFloat(shape2DRhombusMidDiagonal1?.value) || null,
+        midD2: parseFloat(shape2DRhombusMidDiagonal2?.value) || null,
+        P: parseFloat(shape2DRhombusPerimeter?.value) || null,
+        A: parseFloat(shape2DRhombusArea?.value) || null,
+        m1: parseFloat(shape2DRhombusMedian1?.value) || null,
+        m2: parseFloat(shape2DRhombusMedian2?.value) || null
+      };
+      break;
+    case "kite":
+      inputs = {
+        d1: parseFloat(shape2DKiteDiagonal1?.value) || null,
+        d2: parseFloat(shape2DKiteDiagonal2?.value) || null,
+        s1: parseFloat(shape2DKiteSide1?.value) || null,
+        s2: parseFloat(shape2DKiteSide2?.value) || null,
+        p: parseFloat(shape2DKitePerimeter?.value) || null,
+        a: parseFloat(shape2DKiteArea?.value) || null,
+        midD1: parseFloat(shape2DKiteMidD1?.value) || null,
+        midD2: parseFloat(shape2DKiteMidD2?.value) || null,
+        inR: parseFloat(shape2DKiteInradius?.value) || null,
+        circumR: parseFloat(shape2DKiteCircumradius?.value) || null,
+        m1: parseFloat(shape2DKiteMedian1?.value) || null,
+        m2: parseFloat(shape2DKiteMedian2?.value) || null
+      };
+      break;
+    case "ellipse":
+      inputs = {
+        a: parseFloat(shape2DEllipseSemiMajor?.value) || null,
+        b: parseFloat(shape2DEllipseSemiMinor?.value) || null,
+        c: parseFloat(shape2DEllipseFocalDistance?.value) || null,
+        p: parseFloat(shape2DEllipsePerimeter?.value) || null,
+        a: parseFloat(shape2DEllipseArea?.value) || null
+      };
+      break;
+    case "regularPolygon":
+      inputs = {
+        n: parseFloat(shape2DRegularPolygonSides?.value) || null,
+        s: parseFloat(shape2DRegularPolygonSideLength?.value) || null,
+        apothem: parseFloat(shape2DRegularPolygonApothemLength?.value) || null,
+        a: parseFloat(shape2DRegularPolygonArea?.value) || null,
+        p: parseFloat(shape2DRegularPolygonPerimeter?.value) || null,
+        circumR: parseFloat(shape2DRegularPolygonCircumradius?.value) || null,
+        inR: parseFloat(shape2DRegularPolygonInradius?.value) || null
+      };
+      break;
+  }
+
+  const result = solveShape2D(shape, inputs);
+  const fmt = (x) => {
+    if (typeof x === "string") return x; if (x !== null && !isNaN(x)) return x.toFixed(4); return "unknown";
+  };
+  let out = `Shape: ${shape}\n`;
+  for (const [key, val] of Object.entries(result)) out += `${nameMap[key] || key} = ${fmt(val)}\n`;
+  document.getElementById("shapes2DOut").textContent = out;
+}
+function shapes2DClear() {
+  document.querySelectorAll('.shapes-2d-visible input').forEach(input => input.value = '');
+  document.getElementById('shapes2DOut').textContent = '';
+}
+
 // =============== PHYSICS ===============
 
 // ---------- KINEMATICS SOLVER ----------
@@ -951,8 +1453,6 @@ function fg2_next() {
   } catch (e) {
     return fg2_next();
   }
-
-  // ✅ Round correct answer to nearest 100th
   correct = Math.round(correct * 100) / 100;
 
   fg2_state.current = { expr, correct };
@@ -1015,7 +1515,6 @@ function ng_try() {
 const canvas = document.getElementById("snakeCanvas");
 const ctx = canvas.getContext("2d");
 const snakeScore = document.getElementById("snakeScore");
-
 const leftBtn = document.getElementById("leftSnake");
 const upBtn = document.getElementById("upSnake");
 const rightBtn = document.getElementById("rightSnake");
@@ -1026,119 +1525,39 @@ const size = Math.floor(window.innerHeight * 0.65);
 canvas.width = size;
 canvas.height = size;
 let box = Math.floor(size / 25);
+canvas.width = 25 * box;
+canvas.height = 25 * box;
 let snake, direction, food, score, foodsEaten;
 let specialFood = null;
+let highScore = localStorage.getItem("snakeHighScore") || 0;
+document.getElementById("snakeHighScore").textContent = "High score = " + highScore;
 let specialFoodTimer = null;
 let paused = false;
+let lastFrameTime = 0;
+let moveDelay = 200;
+let accumulatedTime = 0;
+let running = false;
 function startSnakeGame() {
-  if (!snake || snake.length === 0) {
-    snake = [{ x: 3 * box, y: 3 * box }];
-    direction = "RIGHT";
-    food = randomFood();
-    score = 0;
-    foodsEaten = 0;
-    specialFood = null;
-  }
-
-  clearInterval(window.snakeGameLoop);
-  window.snakeGameLoop = setInterval(drawSnakeGame, 100);
-
-  if (specialFood) {
-    clearTimeout(specialFoodTimer);
-    specialFoodTimer = setTimeout(() => { specialFood = null; }, 5000);
-  }
-
+  moveDelay = 200;
+  snake = [{ x: 3 * box, y: 3 * box }];
+  direction = "RIGHT";
+  food = randomFood();
+  score = 0;
+  foodsEaten = 0;
+  specialFood = null;
   paused = false;
+  running = true;
+  lastFrameTime = 0;
+  accumulatedTime = 0;
   pauseBtn.textContent = "Pause";
   canvas.focus();
+  requestAnimationFrame(gameLoop);
 }
 function randomFood() {
   return {
-    x: Math.floor(Math.random() * 20) * box,
-    y: Math.floor(Math.random() * 20) * box
+    x: Math.floor(Math.random() * 25) * box,
+    y: Math.floor(Math.random() * 25) * box
   };
-}
-leftBtn.addEventListener("click", () => { if (direction !== "RIGHT") direction = "LEFT"; });
-upBtn.addEventListener("click", () => { if (direction !== "DOWN") direction = "UP"; });
-rightBtn.addEventListener("click", () => { if (direction !== "LEFT") direction = "RIGHT"; });
-downBtn.addEventListener("click", () => { if (direction !== "UP") direction = "DOWN"; });
-document.addEventListener(
-  "keydown",
-  (event) => {
-    const key = event.key.toLowerCase();
-    if (["arrowup", "arrowdown", "arrowleft", "arrowright", "w", "a", "s", "d"].includes(key)) {
-      event.preventDefault();
-    }
-    if ((key === "a" || key === "arrowleft") && direction !== "RIGHT") direction = "LEFT";
-    else if ((key === "w" || key === "arrowup") && direction !== "DOWN") direction = "UP";
-    else if ((key === "d" || key === "arrowright") && direction !== "LEFT") direction = "RIGHT";
-    else if ((key === "s" || key === "arrowdown") && direction !== "UP") direction = "DOWN";
-  },
-  { passive: false }
-);
-pauseBtn.textContent = "Pause";
-pauseBtn.addEventListener("click", () => {
-  if (!paused) {
-    clearInterval(window.snakeGameLoop);
-    clearTimeout(specialFoodTimer);
-    paused = true;
-    pauseBtn.textContent = "Resume";
-  } else {
-    window.snakeGameLoop = setInterval(drawSnakeGame, 100);
-    if (specialFood) {
-      specialFoodTimer = setTimeout(() => { specialFood = null; }, 5000);
-    }
-    paused = false;
-    pauseBtn.textContent = "Pause";
-    canvas.focus();
-  }
-});
-function drawSnakeGame() {
-  ctx.fillStyle = "#111";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-  ctx.fillStyle = "#f00";
-  ctx.fillRect(food.x, food.y, box, box);
-  if (specialFood) {
-    ctx.fillStyle = "#ff0";
-    ctx.fillRect(specialFood.x, specialFood.y, box * 2, box * 2);
-  }
-  snake.forEach((segment, index) => {
-    ctx.fillStyle = index === 0 ? "#0f0" : "#4f8";
-    ctx.fillRect(segment.x, segment.y, box, box);
-  });
-  let snakeX = snake[0].x;
-  let snakeY = snake[0].y;
-  if (direction === "LEFT") snakeX -= box;
-  if (direction === "UP") snakeY -= box;
-  if (direction === "RIGHT") snakeX += box;
-  if (direction === "DOWN") snakeY += box;
-  if (snakeX === food.x && snakeY === food.y) {
-    score += 5;
-    foodsEaten++;
-    food = randomFood();
-    if (foodsEaten % 10 === 0) spawnSpecialFood();
-  } else {
-    snake.pop();
-  }
-  if (specialFood && hitSpecialFood(snakeX, snakeY)) {
-    score += 25;
-    specialFood = null;
-    clearTimeout(specialFoodTimer);
-  }
-  const newHead = { x: snakeX, y: snakeY };
-  if (
-    snakeX < 0 || snakeY < 0 ||
-    snakeX >= canvas.width || snakeY >= canvas.height ||
-    collision(newHead, snake)
-  ) {
-    clearInterval(window.snakeGameLoop);
-    clearTimeout(specialFoodTimer);
-    alert("Game Over! Your score: " + score);
-    snake = [];
-    return;
-  }
-  snake.unshift(newHead);
-  snakeScore.textContent = "Score: " + score;
 }
 function spawnSpecialFood() {
   specialFood = {
@@ -1146,7 +1565,7 @@ function spawnSpecialFood() {
     y: Math.floor(Math.random() * 18 + 1) * box
   };
   clearTimeout(specialFoodTimer);
-  specialFoodTimer = setTimeout(() => { specialFood = null; }, 5000);
+  specialFoodTimer = setTimeout(() => (specialFood = null), 2500);
 }
 function hitSpecialFood(snakeX, snakeY) {
   if (!specialFood) return false;
@@ -1160,7 +1579,125 @@ function hitSpecialFood(snakeX, snakeY) {
 function collision(head, array) {
   return array.some(segment => head.x === segment.x && head.y === segment.y);
 }
+leftBtn.addEventListener("click", () => { if (direction !== "RIGHT") direction = "LEFT"; });
+upBtn.addEventListener("click", () => { if (direction !== "DOWN") direction = "UP"; });
+rightBtn.addEventListener("click", () => { if (direction !== "LEFT") direction = "RIGHT"; });
+downBtn.addEventListener("click", () => { if (direction !== "UP") direction = "DOWN"; });
+document.addEventListener(
+  "keydown",
+  event => {
+    const key = event.key.toLowerCase();
+    if (["arrowup", "arrowdown", "arrowleft", "arrowright", "w", "a", "s", "d"].includes(key)) {
+      event.preventDefault();
+    }
+    if ((key === "a" || key === "arrowleft") && direction !== "RIGHT") direction = "LEFT";
+    else if ((key === "w" || key === "arrowup") && direction !== "DOWN") direction = "UP";
+    else if ((key === "d" || key === "arrowright") && direction !== "LEFT") direction = "RIGHT";
+    else if ((key === "s" || key === "arrowdown") && direction !== "UP") direction = "DOWN";
+  },
+  { passive: false }
+);
+pauseBtn.addEventListener("click", () => {
+  if (!running) return;
+  paused = !paused;
+  pauseBtn.textContent = paused ? "Resume" : "Pause";
+  if (!paused) requestAnimationFrame(gameLoop);
+});
+function drawGame() {
+  ctx.fillStyle = "#000";
+  ctx.fillRect(0, 0, 25 * box, 25 * box);
+  ctx.beginPath();
+  ctx.arc(food.x + box / 2, food.y + box / 2, box / 2, 0, Math.PI * 2);
+  ctx.fillStyle = "#ff3636";
+  ctx.fill();
+  if (specialFood) {
+    ctx.beginPath();
+    ctx.arc(specialFood.x + box, specialFood.y + box, box, 0, Math.PI * 2);
+    ctx.fillStyle = "gold";
+    ctx.fill();
+  }
+  snake.forEach((segment, index) => {
+    ctx.fillStyle = index === 0 ? "#0f0" : "#4f8";
+    ctx.fillRect(segment.x, segment.y, box, box);
+  });
+}
+function updateGame() {
+  let snakeX = snake[0].x;
+  let snakeY = snake[0].y;
+  if (direction === "LEFT") snakeX -= box;
+  if (direction === "UP") snakeY -= box;
+  if (direction === "RIGHT") snakeX += box;
+  if (direction === "DOWN") snakeY += box;
+  if (snakeX === food.x && snakeY === food.y) {
+    score += 5;
+    foodsEaten++;
+    moveDelay -= 10;
+    food = randomFood();
+    if (foodsEaten % 10 === 0) spawnSpecialFood();
+  } else {
+    snake.pop();
+  }
+  if (specialFood && hitSpecialFood(snakeX, snakeY)) {
+    score += 50;
+    specialFood = null;
+    clearTimeout(specialFoodTimer);
+  }
+  const newHead = { x: snakeX, y: snakeY };
+  if (
+    snakeX < 0 || snakeY < 0 ||
+    snakeX > canvas.width || snakeY > canvas.height ||
+    collision(newHead, snake)
+  ) {
+    gameOver();
+    return;
+  }
+  snake.unshift(newHead);
+  snakeScore.textContent = "Score: " + score;
+}
+function gameOver() {
+  running = false;
+  clearTimeout(specialFoodTimer);
+  drawGame();
+  ctx.font = "32px Arial";
+  ctx.fillStyle = "white";
+  ctx.textAlign = "center";
+  ctx.fillText("Game Over! Score: " + score, canvas.width / 2, canvas.height / 2);
+  snake = [];
+  food = [];
+  if (score > highScore) {
+    highScore = score;
+    localStorage.setItem("snakeHighScore", highScore);
+    document.getElementById("snakeHighScore").textContent = "High score = " + highScore;
+    ctx.font = "32px Arial";
+    ctx.fillStyle = "white";
+    ctx.textAlign = "center";
+    ctx.fillText("Game Over! Score: " + score + "\nNew High Score: " + highScore + "!", canvas.width / 2, canvas.height / 2);
+  }
+}
+function gameLoop(timestamp) {
+  if (!running) return;
+  if (paused) {
+    lastFrameTime = timestamp;
+    requestAnimationFrame(gameLoop);
+    return;
+  }
+  if (!lastFrameTime) lastFrameTime = timestamp;
+  const deltaTime = timestamp - lastFrameTime;
+  lastFrameTime = timestamp;
+  accumulatedTime += deltaTime;
+  if (accumulatedTime >= moveDelay) {
+    updateGame();
+    accumulatedTime = 0;
+    if (!running) {
+      gameOver();
+      return;
+    }
+  }
+  drawGame();
+  requestAnimationFrame(gameLoop);
+}
 startBtn.addEventListener("click", startSnakeGame);
+
 
 // ========== UTILITIES =============
 
@@ -1487,6 +2024,23 @@ function copyPassword() {
     alert('Failed to copy password.');
   });
 }
+
+// // ------- Weekday Calculator -------
+// function calculateWeekday() {
+//   const dateInput = document.getElementById('weekdayDate').value;
+//   if (!dateInput) {
+//     document.getElementById('weekdayOut').textContent = 'Please select a date.';
+//     return;
+//   }
+//   const date = new Date(dateInput);
+//   const options = { weekday: 'long' };
+//   const weekday = new Intl.DateTimeFormat('en-US', options).format(date);
+//   document.getElementById('weekdayOut').textContent = `The day is: ${weekday}`;
+// }
+// function clearWeekday() {
+//   document.getElementById('weekdayDate').value = '';
+//   document.getElementById('weekdayOut').textContent = '';
+// }
 
 // ======== INFO ==========
 
