@@ -1046,8 +1046,6 @@ document.querySelectorAll('.element-box').forEach(box => {
     showElementInfo(symbol);
   });
 });
-
-
 const elementData = {
   H: 'Atomic Number: 1\nCategory: Nonmetal\nPeriod / Block: 1 / s\nAppearance: Colorless gas\nProperties: Lightest element; highly flammable; forms H₂ gas\nReactivity: Reacts explosively with oxygen; forms water\nDiscovery / History: Recognized as an element by Henry Cavendish in 1766\nName Origin: Greek “hydro” (water) + “genes” (creator)\nOccurrence / Uses: Water, acids, ammonia, fuel cells, rockets\nTrivia: Makes up ~75% of the universe’s elemental mass',
   He: 'Atomic Number: 2\nCategory: Noble gas\nPeriod / Block: 1 / s\nAppearance: Colorless, odorless gas\nProperties: Inert, very low boiling point\nReactivity: Extremely unreactive\nDiscovery / History: Detected in the Sun’s spectrum in 1868, isolated on Earth in 1895\nName Origin: Greek “Helios” (Sun)\nOccurrence / Uses: Balloons, cryogenics, pressurizing, deep-sea diving\nTrivia: Second lightest element; can produce superfluid at near absolute zero',
@@ -1168,7 +1166,148 @@ const elementData = {
   Ts: 'Atomic Number: 117\nCategory: Halogens\nPeriod / Block: 7 / p\nAppearance: Unknown\nProperties: Radioactive\nReactivity: Unknown\nDiscovery / History: Discovered by a team of Russian scientists in 2010\nName Origin: Tennessine (Tennessee)\nOccurrence / Uses: Research only\nTrivia: Has no stable isotopes',
   Og: 'Atomic Number: 118\nCategory: Noble Gases\nPeriod / Block: 7 / p\nAppearance: Unknown\nProperties: Radioactive\nReactivity: Unknown\nDiscovery / History: Discovered by a team of American scientists in 2002\nName Origin: Oganesson (Yuri Oganessian)\nOccurrence / Uses: Research only\nTrivia: Has no stable isotopes'
 };
+function searchElement() {
+  const searchedElement = document.getElementById('ptSearch').value.trim().toLowerCase();
+  const ptOut = document.getElementById('ptOut');
 
+  // map of possible user inputs → element button IDs
+  const elements = {
+    "1": "atomH", "h": "atomH", "hydrogen": "atomH",
+    "2": "atomHe", "he": "atomHe", "helium": "atomHe",
+    "3": "atomLi", "li": "atomLi", "lithium": "atomLi",
+    "4": "atomBe", "be": "atomBe", "beryllium": "atomBe",
+    "5": "atomB", "b": "atomB", "boron": "atomB",
+    "6": "atomC", "c": "atomC", "carbon": "atomC",
+    "7": "atomN", "n": "atomN", "nitrogen": "atomN",
+    "8": "atomO", "o": "atomO", "oxygen": "atomO",
+    "9": "atomF", "f": "atomF", "fluorine": "atomF",
+    "10": "atomNe", "ne": "atomNe", "neon": "atomNe",
+    "11": "atomNa", "na": "atomNa", "sodium": "atomNa",
+    "12": "atomMg", "mg": "atomMg", "magnesium": "atomMg",
+    "13": "atomAl", "al": "atomAl", "aluminum": "atomAl",
+    "14": "atomSi", "si": "atomSi", "silicon": "atomSi",
+    "15": "atomP", "p": "atomP", "phosphorus": "atomP",
+    "16": "atomS", "s": "atomS", "sulfur": "atomS",
+    "17": "atomCl", "cl": "atomCl", "chlorine": "atomCl",
+    "18": "atomAr", "ar": "atomAr", "argon": "atomAr",
+    "19": "atomK", "k": "atomK", "potassium": "atomK",
+    "20": "atomCa", "ca": "atomCa", "calcium": "atomCa",
+    "21": "atomSc", "sc": "atomSc", "scandium": "atomSc",
+    "22": "atomTi", "ti": "atomTi", "titanium": "atomTi",
+    "23": "atomV", "v": "atomV", "vanadium": "atomV",
+    "24": "atomCr", "cr": "atomCr", "chromium": "atomCr",
+    "25": "atomMn", "mn": "atomMn", "manganese": "atomMn",
+    "26": "atomFe", "fe": "atomFe", "iron": "atomFe",
+    "27": "atomCo", "co": "atomCo", "cobalt": "atomCo",
+    "28": "atomNi", "ni": "atomNi", "nickel": "atomNi",
+    "29": "atomCu", "cu": "atomCu", "copper": "atomCu",
+    "30": "atomZn", "zn": "atomZn", "zinc": "atomZn",
+    "31": "atomGa", "ga": "atomGa", "gallium": "atomGa",
+    "32": "atomGe", "ge": "atomGe", "germanium": "atomGe",
+    "33": "atomAs", "as": "atomAs", "arsenic": "atomAs",
+    "34": "atomSe", "se": "atomSe", "selenium": "atomSe",
+    "35": "atomBr", "br": "atomBr", "bromine": "atomBr",
+    "36": "atomKr", "kr": "atomKr", "krypton": "atomKr",
+    "37": "atomRb", "rb": "atomRb", "rubidium": "atomRb",
+    "38": "atomSr", "sr": "atomSr", "strontium": "atomSr",
+    "39": "atomY", "y": "atomY", "yttrium": "atomY",
+    "40": "atomZr", "zr": "atomZr", "zirconium": "atomZr",
+    "41": "atomNb", "nb": "atomNb", "niobium": "atomNb",
+    "42": "atomMo", "mo": "atomMo", "molybdenum": "atomMo",
+    "43": "atomTc", "tc": "atomTc", "technetium": "atomTc",
+    "44": "atomRu", "ru": "atomRu", "ruthenium": "atomRu",
+    "45": "atomRh", "rh": "atomRh", "rhodium": "atomRh",
+    "46": "atomPd", "pd": "atomPd", "palladium": "atomPd",
+    "47": "atomAg", "ag": "atomAg", "silver": "atomAg",
+    "48": "atomCd", "cd": "atomCd", "cadmium": "atomCd",
+    "49": "atomIn", "in": "atomIn", "indium": "atomIn",
+    "50": "atomSn", "sn": "atomSn", "tin": "atomSn",
+    "51": "atomSb", "sb": "atomSb", "antimony": "atomSb",
+    "52": "atomTe", "te": "atomTe", "tellurium": "atomTe",
+    "53": "atomI", "i": "atomI", "iodine": "atomI",
+    "54": "atomXe", "xe": "atomXe", "xenon": "atomXe",
+    "55": "atomCs", "cs": "atomCs", "cesium": "atomCs",
+    "56": "atomBa", "ba": "atomBa", "barium": "atomBa",
+    "57": "atomLa", "la": "atomLa", "lanthanum": "atomLa",
+    "58": "atomCe", "ce": "atomCe", "cerium": "atomCe",
+    "59": "atomPr", "pr": "atomPr", "praseodymium": "atomPr",
+    "60": "atomNd", "nd": "atomNd", "neodymium": "atomNd",
+    "61": "atomPm", "pm": "atomPm", "promethium": "atomPm",
+    "62": "atomSm", "sm": "atomSm", "samarium": "atomSm",
+    "63": "atomEu", "eu": "atomEu", "europium": "atomEu",
+    "64": "atomGd", "gd": "atomGd", "gadolinium": "atomGd",
+    "65": "atomTb", "tb": "atomTb", "terbium": "atomTb",
+    "66": "atomDy", "dy": "atomDy", "dysprosium": "atomDy",
+    "67": "atomHo", "ho": "atomHo", "holmium": "atomHo",
+    "68": "atomEr", "er": "atomEr", "erbium": "atomEr",
+    "69": "atomTm", "tm": "atomTm", "thulium": "atomTm",
+    "70": "atomYb", "yb": "atomYb", "ytterbium": "atomYb",
+    "71": "atomLu", "lu": "atomLu", "lutetium": "atomLu",
+    "72": "atomHf", "hf": "atomHf", "hafnium": "atomHf",
+    "73": "atomTa", "ta": "atomTa", "tantalum": "atomTa",
+    "74": "atomW", "w": "atomW", "tungsten": "atomW",
+    "75": "atomRe", "re": "atomRe", "rhenium": "atomRe",
+    "76": "atomOs", "os": "atomOs", "osmium": "atomOs",
+    "77": "atomIr", "ir": "atomIr", "iridium": "atomIr",
+    "78": "atomPt", "pt": "atomPt", "platinum": "atomPt",
+    "79": "atomAu", "au": "atomAu", "gold": "atomAu",
+    "80": "atomHg", "hg": "atomHg", "mercury": "atomHg",
+    "81": "atomTl", "tl": "atomTl", "thallium": "atomTl",
+    "82": "atomPb", "pb": "atomPb", "lead": "atomPb",
+    "83": "atomBi", "bi": "atomBi", "bismuth": "atomBi",
+    "84": "atomPo", "po": "atomPo", "polonium": "atomPo",
+    "85": "atomAt", "at": "atomAt", "astatine": "atomAt",
+    "86": "atomRn", "rn": "atomRn", "radon": "atomRn",
+    "87": "atomFr", "fr": "atomFr", "francium": "atomFr",
+    "88": "atomRa", "ra": "atomRa", "radium": "atomRa",
+    "89": "atomAc", "ac": "atomAc", "actinium": "atomAc",
+    "90": "atomTh", "th": "atomTh", "thorium": "atomTh",
+    "91": "atomPa", "pa": "atomPa", "protactinium": "atomPa",
+    "92": "atomU", "u": "atomU", "uranium": "atomU",
+    "93": "atomNp", "np": "atomNp", "neptunium": "atomNp",
+    "94": "atomPu", "pu": "atomPu", "plutonium": "atomPu",
+    "95": "atomAm", "am": "atomAm", "americium": "atomAm",
+    "96": "atomCm", "cm": "atomCm", "curium": "atomCm",
+    "97": "atomBk", "bk": "atomBk", "berkelium": "atomBk",
+    "98": "atomCf", "cf": "atomCf", "californium": "atomCf",
+    "99": "atomEs", "es": "atomEs", "einsteinium": "atomEs",
+    "100": "atomFm", "fm": "atomFm", "fermium": "atomFm",
+    "101": "atomMd", "md": "atomMd", "mendelevium": "atomMd",
+    "102": "atomNo", "no": "atomNo", "nobelium": "atomNo",
+    "103": "atomLr", "lr": "atomLr", "lawrencium": "atomLr",
+    "104": "atomRf", "rf": "atomRf", "rutherfordium": "atomRf",
+    "105": "atomDb", "db": "atomDb", "dubnium": "atomDb",
+    "106": "atomSg", "sg": "atomSg", "seaborgium": "atomSg",
+    "107": "atomBh", "bh": "atomBh", "bohrium": "atomBh",
+    "108": "atomHs", "hs": "atomHs", "hassium": "atomHs",
+    "109": "atomMt", "mt": "atomMt", "meitnerium": "atomMt",
+    "110": "atomDs", "ds": "atomDs", "darmstadtium": "atomDs",
+    "111": "atomRg", "rg": "atomRg", "roentgenium": "atomRg",
+    "112": "atomCn", "cn": "atomCn", "copernicium": "atomCn",
+    "113": "atomNh", "nh": "atomNh", "nihonium": "atomNh",
+    "114": "atomFl", "fl": "atomFl", "flerovium": "atomFl",
+    "115": "atomMc", "mc": "atomMc", "moscovium": "atomMc",
+    "116": "atomLv", "lv": "atomLv", "livermorium": "atomLv",
+    "117": "atomTs", "ts": "atomTs", "tennessine": "atomTs",
+    "118": "atomOg", "og": "atomOg", "oganesson": "atomOg"
+  };
+
+  const elementId = elements[searchedElement];
+
+  if (elementId) {
+    document.getElementById(elementId).click();
+    document.getElementById(elementId).classList.add("hover-element");
+    setTimeout(() => document.getElementById(elementId).classList.remove("hover-element"), 4000);
+  } else {
+    ptOut.textContent = 'Invalid input. Please enter a valid element name, symbol, or atomic number.';
+  }
+}
+
+document.getElementById('ptSearch').addEventListener('keypress', function(event) {
+  if (event.key === 'Enter') {
+    searchElement();
+  }
+});
 function ptInfoClear() {
   document.getElementById("ptOut").textContent = "";
   document.getElementById("ptInfoBtn").classList.add('ptInfoBtnHidden');
@@ -1629,7 +1768,7 @@ function drawGame() {
   ctx.fillRect(0, 0, 25 * box, 25 * box);
   ctx.beginPath();
   ctx.arc(food.x + box / 2, food.y + box / 2, box / 2, 0, Math.PI * 2);
-  ctx.fillStyle = "#ff3636";
+  ctx.fillStyle = "#ac2727ff";
   ctx.fill();
   if (specialFood) {
     ctx.beginPath();
@@ -1638,7 +1777,7 @@ function drawGame() {
     ctx.fill();
   }
   snake.forEach((segment, index) => {
-    ctx.fillStyle = index === 0 ? "#0f0" : "#4f8";
+    ctx.fillStyle = index === 0 ? "rgba(13, 55, 128, 1)" : "rgba(53, 127, 208, 1)";
     ctx.fillRect(segment.x, segment.y, box, box);
   });
 }
@@ -1679,10 +1818,6 @@ function gameOver() {
   running = false;
   clearTimeout(specialFoodTimer);
   drawGame();
-  ctx.font = "32px Arial";
-  ctx.fillStyle = "white";
-  ctx.textAlign = "center";
-  ctx.fillText("Game Over! Score: " + score, canvas.width / 2, canvas.height / 2);
   snake = [];
   food = [];
   if (score > highScore) {
@@ -1693,6 +1828,12 @@ function gameOver() {
     ctx.fillStyle = "white";
     ctx.textAlign = "center";
     ctx.fillText("Game Over! Score: " + score + "\nNew High Score: " + highScore + "!", canvas.width / 2, canvas.height / 2);
+  }
+  else {
+  ctx.font = "32px Arial";
+  ctx.fillStyle = "white";
+  ctx.textAlign = "center";
+  ctx.fillText("Game Over! Score: " + score, canvas.width / 2, canvas.height / 2);
   }
 }
 function gameLoop(timestamp) {

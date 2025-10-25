@@ -658,6 +658,23 @@
       <div class="card" role="region" aria-labelledby="shapesTitle">
         <h3 id="shapesTitle">3D Shapes Calculator Coming Soon!!</h3>
         <p class="muted">Calculate surface area, volume, or any value of various 3D shapes.</p>
+        <div class="row">
+          <label><span class="muted">Shape</span>
+            <select id="shape3D" aria-label="3D shape selection" onchange="showShape3DInputs()">
+              <option value="select" disabled selected>Select a shape</option>
+              <option value="sphere">Sphere</option>
+              <option value="cone">Cone</option>
+              <option value="cylinder">Cylinder</option>
+              <option value="cube">Cube</option>
+              <option value="rectangularPrism">Cuboid</option>
+              <option value="triangularPrism">Triangular Prism</option>
+              <option value="squarePyramid">Square Pyramid</option>
+              <option value="triangularPyramid">Triangular Pyramid</option>
+              <option value="otherPrisms">Other Prisms</option>
+              <option value="otherPyramid">Other Pyramids</option>
+            </select>
+          </label>
+        </div>
       </div>
     </section>
 
@@ -1804,7 +1821,12 @@
             onclick="highlightElementGroup('unknownElements')">
             <div class="element-type">Unknown properties</div>
           </button>
-        </div>
+        </div><br>
+        <label><span class="muted">Need help finding the element? Type in the Element name or Symbol</span>
+          <input id="ptSearch" type="text" step="any" />
+        </label>
+        <br>
+        <button class="btn"onclick="searchElement()">Search</button>
         <div id="ptOut" class="output mono" role="status" aria-live="polite">
         </div>
         <button id="ptInfoBtn" class="btn ptInfoBtnHidden" onclick="ptInfoClear()">Clear</button>
