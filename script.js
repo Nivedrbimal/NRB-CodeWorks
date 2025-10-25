@@ -1169,8 +1169,6 @@ const elementData = {
 function searchElement() {
   const searchedElement = document.getElementById('ptSearch').value.trim().toLowerCase();
   const ptOut = document.getElementById('ptOut');
-
-  // map of possible user inputs → element button IDs
   const elements = {
     "1": "atomH", "h": "atomH", "hydrogen": "atomH",
     "2": "atomHe", "he": "atomHe", "helium": "atomHe",
@@ -1291,9 +1289,7 @@ function searchElement() {
     "117": "atomTs", "ts": "atomTs", "tennessine": "atomTs",
     "118": "atomOg", "og": "atomOg", "oganesson": "atomOg"
   };
-
   const elementId = elements[searchedElement];
-
   if (elementId) {
     document.getElementById(elementId).click();
     document.getElementById(elementId).classList.add("hover-element");

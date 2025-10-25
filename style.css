@@ -1187,7 +1187,8 @@ input[type="color"] {
     padding: 1px !important
   }
   .hover-element .element-symbol {
-    line-height:1.5;
+    line-height:1;
+    margin-bottom:2px;
   }
   .hover-element .element-number {
     line-height:1;
@@ -1207,7 +1208,8 @@ input[type="color"] {
     transition: opacity 0.1s ease, transform 0.1s ease;
   }
   .hover-element .element-symbol {
-    margin-top:1px;
+    line-height:1;
+    margin-bottom:2px;
   }
   .hover-element {
     transform: scale(5) !important;
