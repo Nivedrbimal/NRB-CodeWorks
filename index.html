@@ -84,11 +84,32 @@
 
       <!-- General Calculator -->
       <div class="card" role="region" aria-labelledby="genCalcTitle">
+        <script src="https://cdn.jsdelivr.net/npm/mathjs@13/lib/browser/math.js"></script>
         <h3 id="genCalcTitle">General Calculator</h3>
         <p class="muted">Supports basic operations, exponents, trigonometry, pi, </p>
         <div class="grid">
           <label><span class="muted">Equation</span>
             <input id="genCalcVal" type="text" step="any" placeholder="Enter equation" aria-label="equation input" />
+          </label>
+        </div>
+        <div class="row">
+          <label><span class="muted">Select to which digit to round to:</span>
+            <select id="genCalcRound">
+              <option disabled selected>Select</option>
+              <option value="1">Whole Number</option>
+              <option value="10">Tenth</option>
+              <option value="100">Hundredth</option>
+              <option value="1000">Thousandth</option>
+              <option value="10000">Ten Thousandth</option>
+              <option value="0">Don't Round</option>
+            </select>
+          </label>
+          <label><span class="muted">If doing trigonomentric equations, select mode of angle:</span>
+            <select id="genCalcAngleMode">
+              <option disabled selected>Select</option>
+              <option value="deg">Degree</option>
+              <option value="rad">Radian</option>
+            </select>
           </label>
         </div>
         <div class="row">
@@ -100,19 +121,18 @@
 
       <!-- Trig Evaluator -->
       <div class="card" role="region" aria-labelledby="trigTitle">
-        <h3 id="trigTitle">Trigonometric evaluator</h3>
-        <p class="muted">Supports basic, inverse and hyperbolic trigonometric functions. Choose degrees, radians or
-          polar.</p>
+        <h3 id="trigTitle">Trigonometric Evaluator</h3>
+        <p class="muted">
+          Supports basic, inverse, hyperbolic functions and polar input.
+        </p>
 
         <div class="grid">
           <label><span class="muted">Mode</span>
             <select id="triMode" aria-label="trig mode" onchange="updatePlaceholder()">
               <option value="deg">Degrees</option>
               <option value="rad">Radians</option>
-              <option value="pol">Polar</option>
             </select>
           </label>
-
           <label><span class="muted">Operation</span>
             <select id="triOp" aria-label="trig operation" onchange="updatePlaceholder()">
               <option value="sin">sin</option>
@@ -135,9 +155,11 @@
               <option value="coth">coth</option>
             </select>
           </label>
-
-          <label><span class="muted">Input (Use the pi symbol(π) when doing radians)</span>
-            <input id="triVal" type="text" step="any" placeholder="Enter in degree(s)" aria-label="trig input" />
+          <label><span class="muted">Input</span>
+            <input id="triVal" type="text" placeholder="Enter value" aria-label="trig input"/>
+          </label>
+          <label><span class="muted">Polar Input</span>
+            <input id="triPolar" type="text" placeholder="r∠θ (e.g. 5∠30°)" aria-label="polar input"/>
           </label>
         </div>
 
@@ -164,29 +186,27 @@
             <input id="quadC" type="number" step="any" placeholder="Value of 'c'" aria-label="quad c input" />
           </label>
           <label><span class="muted">Enter value of 'x₁', leave blank if unknown</span>
-            <input id="quadX1" type="number" step="any" placeholder="first solution for x₁"
+            <input id="quadX1" type="number" step="any" placeholder="value x₁"
               aria-label="quad x₁ input" />
           </label>
           <label><span class="muted">Enter value of 'x₂', leave blank if unknown</span>
-            <input id="quadX2" type="number" step="any" placeholder="second solution for x₂"
+            <input id="quadX2" type="number" step="any" placeholder="value of x₂"
               aria-label="quad x₂ input" />
           </label>
-        </div>
-        <div class="grid">
           <label><span class="muted">Enter value of 'h', leave blank if unknown</span>
-            <input id="quadH" type="number" step="any" placeholder="x-coordinate of vertex'"
+            <input id="quadH" type="number" step="any" placeholder="x of vertex"
               aria-label="quad h input" />
           </label>
           <label><span class="muted">Enter value of 'k', leave blank if unknown</span>
-            <input id="quadK" type="number" step="any" placeholder="y-coordinate of vertex'"
+            <input id="quadK" type="number" step="any" placeholder="y of vertex"
               aria-label="quad k input" />
           </label>
           <label><span class="muted">Enter value of 'x', leave blank if unknown</span>
-            <input id="quadPx" type="number" step="any" placeholder="x-coordinate of known point'"
+            <input id="quadPx" type="number" step="any" placeholder="x of known point"
               aria-label="quad x input" />
           </label>
           <label><span class="muted">Enter value of 'y', leave blank if unknown</span>
-            <input id="quadPy" type="number" step="any" placeholder="y-coordinate of known point'"
+            <input id="quadPy" type="number" step="any" placeholder="y of known point"
               aria-label="quad y input" />
           </label>
 
@@ -776,7 +796,7 @@
         <div class="periodic-table">
           <!--Shell-->
           <div class="ptColumn">
-            <span class="element-column"> </span>
+            <span class="element-column" style="color:transparent">Shell</span>
             <div class="side-text">
               1
             </div>
@@ -1748,7 +1768,7 @@
           </div>
           <!--Orbitals-->
           <div class="ptColumn">
-            <span class="element-column"> </span>
+            <span class="element-column" style="color:transparent">Orbitals</span>
             <div class="side-text">
               2
             </div>

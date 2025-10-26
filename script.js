@@ -2,8 +2,10 @@ document.body.style.overflow = 'hidden';
 // ---------- Utilities ----------
 const isNum = v => v !== null && v !== '' && !Number.isNaN(Number(v));
 const toNum = v => isNum(v) ? Number(v) : null;
-const fmt = n => (n === null || n === undefined || !Number.isFinite(n)) ? '—' : (Math.abs(n) < 1e-8 ? n.toExponential(4) : Number(n.toPrecision(12)).toString());
-
+// const fmt = n => (n === null || n === undefined || !Number.isFinite(n)) ? '—' : (Math.abs(n) < 1e-8 ? n.toExponential(4) : Number(n.toPrecision(12)).toString());
+const known = x => x !== null;
+const deg2rad = d => d * Math.PI / 180;
+const rad2deg = r => r * 180 / Math.PI;
 // ---------- Navigation ----------
 const topLinks = document.querySelectorAll(".top-link");
 function switchTopPanel(e) {
@@ -104,14 +106,43 @@ window.addEventListener('load', () => {
 
 // -------- GENERAL CALCULATOR --------
 function genCalcCompute() {
-
+  const input = document.getElementById('genCalcVal').value;
+  const round = Number(document.getElementById('genCalcRound').value) || 10000;
+  const mode = document.getElementById('genCalcAngleMode').value;
+  let expr = input.replace(/\s+/g, '');
+  expr = expr.replace(/×/g, '*').replace(/÷/g, '/').replace(/\^/g, '**');
+  if (mode === 'deg') {
+    expr = expr.replace(/(sin|cos|tan|csc|sec|cot)\(([^)]+)\)/g, (match, fn, val) => {
+      return `${fn}(deg2Rad(${val}))`;
+    });
+    expr = expr.replace(/(asin|acos|atan|acsc|asec|acot)\(([^)]+)\)/g, (match, fn, val) => {
+      return `rad2Deg(${fn}(${val}))`;
+    });
+  }
+  try {
+    const ans = math.evaluate(expr);
+    if (round === 0) {
+      document.getElementById('genCalcOut').textContent = ans;
+    } else {
+      document.getElementById('genCalcOut').textContent = Math.round(ans * round) / round;
+    }
+  } catch (err) {
+    document.getElementById('genCalcOut').textContent = 'Invalid expression';
+  }
 }
 function genCalcClear() {
-  document.getElementById("genCalcVal").value = '';
-  document.getElementById("genCalcOut").textContent = '';
+  document.getElementById('genCalcVal').value = '';
+  document.getElementById('genCalcOut').textContent = '';
 }
 
 // ---------- TRIG EVALUATOR ----------
+
+function fmt(v) { return Number(v.toFixed(6)); }
+
+function parseRadianInput(raw) {
+  try { return eval(raw.replace(/π/g,'Math.PI')); } 
+  catch { return NaN; }
+}
 function parseRadianInput(raw) {
   let str = raw.replace(/π/g, 'Math.PI');
 
@@ -121,197 +152,173 @@ function parseRadianInput(raw) {
     return NaN;
   }
 }
+function parsePolarInput(raw) {
+  const match = raw.match(/^\s*([\d.]+)\s*∠\s*([\d.π\/+-]+)\s*$/i);
+  if (!match) return null;
+  let r = parseFloat(match[1]);
+  let theta;
+  try { theta = eval(match[2].replace(/π/g,'Math.PI')); } 
+  catch { return null; }
+  return { r, theta };
+}
 function updatePlaceholder() {
   const mode = document.getElementById('triMode').value;
-  const input = document.getElementById('triVal');
   const op = document.getElementById('triOp').value;
-  if (['asin', 'acos', 'atan', 'acsc', 'asec', 'acot'].includes(op)) {
+  const input = document.getElementById('triVal');
+  if (['asin','acos','atan','acsc','asec','acot'].includes(op))
     input.placeholder = 'Enter value';
-  }
-  else if (['sinh', 'cosh', 'tanh', 'csch', 'sech', 'coth'].includes(op)) {
+  else if (['sinh','cosh','tanh','csch','sech','coth'].includes(op))
     input.placeholder = 'Enter a real number';
-  }
-  else {
-    if (mode === 'deg' || mode === 'pol') {
-      input.placeholder = 'Enter in degree(s)';
-    } else if (mode === 'rad') {
-      input.placeholder = 'Enter in radian(s) (use the pi symbol (π) when inputting)';
-    } else {
-      input.placeholder = 'Enter number';
-    }
-  }
+  else if (mode === 'deg') input.placeholder = 'Enter in degree(s)';
+  else input.placeholder = 'Enter in radian(s)';
 }
 function trigClear() {
   document.getElementById('triOut').textContent = '';
   document.getElementById('triVal').value = '';
+  document.getElementById('triPolar').value = '';
   document.getElementById('triOp').value = 'sin';
   document.getElementById('triMode').value = 'deg';
   updatePlaceholder();
+}
+function getNiceAngle(op, angle) {
+  const pi = Math.PI, tol = 1e-6;
+  const near = (a,b) => Math.abs(a-b)<tol;
+
+  switch(op) {
+    case 'sin':
+      if(near(angle,0)||near(angle,2*pi)) return '0';
+      if(near(angle,pi/6)||near(angle,11*pi/6)) return '1/2';
+      if(near(angle,pi/4)||near(angle,7*pi/4)) return '√2/2';
+      if(near(angle,pi/3)||near(angle,5*pi/3)) return '√3/2';
+      if(near(angle,pi/2)) return '1';
+      if(near(angle,pi)) return '0';
+      break;
+    case 'cos':
+      if(near(angle,0)||near(angle,2*pi)) return '1';
+      if(near(angle,pi/6)||near(angle,11*pi/6)) return '√3/2';
+      if(near(angle,pi/4)||near(angle,7*pi/4)) return '√2/2';
+      if(near(angle,pi/3)||near(angle,5*pi/3)) return '1/2';
+      if(near(angle,pi/2)||near(angle,3*pi/2)) return '0';
+      if(near(angle,pi)) return '-1';
+      break;
+    case 'tan':
+      if(near(angle,0)||near(angle,pi)||near(angle,2*pi)) return '0';
+      if(near(angle,pi/6)||near(angle,7*pi/6)) return '1/√3';
+      if(near(angle,pi/4)||near(angle,5*pi/4)) return '1';
+      if(near(angle,pi/3)||near(angle,4*pi/3)) return '√3';
+      if(near(angle,pi/2)||near(angle,3*pi/2)) return 'undefined';
+      break;
+    case 'csc':
+      if(near(angle,0)||near(angle,pi)||near(angle,2*pi)) return 'undefined';
+      if(near(angle,pi/6)||near(angle,5*pi/6)) return '2';
+      if(near(angle,pi/4)||near(angle,3*pi/4)) return '√2';
+      if(near(angle,pi/3)||near(angle,2*pi/3)) return '2√3/3';
+      if(near(angle,pi/2)) return '1';
+      break;
+    case 'sec':
+      if(near(angle,pi/2)||near(angle,3*pi/2)) return 'undefined';
+      if(near(angle,0)||near(angle,2*pi)) return '1';
+      if(near(angle,pi/6)||near(angle,11*pi/6)) return '2√3/3';
+      if(near(angle,pi/4)||near(angle,7*pi/4)) return '√2';
+      if(near(angle,pi/3)||near(angle,5*pi/3)) return '2';
+      if(near(angle,pi)) return '-1';
+      break;
+    case 'cot':
+      if(near(angle,0)||near(angle,pi)||near(angle,2*pi)) return 'undefined';
+      if(near(angle,pi/6)||near(angle,7*pi/6)) return '√3';
+      if(near(angle,pi/4)||near(angle,5*pi/4)) return '1';
+      if(near(angle,pi/3)||near(angle,4*pi/3)) return '1/√3';
+      if(near(angle,pi/2)) return '0';
+      break;
+    default: return null;
+  }
+  return null;
 }
 function trigCompute() {
   const mode = document.getElementById('triMode').value;
   const op = document.getElementById('triOp').value;
   const raw = document.getElementById('triVal').value;
+  const polarRaw = document.getElementById('triPolar').value;
   const outEl = document.getElementById('triOut');
-  if (!raw) { outEl.textContent = 'Enter a value'; return; }
-  let x;
-  if (mode === 'rad') {
+  if (!raw && !polarRaw) { outEl.textContent = 'Enter a value'; return; }
+  let x, polar = null;
+  if (polarRaw) {
+    polar = parsePolarInput(polarRaw);
+    if (!polar) { 
+      outEl.textContent = 'Invalid polar input'; 
+      return; 
+    }
+    const thetaRad = (mode === 'deg') ? polar.theta * Math.PI / 180 : polar.theta;
+    const xRect = polar.r * Math.cos(thetaRad);
+    const yRect = polar.r * Math.sin(thetaRad);
+    let trigValue;
+    switch (op) {
+      case 'sin': trigValue = Math.sin(thetaRad); break;
+      case 'cos': trigValue = Math.cos(thetaRad); break;
+      case 'tan': trigValue = Math.tan(thetaRad); break;
+      case 'csc': trigValue = 1 / Math.sin(thetaRad); break;
+      case 'sec': trigValue = 1 / Math.cos(thetaRad); break;
+      case 'cot': trigValue = 1 / Math.tan(thetaRad); break;
+      default: trigValue = NaN;
+    }
+
+    outEl.textContent = `Result: ${fmt(trigValue)} | Rectangular: (${fmt(xRect)}, ${fmt(yRect)})`;
+    return;
+  }
+
+ else if (mode==='rad') {
     x = parseRadianInput(raw);
   } else {
     x = Number(raw);
   }
-  if (isNaN(x)) { outEl.textContent = 'Invalid input'; return; }
-  const toRad = v => mode === 'deg' ? v * Math.PI / 180 : v;
-  const fromRad = v => mode === 'deg' ? v * 180 / Math.PI : v;
-  const pi = Math.PI;
+  if (isNaN(x)) { outEl.textContent='Invalid input'; return; }
 
+  const toRad = v => mode==='deg'? v*Math.PI/180 : v;
+  const fromRad = v => mode==='deg'? v*180/Math.PI : v;
+  const angle = toRad(x);
+
+  let res;
   try {
-    const angle = toRad(x);
-    let res = null;
-    switch (op) {
-      case 'sin': res = Math.sin(toRad(x)); break;
-      case 'cos': res = Math.cos(toRad(x)); break;
-      case 'tan': res = Math.tan(toRad(x)); break;
-      case 'csc': res = 1 / Math.sin(toRad(x)); break;
-      case 'sec': res = 1 / Math.cos(toRad(x)); break;
-      case 'cot': res = 1 / Math.tan(toRad(x)); break;
-      case 'asin': { let v = Math.asin(x); res = fromRad(v); break; }
-      case 'acos': { let v = Math.acos(x); res = fromRad(v); break; }
-      case 'atan': { let v = Math.atan(x); res = fromRad(v); break; }
-      case 'asec': { let v = 1 / x; if (Math.abs(v) <= 1) { let r = Math.acos(1 / v); res = fromRad(r); } else res = NaN; break; }
-      case 'acsc': { let v = 1 / x; if (Math.abs(v) <= 1) { let r = Math.asin(1 / v); res = fromRad(r); } else res = NaN; break; }
-      case 'acot': { let r = Math.atan(1 / x); res = fromRad(r); break; }
-      case 'sinh': res = Math.sinh(toRad(x)); break;
-      case 'cosh': res = Math.cosh(toRad(x)); break;
-      case 'tanh': res = Math.tanh(toRad(x)); break;
-      case 'csch': res = 1 / Math.sinh(toRad(x)); break;
-      case 'sech': res = 1 / Math.cosh(toRad(x)); break;
-      case 'coth': res = 1 / Math.tanh(toRad(x)); break;
-      default: res = NaN;
+    if (polar) {
+      res = evalTrig(op, polar.theta, mode);
+    } else {
+      res = evalTrig(op, angle, mode);
     }
-    var rad = null;
-    if (op === 'sin') {
-      if (angle === 0 || angle === 2 * pi || angle === -2 * pi) rad = '0';
-      else if (angle === pi / 6 || angle === -11 * pi / 6) rad = '1/2';
-      else if (angle === pi / 4 || angle === -7 * pi / 4) rad = '√2/2';
-      else if (angle === pi / 3 || angle === -5 * pi / 3) rad = '√3/2';
-      else if (angle === pi / 2 || angle === -3 * pi / 2) rad = '1';
-      else if (angle === 2 * pi / 3 || angle === -4 * pi / 3) rad = '√3/2';
-      else if (angle === 3 * pi / 4 || angle === -5 * pi / 4) rad = '√2/2';
-      else if (angle === 5 * pi / 6 || angle === -7 * pi / 6) rad = '1/2';
-      else if (angle === pi || angle === -pi) rad = '0';
-      else if (angle === 7 * pi / 6 || angle === -5 * pi / 6) rad = '-1/2';
-      else if (angle === 5 * pi / 4 || angle === -3 * pi / 4) rad = '-√2/2';
-      else if (angle === 4 * pi / 3 || angle === -2 * pi / 3) rad = '-√3/2';
-      else if (angle === 3 * pi / 2 || angle === -pi / 2) rad = '-1';
-      else if (angle === 5 * pi / 3 || angle === -pi / 3) rad = '-√3/2';
-      else if (angle === 7 * pi / 4 || angle === -pi / 4) rad = '-√2/2';
-      else if (angle === 11 * pi / 6 || angle === -pi / 6) rad = '-1/2';
+    switch(op) {
+      case 'sin': res=Math.sin(angle); break;
+      case 'cos': res=Math.cos(angle); break;
+      case 'tan': res=Math.tan(angle); break;
+      case 'csc': res=1/Math.sin(angle); break;
+      case 'sec': res=1/Math.cos(angle); break;
+      case 'cot': res=1/Math.tan(angle); break;
+      case 'asin': res=fromRad(Math.asin(x)); break;
+      case 'acos': res=fromRad(Math.acos(x)); break;
+      case 'atan': res=fromRad(Math.atan(x)); break;
+      case 'asec': res=fromRad(Math.acos(1/x)); break;
+      case 'acsc': res=fromRad(Math.asin(1/x)); break;
+      case 'acot': res=fromRad(Math.atan(1/x)); break;
+      case 'sinh': res=Math.sinh(x); break;
+      case 'cosh': res=Math.cosh(x); break;
+      case 'tanh': res=Math.tanh(x); break;
+      case 'csch': res=1/Math.sinh(x); break;
+      case 'sech': res=1/Math.cosh(x); break;
+      case 'coth': res=1/Math.tanh(x); break;
+      default: res=NaN;
+    }
+    let output = `Result: ${fmt(res)}`;
+    const nice = getNiceAngle(op, angle);
+    if (nice) output += ` or ${nice}`;
+
+    if (polar) {
+      let xr = polar.r * Math.cos(polar.theta);
+      let yr = polar.r * Math.sin(polar.theta);
+      output += ` | Rectangular: (${fmt(xr)}, ${fmt(yr)})`;
     }
 
-    // cos
-    else if (op === 'cos') {
-      if (angle === 0 || angle === 2 * pi || angle === -2 * pi) rad = '1';
-      else if (angle === pi / 6 || angle === -11 * pi / 6) rad = '√3/2';
-      else if (angle === pi / 4 || angle === -7 * pi / 4) rad = '√2/2';
-      else if (angle === pi / 3 || angle === -5 * pi / 3) rad = '1/2';
-      else if (angle === pi / 2 || angle === -3 * pi / 2) rad = '0';
-      else if (angle === 2 * pi / 3 || angle === -4 * pi / 3) rad = '-1/2';
-      else if (angle === 3 * pi / 4 || angle === -5 * pi / 4) rad = '-√2/2';
-      else if (angle === 5 * pi / 6 || angle === -7 * pi / 6) rad = '-√3/2';
-      else if (angle === pi || angle === -pi) rad = '-1';
-      else if (angle === 7 * pi / 6 || angle === -5 * pi / 6) rad = '-√3/2';
-      else if (angle === 5 * pi / 4 || angle === -3 * pi / 4) rad = '-√2/2';
-      else if (angle === 4 * pi / 3 || angle === -2 * pi / 3) rad = '-1/2';
-      else if (angle === 3 * pi / 2 || angle === -pi / 2) rad = '0';
-      else if (angle === 5 * pi / 3 || angle === -pi / 3) rad = '1/2';
-      else if (angle === 7 * pi / 4 || angle === -pi / 4) rad = '√2/2';
-      else if (angle === 11 * pi / 6 || angle === -pi / 6) rad = '√3/2';
-    }
-
-    // tan
-    else if (op === 'tan') {
-      if (angle === 0 || angle === pi || angle === -pi || angle === 2 * pi || angle === -2 * pi) rad = '0';
-      else if (angle === pi / 6 || angle === -11 * pi / 6) rad = '1/√3';
-      else if (angle === pi / 4 || angle === -7 * pi / 4) rad = '1';
-      else if (angle === pi / 3 || angle === -5 * pi / 3) rad = '√3';
-      else if (angle === pi / 2 || angle === -3 * pi / 2 || angle === 3 * pi / 2 || angle === -pi / 2) rad = 'undefined';
-      else if (angle === 2 * pi / 3 || angle === -4 * pi / 3) rad = '-√3';
-      else if (angle === 3 * pi / 4 || angle === -5 * pi / 4) rad = '-1';
-      else if (angle === 5 * pi / 6 || angle === -7 * pi / 6) rad = '-1/√3';
-      else if (angle === 7 * pi / 6 || angle === -5 * pi / 6) rad = '1/√3';
-      else if (angle === 5 * pi / 4 || angle === -3 * pi / 4) rad = '1';
-      else if (angle === 4 * pi / 3 || angle === -2 * pi / 3) rad = '√3';
-      else if (angle === 5 * pi / 3 || angle === -pi / 3) rad = '-√3';
-      else if (angle === 7 * pi / 4 || angle === -pi / 4) rad = '-1';
-      else if (angle === 11 * pi / 6 || angle === -pi / 6) rad = '-1/√3';
-    }
-
-    // csc
-    else if (op === 'csc') {
-      if (angle === 0 || angle === pi || angle === -pi || angle === 2 * pi || angle === -2 * pi) rad = 'undefined';
-      else if (angle === pi / 6 || angle === -11 * pi / 6) rad = '2';
-      else if (angle === pi / 4 || angle === -7 * pi / 4) rad = '√2';
-      else if (angle === pi / 3 || angle === -5 * pi / 3) rad = '2√3/3';
-      else if (angle === pi / 2 || angle === -3 * pi / 2) rad = '1';
-      else if (angle === 2 * pi / 3 || angle === -4 * pi / 3) rad = '2√3/3';
-      else if (angle === 3 * pi / 4 || angle === -5 * pi / 4) rad = '√2';
-      else if (angle === 5 * pi / 6 || angle === -7 * pi / 6) rad = '2';
-      else if (angle === 7 * pi / 6 || angle === -5 * pi / 6) rad = '-2';
-      else if (angle === 5 * pi / 4 || angle === -3 * pi / 4) rad = '-√2';
-      else if (angle === 4 * pi / 3 || angle === -2 * pi / 3) rad = '-2√3/3';
-      else if (angle === 3 * pi / 2 || angle === -pi / 2) rad = '-1';
-      else if (angle === 5 * pi / 3 || angle === -pi / 3) rad = '-2√3/3';
-      else if (angle === 7 * pi / 4 || angle === -pi / 4) rad = '-√2';
-      else if (angle === 11 * pi / 6 || angle === -pi / 6) rad = '-2';
-    }
-
-    // sec
-    else if (op === 'sec') {
-      if (angle === pi / 2 || angle === -3 * pi / 2 || angle === 3 * pi / 2 || angle === -pi / 2) rad = 'undefined';
-      else if (angle === 0 || angle === 2 * pi || angle === -2 * pi) rad = '1';
-      else if (angle === pi / 6 || angle === -11 * pi / 6) rad = '2√3/3';
-      else if (angle === pi / 4 || angle === -7 * pi / 4) rad = '√2';
-      else if (angle === pi / 3 || angle === -5 * pi / 3) rad = '2';
-      else if (angle === 2 * pi / 3 || angle === -4 * pi / 3) rad = '-2';
-      else if (angle === 3 * pi / 4 || angle === -5 * pi / 4) rad = '-√2';
-      else if (angle === 5 * pi / 6 || angle === -7 * pi / 6) rad = '-2√3/3';
-      else if (angle === pi || angle === -pi) rad = '-1';
-      else if (angle === 7 * pi / 6 || angle === -5 * pi / 6) rad = '-2√3/3';
-      else if (angle === 5 * pi / 4 || angle === -3 * pi / 4) rad = '-√2';
-      else if (angle === 4 * pi / 3 || angle === -2 * pi / 3) rad = '-2';
-      else if (angle === 5 * pi / 3 || angle === -pi / 3) rad = '2';
-      else if (angle === 7 * pi / 4 || angle === -pi / 4) rad = '√2';
-      else if (angle === 11 * pi / 6 || angle === -pi / 6) rad = '2√3/3';
-    }
-
-    // cot
-    else if (op === 'cot') {
-      if (angle === 0 || angle === pi || angle === -pi || angle === 2 * pi || angle === -2 * pi) rad = 'undefined';
-      else if (angle === pi / 6 || angle === -11 * pi / 6) rad = '√3/1';
-      else if (angle === pi / 4 || angle === -7 * pi / 4) rad = '1';
-      else if (angle === pi / 3 || angle === -5 * pi / 3) rad = '3√3/3';
-      else if (angle === pi / 2 || angle === -3 * pi / 2 || angle === 3 * pi / 2 || angle === -pi / 2) rad = '0';
-      else if (angle === 2 * pi / 3 || angle === -4 * pi / 3) rad = '-3√3/3';
-      else if (angle === 3 * pi / 4 || angle === -5 * pi / 4) rad = '-1';
-      else if (angle === 5 * pi / 6 || angle === -7 * pi / 6) rad = '-√3';
-      else if (angle === 7 * pi / 6 || angle === -5 * pi / 6) rad = '√3';
-      else if (angle === 5 * pi / 4 || angle === -3 * pi / 4) rad = '1';
-      else if (angle === 4 * pi / 3 || angle === -2 * pi / 3) rad = '3√3/1';
-      else if (angle === 5 * pi / 3 || angle === -pi / 3) rad = '-3√3/3';
-      else if (angle === 7 * pi / 4 || angle === -pi / 4) rad = '-1';
-      else if (angle === 11 * pi / 6 || angle === -pi / 6) rad = '-√3';
-    }
-
-    if (rad !== null) {
-      outEl.textContent = `Result: ${fmt(res)} or ` + rad;
-    }
-    else
-      outEl.textContent = `Result: ${fmt(res)}`;
-  } catch (e) {
-    outEl.textContent = 'Error: ' + e.message;
-  }
+    outEl.textContent = output;
+  } catch(e) { outEl.textContent='Error: '+e.message; }
 }
+
 
 // -------- QUADRATIC EQUATION ---------
 function quadeClear() {
@@ -944,9 +951,6 @@ function proj_flexible() {
   let R = toNum(document.getElementById('pm_R').value);
   let H = toNum(document.getElementById('pm_H').value);
 
-  const known = x => x !== null;
-  const deg2rad = d => d * Math.PI / 180;
-  const rad2deg = r => r * 180 / Math.PI;
 
   let changed = true, iter = 0;
   while (changed && iter < 40) {
@@ -1025,6 +1029,23 @@ function highlightElementGroup(type) {
     elements.forEach(el => el.classList.add('highlighted'));
   }
 }
+const elementBox = document.querySelector('.element-box');
+const noElements = document.querySelectorAll('.noElement');
+const sideTexts = document.querySelectorAll('.side-text');
+
+function syncSizes() {
+  const rect = elementBox.getBoundingClientRect();
+  const width = rect.width + 'px';
+  const height = rect.height + 'px';
+  [...noElements, ...sideTexts].forEach(el => {
+    el.style.width = width;
+    el.style.height = height;
+  });
+}
+syncSizes();
+window.addEventListener('resize', syncSizes);
+const resizeObserver = new ResizeObserver(syncSizes);
+resizeObserver.observe(elementBox);
 
 function showElementInfo(symbol) {
   const out = document.getElementById('ptOut');
@@ -1299,7 +1320,7 @@ function searchElement() {
   }
 }
 
-document.getElementById('ptSearch').addEventListener('keypress', function(event) {
+document.getElementById('ptSearch').addEventListener('keypress', function (event) {
   if (event.key === 'Enter') {
     searchElement();
   }
@@ -1515,8 +1536,8 @@ function fg2_start() {
   const opsPer = toNum(document.getElementById('fg_ops').value) ?? 1;
   const n = toNum(document.getElementById('fg_n').value) ?? 5;
 
-  if (min > max) {
-    document.getElementById('fg2_area').textContent = 'Min must be <= Max.';
+  if (min >= max) {
+    document.getElementById('fg2_area').textContent = 'Minimum number must be less than the maximum number.';
     return;
   }
 
@@ -1537,20 +1558,24 @@ function randChoice(arr) {
 function makeExpr(min, max, ops, allowedOps) {
   const nums = [];
   for (let i = 0; i < ops + 1; i++) nums.push(randInt(min, max));
-
   let expr = '' + nums[0];
-
   for (let i = 0; i < ops; i++) {
     let op = randChoice(allowedOps);
     let val = nums[i + 1];
-
-    if ((op === '/' || op === '%') && val === 0) {
-      val = 1;
+    if ((op === '÷' || op === '/' || op === '%') && val === 0) val = 1;
+    switch (op) {
+      case '*':
+        op = '×';
+        break;
+      case '/':
+        op = '÷';
+        break;
+      case '**':
+        op = '^';
+        break;
     }
-
     expr += ` ${op} ${val}`;
   }
-
   return expr;
 }
 function toggleDropdown() {
@@ -1587,10 +1612,12 @@ function getSelectedOperations() {
   return ops.length ? ops : ['+', '-', '*', '/'];
 }
 function evalExpr(s) {
-  if (!/^[0-9+\-*/%^().\s]+$/.test(s)) throw new Error('Invalid tokens');
-  const safe = s.replace(/\^/g, '**');
-  // eslint-disable-next-line no-new-func
-  return Function(`"use strict"; return (${safe});`)();
+  if (!/^[0-9+\-x×÷*/%^().\s]+$/.test(s)) throw new Error('Invalid tokens');
+  const safe = s
+    .replace(/×|x/g, '*')
+    .replace(/÷/g, '/')
+    .replace(/\^/g, '**');
+  return Function(`"use strict"; return (${safe})`)();
 }
 function fg2_next() {
   if (!fg2_state) return;
@@ -1636,7 +1663,7 @@ function fg2_submit() {
   document.getElementById('fg2_area').textContent =
     (ok ? 'Correct! ' : 'Incorrect. ') + `Answer: ${fmt(correct)}`;
 
-  setTimeout(fg2_next, 700);
+  setTimeout(fg2_next, 2000);
 }
 document.addEventListener('DOMContentLoaded', () => {
   const opsToggle = document.getElementById('opsToggle');
@@ -1735,24 +1762,6 @@ function hitSpecialFood(snakeX, snakeY) {
 function collision(head, array) {
   return array.some(segment => head.x === segment.x && head.y === segment.y);
 }
-leftBtn.addEventListener("click", () => { if (direction !== "RIGHT") direction = "LEFT"; });
-upBtn.addEventListener("click", () => { if (direction !== "DOWN") direction = "UP"; });
-rightBtn.addEventListener("click", () => { if (direction !== "LEFT") direction = "RIGHT"; });
-downBtn.addEventListener("click", () => { if (direction !== "UP") direction = "DOWN"; });
-document.addEventListener(
-  "keydown",
-  event => {
-    const key = event.key.toLowerCase();
-    if (["arrowup", "arrowdown", "arrowleft", "arrowright", "w", "a", "s", "d"].includes(key)) {
-      event.preventDefault();
-    }
-    if ((key === "a" || key === "arrowleft") && direction !== "RIGHT") direction = "LEFT";
-    else if ((key === "w" || key === "arrowup") && direction !== "DOWN") direction = "UP";
-    else if ((key === "d" || key === "arrowright") && direction !== "LEFT") direction = "RIGHT";
-    else if ((key === "s" || key === "arrowdown") && direction !== "UP") direction = "DOWN";
-  },
-  { passive: false }
-);
 pauseBtn.addEventListener("click", () => {
   if (!running) return;
   paused = !paused;
@@ -1778,6 +1787,24 @@ function drawGame() {
   });
 }
 function updateGame() {
+  leftBtn.addEventListener("click", () => { if (direction !== "RIGHT") direction = "LEFT"; });
+  upBtn.addEventListener("click", () => { if (direction !== "DOWN") direction = "UP"; });
+  rightBtn.addEventListener("click", () => { if (direction !== "LEFT") direction = "RIGHT"; });
+  downBtn.addEventListener("click", () => { if (direction !== "UP") direction = "DOWN"; });
+  document.addEventListener(
+    "keydown",
+    event => {
+      const key = event.key.toLowerCase();
+      if (["arrowup", "arrowdown", "arrowleft", "arrowright"].includes(key)) {
+        event.preventDefault();
+      }
+      if ((key === "a" || key === "arrowleft") && direction !== "RIGHT") direction = "LEFT";
+      else if ((key === "w" || key === "arrowup") && direction !== "DOWN") direction = "UP";
+      else if ((key === "d" || key === "arrowright") && direction !== "LEFT") direction = "RIGHT";
+      else if ((key === "s" || key === "arrowdown") && direction !== "UP") direction = "DOWN";
+    },
+    { passive: false }
+  );
   let snakeX = snake[0].x;
   let snakeY = snake[0].y;
   if (direction === "LEFT") snakeX -= box;
@@ -1826,10 +1853,10 @@ function gameOver() {
     ctx.fillText("Game Over! Score: " + score + "\nNew High Score: " + highScore + "!", canvas.width / 2, canvas.height / 2);
   }
   else {
-  ctx.font = "32px Arial";
-  ctx.fillStyle = "white";
-  ctx.textAlign = "center";
-  ctx.fillText("Game Over! Score: " + score, canvas.width / 2, canvas.height / 2);
+    ctx.font = "32px Arial";
+    ctx.fillStyle = "white";
+    ctx.textAlign = "center";
+    ctx.fillText("Game Over! Score: " + score, canvas.width / 2, canvas.height / 2);
   }
 }
 function gameLoop(timestamp) {
