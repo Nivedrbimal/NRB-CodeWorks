@@ -84,7 +84,6 @@
 
       <!-- General Calculator -->
       <div class="card" role="region" aria-labelledby="genCalcTitle">
-        <script src="https://cdn.jsdelivr.net/npm/mathjs@13/lib/browser/math.js"></script>
         <h3 id="genCalcTitle">General Calculator</h3>
         <p class="muted">Supports basic operations, exponents, trigonometry, pi, </p>
         <div class="grid">
@@ -95,7 +94,7 @@
         <div class="row">
           <label><span class="muted">Select to which digit to round to:</span>
             <select id="genCalcRound">
-              <option disabled selected>Select</option>
+              <option value="select" disabled selected>Select</option>
               <option value="1">Whole Number</option>
               <option value="10">Tenth</option>
               <option value="100">Hundredth</option>
@@ -106,7 +105,7 @@
           </label>
           <label><span class="muted">If doing trigonomentric equations, select mode of angle:</span>
             <select id="genCalcAngleMode">
-              <option disabled selected>Select</option>
+              <option value="select" disabled selected>Select</option>
               <option value="deg">Degree</option>
               <option value="rad">Radian</option>
             </select>
@@ -1993,6 +1992,11 @@
               <option value="speed">Speed</option>
               <option value="time">Time</option>
               <option value="power">Power</option>
+              <option value="pressure">Pressure</option>
+              <option value="frequency">Frequency</option>
+              <option value="fuelEconomy">Fuel Economy</option>
+              <option value="memory">Memory</option>
+              <option value="dataTransferUnits">Data Transfer Rate</option>
             </select>
           </label>
           <label><span class="muted">Value</span>
