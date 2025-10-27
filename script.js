@@ -1994,8 +1994,12 @@ function updateJetShooter(delta) {
   }
   jetShooterEnemies.forEach(e => (e.y += e.speed));
   jetShooterEnemies = jetShooterEnemies.filter(e => e.y < jetShooterCanvas.height);
-  jetShooterShields.forEach(s => (s.y += s.speed));
-  jetShooterShields = jetShooterShields.filter(s => s.y < jetShooterCanvas.height);
+  jetShooterShields.forEach(s => {
+    s.y += s.speedY;
+    s.angle += s.oscillationSpeed;
+    s.x = s.baseX + Math.sin(s.angle) * s.amplitude;
+  });
+jetShooterShields = jetShooterShields.filter(s => s.y < jetShooterCanvas.height);
   for (let i = jetShooterEnemies.length - 1; i >= 0; i--) {
     for (let j = jetShooterBullets.length - 1; j >= 0; j--) {
       if (checkCollision(jetShooterEnemies[i], jetShooterBullets[j])) {
@@ -2028,15 +2032,51 @@ function updateJetShooter(delta) {
 }
 function drawJetShooter() {
   jetShooterCtx.clearRect(0, 0, jetShooterCanvas.width, jetShooterCanvas.height);
+  const jx = jetShooter.x + jetShooter.size / 2;
+  const jy = jetShooter.y + jetShooter.size / 2;
   jetShooterCtx.fillStyle = jetShooterHasShield ? "lightgreen" : "cyan";
-  jetShooterCtx.fillRect(jetShooter.x, jetShooter.y, jetShooter.size, jetShooter.size);
+  jetShooterCtx.beginPath();
+  jetShooterCtx.moveTo(jx, jetShooter.y + jetShooter.size);
+  jetShooterCtx.lineTo(jetShooter.x, jetShooter.y);
+  jetShooterCtx.lineTo(jetShooter.x + jetShooter.size, jetShooter.y);
+  jetShooterCtx.closePath();
+  jetShooterCtx.fill();
+  jetShooterCtx.fillStyle = "cyan";
+  jetShooterCtx.beginPath();
+  jetShooterCtx.arc(jx, jetShooter.y + jetShooter.size * 0.55, jetShooter.size * 0.15, 0, Math.PI * 2);
+  jetShooterCtx.fill();
+  jetShooterCtx.fillStyle = "orange";
+  jetShooterCtx.beginPath();
+  jetShooterCtx.moveTo(jx - jetShooter.size * 0.15, jetShooter.y);
+  jetShooterCtx.lineTo(jx + jetShooter.size * 0.15, jetShooter.y);
+  jetShooterCtx.lineTo(jx, jetShooter.y - jetShooter.size * 0.3);
+  jetShooterCtx.closePath();
+  jetShooterCtx.fill();
   jetShooterCtx.fillStyle = "yellow";
   jetShooterBullets.forEach(b => {
     jetShooterCtx.fillRect(b.x, b.y, b.size, b.size * 2);
   });
-  jetShooterCtx.fillStyle = "red";
   jetShooterEnemies.forEach(e => {
-    jetShooterCtx.fillRect(e.x, e.y, e.size, e.size);
+    const cx = e.x + e.size / 2;
+    const cy = e.y + e.size / 2;
+    jetShooterCtx.fillStyle = "silver";
+    jetShooterCtx.beginPath();
+    jetShooterCtx.moveTo(cx, e.y + e.size);
+    jetShooterCtx.lineTo(e.x, e.y);
+    jetShooterCtx.lineTo(e.x + e.size, e.y);
+    jetShooterCtx.closePath();
+    jetShooterCtx.fill();
+    jetShooterCtx.fillStyle = "cyan";
+    jetShooterCtx.beginPath();
+    jetShooterCtx.arc(cx, e.y + e.size * 0.55, e.size * 0.15, 0, Math.PI * 2);
+    jetShooterCtx.fill();
+    jetShooterCtx.fillStyle = "orange";
+    jetShooterCtx.beginPath();
+    jetShooterCtx.moveTo(cx - e.size * 0.15, e.y);
+    jetShooterCtx.lineTo(cx + e.size * 0.15, e.y);
+    jetShooterCtx.lineTo(cx, e.y - e.size * 0.3);
+    jetShooterCtx.closePath();
+    jetShooterCtx.fill();
   });
   jetShooterCtx.fillStyle = "gold";
   jetShooterShields.forEach(s => {
@@ -2053,13 +2093,24 @@ function checkCollision(a, b) {
   );
 }
 function spawnShield() {
-const size = jetShooterBox * 3;
-  const x = Math.random() * (jetShooterCanvas.width - size);
+  const size = jetShooterBox * 3;
   const y = -size;
   const speedY = 3 + Math.random() * 4;
-  const speedX = (Math.random() * 4) - 2; 
-
-  jetShooterShields.push({ x, y, size, speedY, speedX });
+  const baseX = Math.random() * (jetShooterCanvas.width - size); 
+  const amplitude = 100 + (Math.random() * 100);
+  const oscillationSpeed = 0.02 + (Math.random() * 0.03);
+  const angle = Math.random() * Math.PI / 180; 
+  const x = baseX + Math.sin(angle) * amplitude;
+  jetShooterShields.push({ 
+    x, 
+    y, 
+    size, 
+    speedY, 
+    baseX, 
+    angle, 
+    amplitude, 
+    oscillationSpeed 
+  });
 }
 function spawnEnemy() {
   const size = jetShooterBox * 4;
@@ -2068,27 +2119,58 @@ function spawnEnemy() {
   const speed = 2 + Math.random() * 2;
   jetShooterEnemies.push({ x, y, size, speed });
 }
-const keys = {};
-document.addEventListener("keydown", (e) => {
-  keys[e.key.toLowerCase()] = true;
-  if (!jetShooterRunning) return;
-  if (["arrowleft", "arrowright"].includes(e.key.toLowerCase())) e.preventDefault();
-  if (keys["arrowleft"] || keys["a"]) moveJetShooter(-1);
-  if (keys["arrowright"] || keys["d"]) moveJetShooter(1);
-  if (keys[" "]) shootJetShooter();
-});
-document.addEventListener("keyup", (e) => {
-  keys[e.key.toLowerCase()] = false;
-});
-jetShooterLeftBtn.onclick = () => moveJetShooter(-1);
-jetShooterRightBtn.onclick = () => moveJetShooter(1);
-jetShooterShootBtn.onclick = () => shootJetShooter();
-jetShooterStartBtn.onclick = () => jetShooterGameStart();
+jetShooterStartBtn.onclick = () => {
+  if (jetShooterRunning) jetShooterGameStart();
+  else {
+    jetShooterGameStart();
+    jetShooterStartBtn.textContent = "Restart"
+  }
+}
 jetShooterPauseBtn.onclick = () => {
   if (!jetShooterRunning) return;
   jetShooterPaused = !jetShooterPaused;
   jetShooterPauseBtn.textContent = jetShooterPaused ? "Resume" : "Pause";
 };
+let movement = 0;
+const keys = {};
+document.addEventListener("keydown", (e) => {
+  keys[e.key.toLowerCase()] = true;
+  if (!jetShooterRunning) return;
+  if (["arrowleft", "arrowright", "arrowup", "arrowdown", " "].includes(e.key.toLowerCase())) e.preventDefault();
+  if (keys["arrowleft"] || keys["a"]) movement = -1;
+  if (keys["arrowright"] || keys["d"]) movement = 1;
+  if (keys[" "]) shootJetShooter();
+});
+document.addEventListener("keyup", (e) => {
+  keys[e.key.toLowerCase()] = false;
+  movement = 0;
+});
+let isShooting = false;
+let lastShotTime = 0;
+const FIRE_RATE = 150;
+jetShooterLeftBtn.addEventListener('mousedown', () => { movement = -1; });
+jetShooterLeftBtn.addEventListener('mouseup', () => { if (movement === -1) movement = 0; });
+jetShooterLeftBtn.addEventListener('mouseleave', () => { if (movement === -1) movement = 0; });
+jetShooterRightBtn.addEventListener('mousedown', () => { movement = 1; });
+jetShooterRightBtn.addEventListener('mouseup', () => { if (movement === 1) movement = 0; });
+jetShooterRightBtn.addEventListener('mouseleave', () => { if (movement === 1) movement = 0; });
+jetShooterShootBtn.addEventListener('mousedown', () => { isShooting = true; });
+jetShooterShootBtn.addEventListener('mouseup', () => { isShooting = false; });
+jetShooterShootBtn.addEventListener('mouseleave', () => { isShooting = false; });
+function gameLoop() {
+  if (movement === -1) {
+    moveJetShooter(-0.25);
+  } else if (movement === 1) {
+    moveJetShooter(0.25);
+  }
+  const now = performance.now();
+  if (isShooting && (now - lastShotTime > FIRE_RATE)) {
+    shootJetShooter();
+    lastShotTime = now;
+  }
+  requestAnimationFrame(gameLoop);
+}
+gameLoop();
 function moveJetShooter(dir) {
   const step = jetShooterBox * 3;
   const newX = jetShooter.x + dir * step;
