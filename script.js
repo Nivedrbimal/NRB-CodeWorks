@@ -2148,6 +2148,7 @@ document.addEventListener("keyup", (e) => {
 let isShooting = false;
 let lastShotTime = 0;
 const FIRE_RATE = 150;
+// --- Desktop Mouse Events ---
 jetShooterLeftBtn.addEventListener('mousedown', () => { movement = -1; });
 jetShooterLeftBtn.addEventListener('mouseup', () => { if (movement === -1) movement = 0; });
 jetShooterLeftBtn.addEventListener('mouseleave', () => { if (movement === -1) movement = 0; });
@@ -2157,6 +2158,15 @@ jetShooterRightBtn.addEventListener('mouseleave', () => { if (movement === 1) mo
 jetShooterShootBtn.addEventListener('mousedown', () => { isShooting = true; });
 jetShooterShootBtn.addEventListener('mouseup', () => { isShooting = false; });
 jetShooterShootBtn.addEventListener('mouseleave', () => { isShooting = false; });
+jetShooterLeftBtn.addEventListener('touchstart', (e) => { if (!jetShooterRunning) { return; } e.preventDefault(); movement = -1; }, { passive: false });
+jetShooterLeftBtn.addEventListener('touchend', () => { if (movement === -1) movement = 0; });
+jetShooterLeftBtn.addEventListener('touchcancel', () => { if (movement === -1) movement = 0; });
+jetShooterRightBtn.addEventListener('touchstart', (e) => {  if (!jetShooterRunning) { return; } e.preventDefault(); movement = 1; }, { passive: false });
+jetShooterRightBtn.addEventListener('touchend', () => { if (movement === 1) movement = 0; });
+jetShooterRightBtn.addEventListener('touchcancel', () => { if (movement === 1) movement = 0; });
+jetShooterShootBtn.addEventListener('touchstart', (e) => {  if (!jetShooterRunning) { return; } e.preventDefault(); isShooting = true; }, { passive: false });
+jetShooterShootBtn.addEventListener('touchend', () => { isShooting = false; });
+jetShooterShootBtn.addEventListener('touchcancel', () => { isShooting = false; });
 function gameLoop() {
   if (movement === -1) {
     moveJetShooter(-0.25);
