@@ -1744,8 +1744,8 @@ const snakeDownBtn = document.getElementById("downSnake");
 const snakeStartBtn = document.getElementById("startSnakeBtn");
 const snakePauseBtn = document.getElementById("pauseSnakeBtn");
 const snakeSize = Math.floor(window.innerHeight * 0.65);
-snakeCanvas.width = snakeSize;
-snakeCanvas.height = snakeSize;
+snakeCanvas.width = 25 *  Math.floor(snakeSize / 25);
+snakeCanvas.height = 25 *  Math.floor(snakeSize / 25);
 let snakeBox = Math.floor(snakeSize / 25);
 snakeCanvas.width = 25 * snakeBox;
 snakeCanvas.height = 25 * snakeBox;
@@ -1774,7 +1774,7 @@ function startSnakeGame() {
   snakeAccumulatedTime = 0;
   snakePauseBtn.textContent = "Pause";
   snakeCanvas.focus();
-  requestAnimationFrame(gameLoop);
+  requestAnimationFrame(snakeGameLoop);
 }
 function randomFood() {
   return {
@@ -1799,7 +1799,7 @@ function hitSpecialFood(snakeX, snakeY) {
     snakeY + snakeBox > snakeSpecialFood.y
   );
 }
-function collision(head, array) {
+function snakeGameCheckCollision(head, array) {
   return array.some(segment => head.x === segment.x && head.y === segment.y);
 }
 snakePauseBtn.addEventListener("click", () => {
@@ -1869,7 +1869,7 @@ function updateGame() {
   if (
     snakeX < 0 || snakeY < 0 ||
     snakeX >= snakeCanvas.width || snakeY >= snakeCanvas.height ||
-    collision(newHead, snake)
+    snakeGameCheckCollision(newHead, snake)
   ) {
     gameOver();
     return;
@@ -1901,11 +1901,11 @@ function gameOver() {
     snakeCtx.fillText("Score: " + snakeScore, cx, cy + 20);
   }
 }
-function gameLoop(timestamp) {
+function snakeGameLoop(timestamp) {
   if (!snakeRunning) return;
   if (snakePaused) {
     snakeLastFrameTime = timestamp;
-    requestAnimationFrame(gameLoop);
+    requestAnimationFrame(snakeGameLoop);
     return;
   }
   if (!snakeLastFrameTime) snakeLastFrameTime = timestamp;
@@ -1921,7 +1921,7 @@ function gameLoop(timestamp) {
     }
   }
   drawGame();
-  requestAnimationFrame(gameLoop);
+  requestAnimationFrame(snakeGameLoop);
 }
 snakeStartBtn.addEventListener("click", startSnakeGame);
 
@@ -2002,7 +2002,7 @@ function updateJetShooter(delta) {
 jetShooterShields = jetShooterShields.filter(s => s.y < jetShooterCanvas.height);
   for (let i = jetShooterEnemies.length - 1; i >= 0; i--) {
     for (let j = jetShooterBullets.length - 1; j >= 0; j--) {
-      if (checkCollision(jetShooterEnemies[i], jetShooterBullets[j])) {
+      if (jetShooterCheckCollision(jetShooterEnemies[i], jetShooterBullets[j])) {
         jetShooterEnemies.splice(i, 1);
         jetShooterBullets.splice(j, 1);
         jetShooterScore += 10;
@@ -2011,7 +2011,7 @@ jetShooterShields = jetShooterShields.filter(s => s.y < jetShooterCanvas.height)
     }
   }
   for (let i = 0; i < jetShooterEnemies.length; i++) {
-    if (checkCollision(jetShooterEnemies[i], jetShooter)) {
+    if (jetShooterCheckCollision(jetShooterEnemies[i], jetShooter)) {
       if (jetShooterHasShield) {
         jetShooterHasShield = false;
         jetShooterEnemies.splice(i, 1);
@@ -2023,7 +2023,7 @@ jetShooterShields = jetShooterShields.filter(s => s.y < jetShooterCanvas.height)
     }
   }
   for (let i = 0; i < jetShooterShields.length; i++) {
-    if (checkCollision(jetShooterShields[i], jetShooter)) {
+    if (jetShooterCheckCollision(jetShooterShields[i], jetShooter)) {
       jetShooterExtraLife();
       jetShooterShields.splice(i, 1);
       break;
@@ -2084,7 +2084,7 @@ function drawJetShooter() {
   });
   jetShooterScoreHolder.textContent = "Score: " + jetShooterScore;
 }
-function checkCollision(a, b) {
+function jetShooterCheckCollision(a, b) {
   return (
     a.x < b.x + b.size &&
     a.x + a.size > b.x &&
