@@ -1734,103 +1734,103 @@ function ng_try() {
 }
 
 // -------------- Snake Game -------------
-const canvas = document.getElementById("snakeCanvas");
-const ctx = canvas.getContext("2d");
-const snakeScore = document.getElementById("snakeScore");
-const leftBtn = document.getElementById("leftSnake");
-const upBtn = document.getElementById("upSnake");
-const rightBtn = document.getElementById("rightSnake");
-const downBtn = document.getElementById("downSnake");
-const startBtn = document.getElementById("startSnakeBtn");
-const pauseBtn = document.getElementById("pauseSnakeBtn");
-const size = Math.floor(window.innerHeight * 0.65);
-canvas.width = size;
-canvas.height = size;
-let box = Math.floor(size / 25);
-canvas.width = 25 * box;
-canvas.height = 25 * box;
-let snake, direction, food, score, foodsEaten;
-let specialFood = null;
-let highScore = localStorage.getItem("snakeHighScore") || 0;
-document.getElementById("snakeHighScore").textContent = "High score = " + highScore;
-let specialFoodTimer = null;
-let specialFoodTime = 5000;
-let paused = false;
-let lastFrameTime = 0;
-let moveDelay = 200;
-let accumulatedTime = 0;
-let running = false;
+const snakeCanvas = document.getElementById("snakeCanvas");
+const snakeCtx = snakeCanvas.getContext("2d");
+const snakeScoreHolder = document.getElementById("snakeScore");
+const snakeLeftBtn = document.getElementById("leftSnake");
+const snakeUpBtn = document.getElementById("upSnake");
+const snakeRightBtn = document.getElementById("rightSnake");
+const snakeDownBtn = document.getElementById("downSnake");
+const snakeStartBtn = document.getElementById("startSnakeBtn");
+const snakePauseBtn = document.getElementById("pauseSnakeBtn");
+const snakeSize = Math.floor(window.innerHeight * 0.65);
+snakeCanvas.width = snakeSize;
+snakeCanvas.height = snakeSize;
+let snakeBox = Math.floor(snakeSize / 25);
+snakeCanvas.width = 25 * snakeBox;
+snakeCanvas.height = 25 * snakeBox;
+let snake, snakeDirection, snakeFood,snakeScore, snakeFoodsEaten;
+let snakeSpecialFood = null;
+let snakeHighScore = localStorage.getItem("snakeHighScore") || 0;
+document.getElementById("snakeHighScore").textContent = "High score = " + snakeHighScore;
+let snakeSpecialFoodTimer = null;
+let snakeSpecialFoodTime = 5000;
+let snakePaused = false;
+let snakeLastFrameTime = 0;
+let snakeMoveDelay = 200;
+let snakeAccumulatedTime = 0;
+let snakeRunning = false;
 function startSnakeGame() {
-  moveDelay = 200;
-  snake = [{ x: 3 * box, y: 3 * box }];
-  direction = "RIGHT";
-  food = randomFood();
-  score = 0;
-  foodsEaten = 0;
-  specialFood = null;
-  paused = false;
-  running = true;
-  lastFrameTime = 0;
-  accumulatedTime = 0;
-  pauseBtn.textContent = "Pause";
-  canvas.focus();
+  snakeMoveDelay = 200;
+  snake = [{ x: 3 * snakeBox, y: 3 * snakeBox }];
+  snakeDirection = "RIGHT";
+  snakeFood = randomFood();
+  snakeScore = 0;
+  snakeFoodsEaten = 0;
+  snakeSpecialFood = null;
+  snakePaused = false;
+  snakeRunning = true;
+  snakeLastFrameTime = 0;
+  snakeAccumulatedTime = 0;
+  snakePauseBtn.textContent = "Pause";
+  snakeCanvas.focus();
   requestAnimationFrame(gameLoop);
 }
 function randomFood() {
   return {
-    x: Math.floor(Math.random() * 25) * box,
-    y: Math.floor(Math.random() * 25) * box
+    x: Math.floor(Math.random() * 25) * snakeBox,
+    y: Math.floor(Math.random() * 25) * snakeBox
   };
 }
 function spawnSpecialFood() {
-  specialFood = {
-    x: Math.floor(Math.random() * 25) * box,
-    y: Math.floor(Math.random() * 25) * box
+  snakeSpecialFood = {
+    x: Math.floor(Math.random() * 25) * snakeBox,
+    y: Math.floor(Math.random() * 25) * snakeBox
   };
-  clearTimeout(specialFoodTimer);
-  specialFoodTimer = setTimeout(() => (specialFood = null), specialFoodTime);
+  clearTimeout(snakeSpecialFoodTimer);
+  snakeSpecialFoodTimer = setTimeout(() => (snakeSpecialFood = null), snakeSpecialFoodTime);
 }
 function hitSpecialFood(snakeX, snakeY) {
-  if (!specialFood) return false;
+  if (!snakeSpecialFood) return false;
   return (
-    snakeX < specialFood.x + box * 2 &&
-    snakeX + box > specialFood.x &&
-    snakeY < specialFood.y + box * 2 &&
-    snakeY + box > specialFood.y
+    snakeX < snakeSpecialFood.x + snakeBox * 2 &&
+    snakeX + snakeBox > snakeSpecialFood.x &&
+    snakeY < snakeSpecialFood.y + snakeBox * 2 &&
+    snakeY + snakeBox > snakeSpecialFood.y
   );
 }
 function collision(head, array) {
   return array.some(segment => head.x === segment.x && head.y === segment.y);
 }
-pauseBtn.addEventListener("click", () => {
-  if (!running) return;
-  paused = !paused;
-  pauseBtn.textContent = paused ? "Resume" : "Pause";
-  if (!paused) requestAnimationFrame(gameLoop);
+snakePauseBtn.addEventListener("click", () => {
+  if (!snakeRunning) return;
+  snakePaused = !snakePaused;
+  snakePauseBtn.textContent = snakePaused ? "Resume" : "Pause";
+  if (!snakePaused) requestAnimationFrame(gameLoop);
 });
 function drawGame() {
-  ctx.fillStyle = "#000";
-  ctx.fillRect(0, 0, 25 * box, 25 * box);
-  ctx.beginPath();
-  ctx.arc(food.x + box / 2, food.y + box / 2, box / 2, 0, Math.PI * 2);
-  ctx.fillStyle = "#ac2727ff";
-  ctx.fill();
-  if (specialFood) {
-    ctx.beginPath();
-    ctx.arc(specialFood.x + box, specialFood.y + box, box, 0, Math.PI * 2);
-    ctx.fillStyle = "gold";
-    ctx.fill();
+  snakeCtx.fillStyle = "#000";
+  snakeCtx.fillRect(0, 0, 25 * snakeBox, 25 * snakeBox);
+  snakeCtx.beginPath();
+  snakeCtx.arc(snakeFood.x + snakeBox / 2, snakeFood.y + snakeBox / 2, snakeBox / 2, 0, Math.PI * 2);
+  snakeCtx.fillStyle = "#ac2727ff";
+  snakeCtx.fill();
+  if (snakeSpecialFood) {
+    snakeCtx.beginPath();
+    snakeCtx.arc(snakeSpecialFood.x + snakeBox, snakeSpecialFood.y + snakeBox, snakeBox, 0, Math.PI * 2);
+    snakeCtx.fillStyle = "gold";
+    snakeCtx.fill();
   }
   snake.forEach((segment, index) => {
-    ctx.fillStyle = index === 0 ? "rgba(13, 55, 128, 1)" : "rgba(53, 127, 208, 1)";
-    ctx.fillRect(segment.x, segment.y, box, box);
+    snakeCtx.fillStyle = index === 0 ? "rgba(13, 55, 128, 1)" : "rgba(53, 127, 208, 1)";
+    snakeCtx.fillRect(segment.x, segment.y, snakeBox, snakeBox);
   });
 }
 function updateGame() {
-  leftBtn.addEventListener("click", () => { if (direction !== "RIGHT") direction = "LEFT"; });
-  upBtn.addEventListener("click", () => { if (direction !== "DOWN") direction = "UP"; });
-  rightBtn.addEventListener("click", () => { if (direction !== "LEFT") direction = "RIGHT"; });
-  downBtn.addEventListener("click", () => { if (direction !== "UP") direction = "DOWN"; });
+  snakeLeftBtn.addEventListener("click", () => { if (snakeDirection !== "RIGHT") snakeDirection = "LEFT"; });
+  snakeUpBtn.addEventListener("click", () => { if (snakeDirection !== "DOWN") snakeDirection = "UP"; });
+  snakeRightBtn.addEventListener("click", () => { if (snakeDirection !== "LEFT") snakeDirection = "RIGHT"; });
+  snakeDownBtn.addEventListener("click", () => { if (snakeDirection !== "UP") snakeDirection = "DOWN"; });
   document.addEventListener(
     "keydown",
     event => {
@@ -1838,82 +1838,82 @@ function updateGame() {
       if (["arrowup", "arrowdown", "arrowleft", "arrowright"].includes(key)) {
         event.preventDefault();
       }
-      if ((key === "a" || key === "arrowleft") && direction !== "RIGHT") direction = "LEFT";
-      else if ((key === "w" || key === "arrowup") && direction !== "DOWN") direction = "UP";
-      else if ((key === "d" || key === "arrowright") && direction !== "LEFT") direction = "RIGHT";
-      else if ((key === "s" || key === "arrowdown") && direction !== "UP") direction = "DOWN";
+      if ((key === "a" || key === "arrowleft") && snakeDirection !== "RIGHT") snakeDirection = "LEFT";
+      else if ((key === "w" || key === "arrowup") && snakeDirection !== "DOWN") snakeDirection = "UP";
+      else if ((key === "d" || key === "arrowright") && snakeDirection !== "LEFT") snakeDirection = "RIGHT";
+      else if ((key === "s" || key === "arrowdown") && snakeDirection !== "UP") snakeDirection = "DOWN";
     },
     { passive: false }
   );
   let snakeX = snake[0].x;
   let snakeY = snake[0].y;
-  if (direction === "LEFT") snakeX -= box;
-  if (direction === "UP") snakeY -= box;
-  if (direction === "RIGHT") snakeX += box;
-  if (direction === "DOWN") snakeY += box;
-  if (snakeX === food.x && snakeY === food.y) {
-    score += 5;
-    foodsEaten++;
-    moveDelay -= 2.5;
-    food = randomFood();
-    if (foodsEaten % 10 === 0) spawnSpecialFood();
+  if (snakeDirection === "LEFT") snakeX -= snakeBox;
+  if (snakeDirection === "UP") snakeY -= snakeBox;
+  if (snakeDirection === "RIGHT") snakeX += snakeBox;
+  if (snakeDirection === "DOWN") snakeY += snakeBox;
+  if (snakeX === snakeFood.x && snakeY === snakeFood.y) {
+    snakeScore += 5;
+    snakeFoodsEaten++;
+    snakeMoveDelay -= 2.5;
+    snakeFood = randomFood();
+    if (snakeFoodsEaten % 10 === 0) spawnSpecialFood();
   } else {
     snake.pop();
   }
-  if (specialFood && hitSpecialFood(snakeX, snakeY)) {
-    score += 50;
-    specialFood = null;
-    clearTimeout(specialFoodTimer);
+  if (snakeSpecialFood && hitSpecialFood(snakeX, snakeY)) {
+    snakeScore += 50;
+    snakeSpecialFood = null;
+    clearTimeout(snakeSpecialFoodTimer);
   }
   const newHead = { x: snakeX, y: snakeY };
   if (
     snakeX < 0 || snakeY < 0 ||
-    snakeX > canvas.width || snakeY > canvas.height ||
+    snakeX > snakeCanvas.width || snakeY > snakeCanvas.height ||
     collision(newHead, snake)
   ) {
     gameOver();
     return;
   }
   snake.unshift(newHead);
-  snakeScore.textContent = "Score: " + score;
+  snakeScoreHolder.textContent = "Score: " + snakeScore;
 }
 function gameOver() {
-  running = false;
-  clearTimeout(specialFoodTimer);
+  snakeRunning = false;
+  clearTimeout(snakeSpecialFoodTimer);
   drawGame();
   snake = [];
-  food = [];
-  if (score > highScore) {
-    highScore = score;
-    localStorage.setItem("snakeHighScore", highScore);
-    document.getElementById("snakeHighScore").textContent = "High score = " + highScore;
-    ctx.font = "32px Arial";
-    ctx.fillStyle = "white";
-    ctx.textAlign = "center";
-    ctx.fillText("Game Over! Score: " + score + "\nNew High Score: " + highScore + "!", canvas.width / 2, canvas.height / 2);
+  snakeFood = [];
+  if (snakeScore > snakeHighScore) {
+    snakeHighScore = snakeScore;
+    localStorage.setItem("snakeHighScore", snakeHighScore);
+    document.getElementById("snakeHighScore").textContent = "High score = " + snakeHighScore;
+    snakeCtx.font = "32px Arial";
+    snakeCtx.fillStyle = "white";
+    snakeCtx.textAlign = "center";
+    snakeCtx.fillText("Game Over! Score: " + snakeScore + "\nNew High Score: " + snakeHighScore + "!", snakeCanvas.width / 2, snakeCanvas.height / 2);
   }
   else {
-    ctx.font = "32px Arial";
-    ctx.fillStyle = "white";
-    ctx.textAlign = "center";
-    ctx.fillText("Game Over! Score: " + score, canvas.width / 2, canvas.height / 2);
+    snakeCtx.font = "32px Arial";
+    snakeCtx.fillStyle = "white";
+    snakeCtx.textAlign = "center";
+    snakeCtx.fillText("Game Over! Score: " + snakeScore, snakeCanvas.width / 2, snakeCanvas.height / 2);
   }
 }
 function gameLoop(timestamp) {
-  if (!running) return;
-  if (paused) {
-    lastFrameTime = timestamp;
+  if (!snakeRunning) return;
+  if (snakePaused) {
+    snakeLastFrameTime = timestamp;
     requestAnimationFrame(gameLoop);
     return;
   }
-  if (!lastFrameTime) lastFrameTime = timestamp;
-  const deltaTime = timestamp - lastFrameTime;
-  lastFrameTime = timestamp;
-  accumulatedTime += deltaTime;
-  if (accumulatedTime >= moveDelay) {
+  if (!snakeLastFrameTime) snakeLastFrameTime = timestamp;
+  const snakeDeltaTime = timestamp - snakeLastFrameTime;
+  snakeLastFrameTime = timestamp;
+  snakeAccumulatedTime += snakeDeltaTime;
+  if (snakeAccumulatedTime >= snakeMoveDelay) {
     updateGame();
-    accumulatedTime = 0;
-    if (!running) {
+    snakeAccumulatedTime = 0;
+    if (!snakeRunning) {
       gameOver();
       return;
     }
@@ -1921,10 +1921,46 @@ function gameLoop(timestamp) {
   drawGame();
   requestAnimationFrame(gameLoop);
 }
-startBtn.addEventListener("click", startSnakeGame);
+snakeStartBtn.addEventListener("click", startSnakeGame);
 
 
 // --------- Jet Shooter Game ----------
+
+const jetShooterCanvas = document.getElementById('jetShooterCanvas');
+const jetShooterCtx = jetShooterCanvas.getContext("2d");
+const jetShooterScoreHolder = document.getElementById("jetShooterScore");
+const jetShooterLeftBtn = document.getElementById("leftJetShooter");
+const jetShooterRightBtn = document.getElementById("rightJetShooter");
+const jetShooterShootBtn = document.getElementById("shootJetShooter");
+const jetShooterStartBtn = document.getElementById("startJetShooterBtn");
+const jetShooterPauseBtn = document.getElementById("pauseJetShooterBtn");
+const jetShooterSize = Math.floor(window.innerHeight * 0.65);
+jetShooterCanvas.width = jetShooterSize;
+jetShooterCanvas.height = jetShooterSize;
+let jetShooterBox = Math.floor(jetShooterSize / 50);
+jetShooterCanvas.width = 50 * jetShooterBox;
+jetShooterCanvas.height = 50 * jetShooterBox;
+let jetShooter, jetShooterBullet, jetShooterEnemyBullet, jetShooterEnemeies, jetShooterScore;
+let jetShooterPowerUp = null;
+let jetShooterHighScore = localStorage.getItem("jetShooterHighScore") || 0;
+document.getElementById("jetShooterHighScore").textContent = "High score = " + jetShooterHighScore;
+let jetShooterPaused = false;
+let jetShooterLastFrameTime = 0;
+let jetShooterEnemyNumber = 2;
+let jetShooterAccumulatedTime = 0;
+let jetShooterRunning = false;
+function jetShooterSnakeGame() {
+  jetShooter = [{ x: snakeBox / 2, y: snakeBox - 2}];
+  jetShooterScore = 0;
+  jetShooterPaused = false;
+  jetShooterRunning = true;
+  jetShooterLastFrameTime = 0;
+  jetShooterAccumulatedTime = 0;
+  jetShooterPauseBtn.textContent = "Pause";
+  jetShooterCanvas.focus();
+  requestAnimationFrame(gameLoop);
+}
+
 
 
 
@@ -2316,29 +2352,29 @@ updateUnits();
 categorySelect.addEventListener("change", updateUnits);
 const conversionRates = {
   length: {
-    ℓp: 1.616255e-35,       // Planck length
-    qm: 1e-30,              // quecto-meter
-    rm: 1e-27,              // ronto-meter
-    ym: 1e-24,              // yocto-meter
-    zm: 1e-21,              // zepto-meter
-    am: 1e-18,              // atto-meter
-    fm: 1e-15,              // femto-meter
-    pm: 1e-12,              // pico-meter
-    nm: 1e-9,               // nano-meter
-    µm: 1e-6,               // micro-meter
-    mm: 1e-3,               // milli-meter
-    cm: 1e-2,               // centi-meter
-    dm: 1e-1,               // deci-meter
-    m: 1,                    // meter
-    km: 1e3,                 // kilometer
-    Mm: 1e6,                 // megameter
-    Gm: 1e9,                 // gigameter
-    Tm: 1e12,                // terameter
-    Pm: 1e15,                // petameter
-    Em: 1e18,                // exameter
-    Zm: 1e21,                // zettameter
-    Ym: 1e24,                // yottameter
-    Rm: 1e27,                // ronnameter
+    ℓp: 1.616255e-35,                 // Planck length
+    qm: 1e-30,                        // quecto-meter
+    rm: 1e-27,                        // ronto-meter
+    ym: 1e-24,                        // yocto-meter
+    zm: 1e-21,                        // zepto-meter
+    am: 1e-18,                        // atto-meter
+    fm: 1e-15,                        // femto-meter
+    pm: 1e-12,                        // pico-meter
+    nm: 1e-9,                         // nano-meter
+    µm: 1e-6,                         // micro-meter
+    mm: 1e-3,                         // milli-meter
+    cm: 1e-2,                         // centi-meter
+    dm: 1e-1,                         // deci-meter
+    m: 1,                             // meter
+    km: 1e3,                          // kilometer
+    Mm: 1e6,                          // megameter
+    Gm: 1e9,                          // gigameter
+    Tm: 1e12,                         // terameter
+    Pm: 1e15,                         // petameter
+    Em: 1e18,                         // exameter
+    Zm: 1e21,                         // zettameter
+    Ym: 1e24,                         // yottameter
+    Rm: 1e27,                         // ronnameter
     bohrRadius: 5.29177210903e-11,    // Bohr radius
     classicalElectronRadius: 2.8179403262e-15, // electron radius
     comptonWavelength: 2.426310238e-12, // Compton wavelength of electron

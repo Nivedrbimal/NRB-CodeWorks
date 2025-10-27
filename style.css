@@ -916,17 +916,16 @@ input[type="color"] {
   margin: 6px 0;
 }
 
+/*----- Snake Game ----*/
 .snake-game-container {
   justify-content: space-around;
 }
-
 .snake-controls {
   display: flex;
   flex-direction: column;
   gap: clamp(0.5rem, 2vw, 1.5rem);
   align-items: center;
 }
-
 .snake-canvas {
   width: 65vh;
   height: 65vh;
@@ -935,20 +934,49 @@ input[type="color"] {
   border-image: var(--gradient-primary) 5;
   background-color: #111;
 }
-
-.direction-pad {
+#upSnake {
+  top: 5px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+#downSnake {
+  bottom: 5px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+#leftSnake {
+  top: 50%;
+  left: 5px;
+  transform: translateY(-50%);
+}
+#rightSnake {
+  top: 50%;
+  right: 5px;
+  transform: translateY(-50%);
+}
+#snakeScore {
+  overflow: hidden;
+  color: #fff;
+  font-weight: bold;
+  font-size: 1.1em;
+}
+#snakeHighScore {
+    overflow: hidden;
+    color: #fff;
+    font-weight: bold;
+    font-size: 1.1em;
+}
+.snake-direction-pad {
   min-width: 150px;
   min-height: 150px;
   position: relative;
-  width: 15vw;
-  height: 15vw;
+  width: 16vw;
+  height: 16vw;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 20px;
 }
-
-.direction-pad button {
+.snake-direction-pad button {
   position: absolute;
   width: clamp(50px, 6vw, 80px);
   height: clamp(50px, 6vw, 80px);
@@ -959,8 +987,7 @@ input[type="color"] {
   cursor: pointer;
   overflow: hidden;
 }
-
-.direction-pad button::before {
+.snake-direction-pad button::before {
   content: "";
   position: absolute;
   inset: 0;
@@ -972,54 +999,101 @@ input[type="color"] {
   mask-composite: exclude;
   pointer-events: none;
 }
-
-.direction-pad button:hover {
+.snake-direction-pad button:hover {
   transform: scale(1.1);
   box-shadow: 0 0 5px var(--accent1);
 }
-
-.direction-pad button:active {
+.snake-direction-pad button:active {
   transform: scale(0.95);
   box-shadow: 0 0 5px var(--accent2);
 }
-
-#upSnake {
-  top: 5px;
-  left: 50%;
-  transform: translateX(-50%);
+/*----- Jet Shooter Game ----*/
+.jet-shooter-game-container {
+  justify-content: space-around;
 }
-
-#downSnake {
-  bottom: 5px;
-  left: 50%;
-  transform: translateX(-50%);
+.jet-shooter-controls {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.5rem, 2vw, 1.5rem);
+  align-items: center;
 }
-
-#leftSnake {
+.jet-shooter-canvas {
+  overflow: hidden;
+  border: 2px solid;
+  border-image: var(--gradient-primary) 5;
+  background-color: #111;
+}
+#leftJetShooter {
   top: 50%;
-  left: 5px;
+  left: 2px;
   transform: translateY(-50%);
 }
-
-#rightSnake {
+#shootJetShooter {
   top: 50%;
-  right: 5px;
   transform: translateY(-50%);
 }
-
-#snakeScore {
+#rightJetShooter {
+  top: 50%;
+  right: 2px;
+  transform: translateY(-50%);
+}
+#jetShooterScore {
   overflow: hidden;
   color: #fff;
   font-weight: bold;
   font-size: 1.1em;
 }
-
-#snakeHighScore {
+#jetShooterHighScore {
     overflow: hidden;
     color: #fff;
     font-weight: bold;
     font-size: 1.1em;
 }
+.jet-shooter-direction-pad {
+  min-width: 180px;
+  min-height: 50px;
+  position: relative;
+  width: 20vw;
+  height: 5vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.jet-shooter-direction-pad button {
+  position: absolute;
+  width: clamp(50px, 6vw, 80px);
+  height: clamp(50px, 6vw, 80px);
+  font-size: clamp(16px, 1.2vw, 22px);
+  border-radius: 50%;
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+  overflow: hidden;
+}
+.jet-shooter-direction-pad button::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  padding: 4px;
+  background: var(--gradient-primary);
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+.jet-shooter-direction-pad button:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 5px var(--accent1);
+}
+.jet-shooter-direction-pad button:active {
+  transform: scale(0.95);
+  box-shadow: 0 0 5px var(--accent2);
+}
+
+
+
+
 
 .sr-only {
   overflow: hidden;

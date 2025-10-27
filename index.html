@@ -1956,7 +1956,7 @@
             <div class="row" style="padding: 5px;">
               <div id="snakeScore" class="mono">Score: 0</div>
             </div>
-            <div class="direction-pad">
+            <div class="snake-direction-pad">
               <button id="upSnake" class="btn">↑</button>
               <button id="leftSnake" class="btn">←</button>
               <button id="rightSnake" class="btn">→</button>
@@ -1965,6 +1965,31 @@
             <div class="row" style="padding: 5px;">
               <button class="btn primary" id="startSnakeBtn" onclick="startSnakeGame()">Start Game</button>
               <button class="btn primary" id="pauseSnakeBtn">Pause Game</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Jet Shooter Game -->
+      <div class="card" role="region" aria-labelledby="jet shooter Title">
+        <h3 id="jetShooterTitle">Jet Shooter Game</h3>
+        <div class=" row jet-shooter-game-container">
+          <canvas id="jetShooterCanvas" class="jet-shooter-canvas" tabindex="0"></canvas>
+          <div class="jet-shooter-controls">
+            <div class="row" style="padding: 5px;">
+              <div id="jetShooterHighScore" class="mono">High score: 0</div>
+            </div>
+            <div class="row" style="padding: 5px;">
+              <div id="jetShooterScore" class="mono">Score: 0</div>
+            </div>
+            <div class="jet-shooter-direction-pad">
+              <button id="leftJetShooter" class="btn">&lt;</button>
+              <button id="shootJetShooter" class="btn">∆</button>
+              <button id="rightJetShooter" class="btn">></button>
+            </div>
+            <div class="row" style="padding: 5px;">
+              <button class="btn primary" id="startJetShooterBtn" onclick="startJetShooterGame()">Start Game</button>
+              <button class="btn primary" id="pauseJetShooterBtn">Pause Game</button>
             </div>
           </div>
         </div>
