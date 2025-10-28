@@ -1240,6 +1240,8 @@ input[type="color"] {
   .element-box:hover:not(.highlighted) .element-type-liquids,
   .element-box:hover:not(.highlighted) .element-type-solids,
   .element-box:hover:not(.highlighted) .element-type-artificial {
+    padding-top:0.5px;
+    padding-bottom:0.5px;
     align-items: center;
     line-height:1;
     border-radius: 1px;
