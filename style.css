@@ -1229,10 +1229,12 @@ input[type="color"] {
     line-height:1;
     margin-bottom: 2px;
     vertical-align: top;
+    align-items: center;
   }
   .element-box:hover:not(.highlighted) .element-number {
     line-height:1;
-    font-size: clamp(2px, 0.4, 14px) !important;
+    font-size: clamp(2px, 0.4vw, 14px) !important;
+    align-items: center;
   }
   .element-box:hover:not(.highlighted) .element-name,
   .element-box:hover:not(.highlighted) .element-mass,
@@ -1240,11 +1242,12 @@ input[type="color"] {
   .element-box:hover:not(.highlighted) .element-type-liquids,
   .element-box:hover:not(.highlighted) .element-type-solids,
   .element-box:hover:not(.highlighted) .element-type-artificial {
+    align-items: center;
     line-height:1;
     border-radius: 1px;
     display:block;
     opacity: 1;
-    font-size: clamp(2px, 0.4, 14px) !important;
+    font-size: clamp(2px, 0.4vw, 14px) !important;
     transition: opacity 0.1s ease, transform 0.1s ease;
   }
   .element-box:hover:not(.highlighted) {
@@ -1256,10 +1259,12 @@ input[type="color"] {
   .hover-element .element-symbol {
     line-height:1;
     margin-bottom:2px;
+    align-items: center;
   }
   .hover-element .element-number {
     line-height:1;
-    font-size: clamp(2px, 0.4, 14px) !important;
+    font-size: clamp(2px, 0.4vw, 14px) !important;
+    align-items: center;
   }
   .hover-element .element-name,
   .hover-element .element-mass,
@@ -1268,6 +1273,7 @@ input[type="color"] {
   .hover-element .element-type-solids,
   .hover-element .element-type-artificial {
     line-height:1;
+    align-items: center;
     border-radius: 1px;
     display:block;
     opacity: 1;
