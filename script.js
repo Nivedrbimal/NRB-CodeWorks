@@ -1069,24 +1069,6 @@ function highlightElementGroup(type) {
     elements.forEach(el => el.classList.add('highlighted'));
   }
 }
-const elementBox = document.querySelector('.element-box');
-const noElements = document.querySelectorAll('.noElement');
-const sideTexts = document.querySelectorAll('.side-text');
-
-function syncSizes() {
-  const rect = elementBox.getBoundingClientRect();
-  const width = rect.width + 'px';
-  const height = rect.height + 'px';
-  [...noElements, ...sideTexts].forEach(el => {
-    el.style.width = width;
-    el.style.height = height;
-  });
-}
-syncSizes();
-window.addEventListener('resize', syncSizes);
-const resizeObserver = new ResizeObserver(syncSizes);
-resizeObserver.observe(elementBox);
-
 function showElementInfo(symbol) {
   const out = document.getElementById('ptOut');
   const info = elementData[symbol];

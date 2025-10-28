@@ -509,22 +509,89 @@ input[type="color"] {
 .shapes-2d-visible {
   display: block;
 }
-/*Chemistry Section*/
 
+
+/*Chemistry Section*/
 .periodic-table {
   display: flex;
   flex-direction: row;
   justify-content: center;
-  gap: clamp(2px, 0.6vw, 8px);
+  gap: clamp(2px, 0.5vw, 8px);
+  width:100% !important;
 }
-
 .ptColumn {
   display: flex;
   flex-direction: column;
-  padding: clamp(0.5px, 1.3vw, 2px);
-  gap: clamp(2px, 0.6vw, 8px);
-  width: clamp(15px, 4vw, 65px);
+  gap: clamp(2px, 0.5vw, 8px);
   justify-content: center;
+  width: clamp(15px,4vw,75px);
+}
+.element-box {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border: clamp(0.2px, 0.1vw, 1px) solid;
+  border-radius: 7px;
+  padding: clamp(0.5px, 1.3vw, 2px);
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.side-text {
+  font-size: clamp(2.25px, 0.6vw, 9px);
+  align-content: center;
+  transform:none !important;
+}
+.noElement {
+  transform: none !important;
+}
+.element-box,
+.noElement,
+.side-text {
+  aspect-ratio: 6/7;
+  z-index: 1;
+  height: clamp(15px, 4.6vw, 75px);
+}
+@media screen and (max-width: 1200px) {
+  .element-box,
+  .noElement,
+  .side-text {
+    height: clamp(15px, 4.7vw, 75px);
+  }
+}
+.element-box:hover:not(.highlighted) {
+  transform: scale(2);
+  z-index: 10 ;
+  box-shadow: 0 0 12px rgba(60, 120, 216, 0.4);
+}
+.hover-element {
+  transform: scale(2);
+  z-index: 10 ;
+  box-shadow: 0 0 12px rgba(60, 120, 216, 0.4);
+}
+.element-box.highlighted {
+  transform: scale(1.1);
+  z-index: 5;
+}
+
+.element-column {
+  font-size: clamp(2.75px, 2vw, 11px);
+  text-align: center;
+  font-weight: 200;
+}
+
+.element-symbol {
+  text-align: center;
+  font-size: clamp(4px, 1vw, 16px);
+  font-weight: 700;
+}
+.element-name,
+.element-mass {
+  text-align: center;
+  font-size: clamp(2.25px, 0.6vw, 9px);
+}
+.element-number {
+  font-size: clamp(2.25px, 0.6vw, 9px);
+  text-align: left;
 }
 
 .element-box-legend {
@@ -538,7 +605,6 @@ input[type="color"] {
   cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
-
 .element-box-legend:hover {
   transform: scale(1.03);
   box-shadow: 0 0 12px rgba(60, 120, 216, 0.4);
@@ -553,76 +619,6 @@ input[type="color"] {
   flex-direction: row;
   padding: clamp(2px, 0.333vw, 5px);
   justify-content: space-around;
-}
-
-.element-box {
-  aspect-ratio: 6/7;
-  display: flex;
-  flex-direction: column;
-  z-index: 1;
-  border: clamp(0.25px, 0.033vw, 1px) solid rgba(255, 255, 255, 0.03);
-  width: clamp(15px, 4vw, 65px);
-  gap: 2px;
-  border-radius: 7px;
-  padding: clamp(0.5px, 1.333vw, 2px);
-  background: #07141c;
-  cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.element-box:hover:not(.highlighted) {
-  transform: scale(2);
-  z-index: 10 ;
-  box-shadow: 0 0 12px rgba(60, 120, 216, 0.4);
-}
-
-.hover-element {
-  transform: scale(2);
-  z-index: 10 ;
-  box-shadow: 0 0 12px rgba(60, 120, 216, 0.4);
-}
-
-.element-box.highlighted {
-  transform: scale(1.1);
-  z-index: 5;
-}
-
-.element-column {
-  font-size: clamp(2.75px, 2vw, 11px);
-  text-align: center;
-  font-weight: 200;
-}
-
-.element-symbol {
-  text-align: center;
-  font-size: clamp(4px, 1.067vw, 16px);
-  font-weight: 700;
-}
-
-.element-name {
-  text-align: center;
-  font-size: clamp(2.25px, 0.6vw, 9px);
-}
-
-.element-mass {
-  text-align: center;
-  font-size: clamp(2.25px, 0.6vw, 9px);
-}
-
-.element-number {
-  font-size: clamp(2.25px, 0.6vw, 9px);
-  text-align: left;
-}
-
-.side-text {
-  z-index: 1;
-  background: none;
-  font-size: clamp(2.25px, 0.6vw, 9px);
-  text-align: center;
-  align-content: center;
-  width: clamp(15px, 4vw, 65px);
-  aspect-ratio: 6/7;
-  padding: clamp(0.5px, 1.333vw, 2px);
 }
 
 .element-type-gases {
@@ -651,16 +647,6 @@ input[type="color"] {
   text-align: center;
   background: #76feca;
   border-radius: clamp(2px, 0.333vw, 5px);
-}
-
-.noElement {
-  z-index: 1;
-  background: none;
-  text-align: center;
-  align-content: center;
-  aspect-ratio: 6/7;
-  width: clamp(15px, 4vw, 65px);
-  padding: clamp(0.5px, 1.333vw, 2px);
 }
 
 .alkaliMetalsLegend {
@@ -1197,11 +1183,10 @@ input[type="color"] {
   .element-box,
   .noElement,
   .side-text {
-    aspect-ratio: 6/7 !important;
     gap:0px !important;
     border-radius: 3px;
     width: clamp(12px, 4vw, 60px);
-    height: 5vw;
+    height: 4.5vw;
     display: block;
   }
 
@@ -1249,7 +1234,7 @@ input[type="color"] {
   }
   .element-box:hover:not(.highlighted) {
     transform: scale(5);
-    padding: 1px !important
+    padding: 1px !important;
   }
   .hover-element .element-symbol {
     line-height:0.8;
