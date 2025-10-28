@@ -1225,9 +1225,8 @@ input[type="color"] {
   }
 
   .element-box:hover:not(.highlighted) .element-symbol {
-    line-height:1;
+    line-height:0.8;
     margin-bottom: 2px;
-    vertical-align: top;
     align-items: center;
   }
   .element-box:hover:not(.highlighted) .element-number {
@@ -1255,7 +1254,7 @@ input[type="color"] {
     padding: 1px !important
   }
   .hover-element .element-symbol {
-    line-height:1;
+    line-height:0.8;
     margin-bottom:2px;
     align-items: center;
   }
