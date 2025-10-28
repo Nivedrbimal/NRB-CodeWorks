@@ -1240,7 +1240,6 @@ input[type="color"] {
   .element-box:hover:not(.highlighted) .element-type-liquids,
   .element-box:hover:not(.highlighted) .element-type-solids,
   .element-box:hover:not(.highlighted) .element-type-artificial {
-    padding-top:0.5px;
     padding-bottom:0.5px;
     align-items: center;
     line-height:1;
@@ -1271,8 +1270,9 @@ input[type="color"] {
   .hover-element .element-type-liquids,
   .hover-element .element-type-solids,
   .hover-element .element-type-artificial {
-    line-height:1;
+    padding-bottom:0.5px;
     align-items: center;
+    line-height:1;
     border-radius: 1px;
     display:block;
     opacity: 1;
