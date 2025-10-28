@@ -1226,7 +1226,6 @@ input[type="color"] {
 
   .element-box:hover:not(.highlighted) .element-symbol {
     line-height:0.8;
-    align-items: center;
   }
   .element-box:hover:not(.highlighted) .element-number {
     line-height:1;
@@ -1240,7 +1239,6 @@ input[type="color"] {
   .element-box:hover:not(.highlighted) .element-type-solids,
   .element-box:hover:not(.highlighted) .element-type-artificial {
     padding-bottom:0.5px;
-    align-items: center;
     line-height:1;
     border-radius: 1px;
     display:block;
@@ -1250,17 +1248,14 @@ input[type="color"] {
   }
   .element-box:hover:not(.highlighted) {
     transform: scale(5);
-    gap: 0.25px !important;
     padding: 1px !important
   }
   .hover-element .element-symbol {
     line-height:0.8;
-    align-items: center;
   }
   .hover-element .element-number {
     line-height:1;
     font-size: clamp(2px, 13%, 14px) !important;
-    align-items: center;
   }
   .hover-element .element-name,
   .hover-element .element-mass,
@@ -1268,8 +1263,8 @@ input[type="color"] {
   .hover-element .element-type-liquids,
   .hover-element .element-type-solids,
   .hover-element .element-type-artificial {
-    padding-bottom:0.5px;
-    align-items: center;
+    padding-bottom:0.2px;
+    margin-top:0.1px;
     line-height:1;
     border-radius: 1px;
     display:block;
@@ -1279,13 +1274,12 @@ input[type="color"] {
   }
   .hover-element {
     transform: scale(5) !important;
-    gap: 0px !important;
     z-index: 10;
     padding: 1px !important
   }
 
   .element-box-legend {
-    width: clamp(45px, 16vw, 180px);
+    width: clamp(45px, 17vw, 180px);
     height: clamp(15px, 4vw, 30px);
   }
   .element-type{
