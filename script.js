@@ -2148,7 +2148,6 @@ document.addEventListener("keyup", (e) => {
 let isShooting = false;
 let lastShotTime = 0;
 const FIRE_RATE = 150;
-// --- Desktop Mouse Events ---
 jetShooterLeftBtn.addEventListener('mousedown', () => { movement = -1; });
 jetShooterLeftBtn.addEventListener('mouseup', () => { if (movement === -1) movement = 0; });
 jetShooterLeftBtn.addEventListener('mouseleave', () => { if (movement === -1) movement = 0; });

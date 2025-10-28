@@ -1232,7 +1232,7 @@ input[type="color"] {
   }
   .element-box:hover:not(.highlighted) .element-number {
     line-height:1;
-    font-size: clamp(2px, 0.7vw, 14px) !important;
+    font-size: clamp(2px, 0.4, 14px) !important;
   }
   .element-box:hover:not(.highlighted) .element-name,
   .element-box:hover:not(.highlighted) .element-mass,
@@ -1259,7 +1259,7 @@ input[type="color"] {
   }
   .hover-element .element-number {
     line-height:1;
-    font-size: clamp(2px, 0.7vw, 14px) !important;
+    font-size: clamp(2px, 0.4, 14px) !important;
   }
   .hover-element .element-name,
   .hover-element .element-mass,
@@ -1282,7 +1282,7 @@ input[type="color"] {
   }
 
   .element-box-legend {
-    width: clamp(45px, 12vw, 180px);
+    width: clamp(45px, 16vw, 180px);
     height: clamp(15px, 4vw, 30px);
   }
   .element-type{
