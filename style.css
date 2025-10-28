@@ -559,10 +559,8 @@ input[type="color"] {
   aspect-ratio: 6/7;
   display: flex;
   flex-direction: column;
-  align-content: center;
   z-index: 1;
   border: clamp(0.25px, 0.033vw, 1px) solid rgba(255, 255, 255, 0.03);
-  align-content: center;
   width: clamp(15px, 4vw, 65px);
   gap: 2px;
   border-radius: 7px;
@@ -1204,6 +1202,7 @@ input[type="color"] {
     border-radius: 3px;
     width: clamp(12px, 4vw, 60px);
     height: 5vw;
+    display: block;
   }
 
   .element-symbol {
@@ -1211,7 +1210,7 @@ input[type="color"] {
     line-height: 1;
   }
   .element-number {
-    font-size: 1vw;
+    font-size: 0.4vw;
     line-height: 1;
   }
   .element-name,
