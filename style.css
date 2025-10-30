@@ -569,6 +569,7 @@ input[type="color"] {
   box-shadow: 0 0 12px rgba(60, 120, 216, 0.4);
 }
 .element-box.highlighted {
+  outline: 1px solid;
   transform: scale(1.1);
   z-index: 5;
 }
@@ -788,7 +789,25 @@ input[type="color"] {
   color: #003355;
   stroke: #003355;
 }
-
+#ptOut {
+  overflow: hidden;
+}
+.pt-info-line {
+  opacity: 0;
+  max-height: 0;
+  transform: translateY(-10px);
+  margin-bottom: 0;
+  transition: opacity 0.3s ease-out, 
+              max-height 0.4s ease-out, 
+              transform 0.3s ease-out,
+              margin-bottom 0.3s ease-out;
+}
+.pt-line-visible {
+  opacity: 1;
+  max-height: 3em;
+  transform: translateY(0);
+  margin-bottom: 6px;
+}
 .ptInfoBtnHidden {
   display:none;
 }
@@ -1211,6 +1230,7 @@ input[type="color"] {
 
   .element-box:hover:not(.highlighted) .element-symbol {
     line-height:0.8;
+    font-size:1.5vw;
     margin-bottom:1px;
   }
   .element-box:hover:not(.highlighted) .element-number {
@@ -1238,6 +1258,7 @@ input[type="color"] {
   }
   .hover-element .element-symbol {
     line-height:0.8;
+    font-size:1.5vw;
     margin-bottom:1px;
   }
   .hover-element .element-number {
