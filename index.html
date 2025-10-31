@@ -1846,25 +1846,108 @@
         </label>
         <br>
         <button class="btn"onclick="searchElement()">Search</button>
-        <div id="ptOut" class="output mono column" role="status" aria-live="polite">
-          <!-- <div id="element-info-out-element"></div>
-            <div id="element-info-out-number"></div>
-            <div id="element-info-out-symbol"></div>
-            <div id="element-info-out-name"></div>
+        <div id="ptOut" class="output mono" role="status" aria-live="polite">
+          <div id="ptOutElementInfo" class="element-info-out">
+            <div class="element-info-out-list">
+              <button id="element-info-out-general" class="element-info-out-trigger btn" data-target-id="elementInfoOutGeneral" onclick="showElementInfoOut(this)">General</button>
+              <button id="element-info-out-history" class="element-info-out-trigger btn" data-target-id="elementInfoOutHistory" onclick="showElementInfoOut(this)">History</button>
+              <button id="element-info-out-abundance" class="element-info-out-trigger btn" data-target-id="elementInfoOutAbundance" onclick="showElementInfoOut(this)">Abundance</button>
+              <button id="element-info-out-physical" class="element-info-out-trigger btn" data-target-id="elementInfoOutPhysical" onclick="showElementInfoOut(this)">Physical Properties</button>
+              <button id="element-info-out-chemical" class="element-info-out-trigger btn" data-target-id="elementInfoOutChemical" onclick="showElementInfoOut(this)">Chemical Properties</button>
+              <button id="element-info-out-electron" class="element-info-out-trigger btn" data-target-id="elementInfoOutElectron" onclick="showElementInfoOut(this)">Electron Properties</button>
+            </div>
+            <div id="elementInfoOutMain" class="element-info-out-main">
+              <div id="element-info-out-number" style="font-size: 25px; text-align: left; font-weight: 500;"></div>
+              <div id="element-info-out-symbol" style="font-size: 75px; font-weight: 700;"></div>
+              <div id="element-info-out-name" style="font-size: 25px; font-weight: 500;"></div>
+            </div>
+            <div id="elementInfoOutGeneral" class="element-info-out-display element-info-out-content">
+              <div id="element-info-out-classification"></div>
+              <div id="element-info-out-standard-state"></div>
+              <div id="element-info-out-period"></div>
+              <div id="element-info-out-group"></div>
+              <div id="element-info-out-block"></div>
+              <div id="element-info-out-atomic-mass"></div>
+              <div id="element-info-out-protons"></div>
+              <div id="element-info-out-neutrons"></div>
+              <div id="element-info-out-electrons-neutral"></div>
+            </div>
+            <div id="elementInfoOutHistory" class="element-info-out-display element-info-out-content">
+              <div id="element-info-out-discoverer"></div>
+              <div id="element-info-out-date"></div>
+              <div id="element-info-out-origin"></div>
+            </div>
+            <div id="elementInfoOutAbundance" class="element-info-out-display element-info-out-content">
+              <div id="element-info-out-abundance-earth"></div>
+              <div id="element-info-out-abundance-other"></div>
+              <div id="element-info-out-sources"></div>
+            </div>
+            <div id="elementInfoOutElectron" class="element-info-out-display element-info-out-content">
+              <div id="element-info-out-electron-configuration"></div>
+              <div id="element-info-out-condensed-electron-configuration"></div>
+              <div id="element-info-out-isotopes"></div>
+              <div id="isotopeContainer"></div>
+              <div id="element-info-out-natural-isotopic-composition"></div>
+              <div id="element-info-out-isotopic-masses"></div>
+              <div id="element-info-out-common-oxidation-states"></div>
+              <div id="element-info-out-electron-count-in-ion"></div>
+              <div id="element-info-out-valence-orbital-diagram"></div>
+              <div id="element-info-out-dot-structure"></div>
+              <div id="element-info-out-nuclear-spin"></div>
+              <div id="element-info-out-magnetic-moment"></div>
+            </div>
+            <div id="elementInfoOutPhysical" class="element-info-out-display element-info-out-content">
+              <div id="element-info-out-melting-point-c"></div>
+              <div id="element-info-out-melting-point-k"></div>
+              <div id="element-info-out-melting-point-pressure-dependency"></div>
+              <div id="element-info-out-boiling-point-c"></div>
+              <div id="element-info-out-boiling-point-k"></div>
+              <div id="element-info-out-boiling-point-pressure-dependency"></div>
+              <div id="element-info-out-density"></div>
+              <div id="element-info-out-atomic-radius"></div>
+              <div id="element-info-out-covalent-radius"></div>
+              <div id="element-info-out-van-der-waals-radius"></div>
+              <div id="element-info-out-ionic-radius"></div>
+              <div id="element-info-out-mohs-hardness"></div>
+              <div id="element-info-out-youngs-modulus"></div>
+              <div id="element-info-out-bulk-modulus"></div>
+              <div id="element-info-out-shear-modulus"></div>
+              <div id="element-info-out-thermal-conductivity"></div>
+              <div id="element-info-out-specific-heat"></div>
+              <div id="element-info-out-heat-of-fusion"></div>
+              <div id="element-info-out-heat-of-vaporization"></div>
+              <div id="element-info-out-color-solid"></div>
+              <div id="element-info-out-refractive-index"></div>
+              <div id="element-info-out-crystal-structure"></div>
+              <div id="element-info-out-lattice-parameters"></div>
+              <div id="element-info-out-space-group"></div>
+              <div id="element-info-out-molar-volume"></div>
+              <div id="element-info-out-solubility"></div>
+              <div id="element-info-out-vapor-point"></div>
+            </div>
+            <div id="elementInfoOutChemical" class="element-info-out-display element-info-out-content">
+              <div id="element-info-out-electronegativity"></div>
+              <div id="element-info-out-electron-affinity"></div>
+              <div id="element-info-out-ionization-energy"></div>
+              <div id="element-info-out-electrode-potential"></div>
+              <div id="element-info-out-acid-base-behavior"></div>
+              <div id="element-info-out-reactivity"></div>
+              <div id="element-info-out-electrical-conductivity"></div>
+              <div id="element-info-out-magnetic-properties"></div>
+              <div id="element-info-out-band-gap"></div>
+              <div id="element-info-out-radioactivity"></div>
+              <div id="element-info-out-half-life"></div>
+              <div id="element-info-out-toxicity"></div>
+              <div id="element-info-out-bio-role"></div>
+            </div>
           </div>
-          <div id="ptOutElementBio"></div>
-            <div id="element-info-out-number"></div>
-            <div id="element-info-out-symbol"></div>
-            <div id="element-info-out-name"></div>
-          </div> -->
-          
         </div>
         <button id="ptInfoBtn" class="btn ptInfoBtnHidden" onclick="ptInfoClear()">Clear</button>
       </div>
-      <div class="card">
+      <!-- <div class="card">
         <h3>Formula mass & quick helpers</h3>
         <p class="muted">Currently in progress — coming soon.</p>
-      </div>
+      </div> -->
     </section>
 
     <!-- GAMES -->

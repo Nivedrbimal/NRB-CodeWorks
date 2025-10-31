@@ -628,21 +628,18 @@ input[type="color"] {
   background: #fe7676;
   border-radius: clamp(2px, 0.333vw, 5px);
 }
-
 .element-type-liquids {
   font-size: clamp(2.25px, 0.6vw, 9px);
   text-align: center;
   background: #76a3fe;
   border-radius: clamp(2px, 0.333vw, 5px);
 }
-
 .element-type-solids {
   font-size: clamp(2.25px, 0.6vw, 9px);
   text-align: center;
   background: #fef076;
   border-radius: clamp(2px, 0.333vw, 5px);
 }
-
 .element-type-artificial {
   font-size: clamp(2.25px, 0.6vw, 9px);
   text-align: center;
@@ -656,63 +653,54 @@ input[type="color"] {
   color: #00758c;
   stroke: #00758c;
 }
-
 .metalloidsLegend {
   background-color: #fef7e0;
   border-color: #945700;
   color: #945700;
   stroke: #945700;
 }
-
 .actinidesLegend {
   background-color: #ffe6d4;
   border-color: #c73200;
   color: #c73200;
   stroke: #c73200;
 }
-
 .alkalineEarthMetalsLegend {
   background-color: #ffe7e7;
   border-color: #d60024;
   color: #d60024;
   stroke: #d60024;
 }
-
 .reactiveNonMetalsLegend {
   background-color: #e2eeff;
   border-color: #0060f0;
   color: #0060f0;
   stroke: #0060f0;
 }
-
 .unknownElementsLegend {
   background-color: #e7e7ea;
   border-color: #3f374f;
   color: #3f374f;
   stroke: #3f374f;
 }
-
 .transitionMetalsLegend {
   background-color: #f3e8fd;
   border-color: #6232ec;
   color: #6232ec;
   stroke: #6232ec;
 }
-
 .nobleGasesLegend {
   background-color: #ffe7eb;
   border-color: #cd1d5e;
   color: #cd1d5e;
   stroke: #cd1d5e;
 }
-
 .postTransitionMetalsLegend {
   background-color: #d6f9e8;
   border-color: #227754;
   color: #227754;
   stroke: #227754;
 }
-
 .lanthanidesLegend {
   background-color: #dff3ff;
   border-color: #003355;
@@ -726,72 +714,142 @@ input[type="color"] {
   color: #00758c;
   stroke: #00758c;
 }
-
 .metalloids {
   background-color: #fef7e0;
   border-color: #945700;
   color: #945700;
   stroke: #945700;
 }
-
 .actinides {
   background-color: #ffe6d4;
   border-color: #c73200;
   color: #c73200;
   stroke: #c73200;
 }
-
 .alkalineEarthMetals {
   background-color: #ffe7e7;
   border-color: #d60024;
   color: #d60024;
   stroke: #d60024;
 }
-
 .reactiveNonMetals {
   background-color: #e2eeff;
   border-color: #0060f0;
   color: #0060f0;
   stroke: #0060f0;
 }
-
 .unknownElements {
   background-color: #e7e7ea;
   border-color: #3f374f;
   color: #3f374f;
   stroke: #3f374f;
 }
-
 .transitionMetals {
   background-color: #f3e8fd;
   border-color: #6232ec;
   color: #6232ec;
   stroke: #6232ec;
 }
-
 .nobleGases {
   background-color: #ffe7eb;
   border-color: #cd1d5e;
   color: #cd1d5e;
   stroke: #cd1d5e;
 }
-
 .postTransitionMetals {
   background-color: #d6f9e8;
   border-color: #227754;
   color: #227754;
   stroke: #227754;
 }
-
 .lanthanides {
   background-color: #dff3ff;
   border-color: #003355;
   color: #003355;
   stroke: #003355;
 }
-#ptOut {
-  overflow: hidden;
+
+.element-info-out {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  height: 300px;
+  padding: 10px;
 }
+.element-info-out-main {
+  padding:10px;
+  position: relative;
+  width: 200px;
+  height: 260px;
+  border: 5px solid;
+  border-radius: 15px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  text-align: center;
+  z-index: 2;
+}
+.element-info-out-display {
+display:none;
+}
+.element-info-out-display.active {
+display:block;
+position: absolute;
+left:40%;
+top:0%;
+display:flex;
+flex-direction: column;
+font-size:20px;
+}
+
+.element-info-out-list {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  height: 280px;
+}
+.info-panel {
+  position: absolute;
+  right: 100px;
+  top: 10px;
+  width: 400px;
+  height: 280px;
+  border-image: var(--gradient-primary);
+  padding: 15px;
+  color: #fff;
+  overflow-y: auto;
+  transform: translateX(110%);
+  opacity: 0;
+  transition: all 0.4s ease;
+  z-index: 1;
+}
+.info-panel.active {
+  transform: translateX(0);
+  opacity: 1;
+  z-index: 3;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 .pt-info-line {
   opacity: 0;
   max-height: 0;
