@@ -1882,7 +1882,7 @@ let jetShooterShieldSpawnRate = 15000;
 let jetShooterHasShield = 0;
 let jetShooterBulletRemaining = 100;
 function jetShooterGameStart() {
-  jetShooter = { x: 50 * jetShooterBox, y: 97 * jetShooterBox, size: jetShooterBox * 4 };
+  jetShooter = { x: 50 * jetShooterBox, y: 95 * jetShooterBox, size: jetShooterBox * 4 };
   jetShooterBullets = [];
   jetShooterEnemies = [];
   jetShooterShields = [];
@@ -1988,24 +1988,49 @@ function drawJetShooter() {
   jetShooterCtx.clearRect(0, 0, jetShooterCanvas.width, jetShooterCanvas.height);
   const jx = jetShooter.x + jetShooter.size / 2;
   const jy = jetShooter.y + jetShooter.size / 2;
-  jetShooterCtx.fillStyle = jetShooterHasShield >= 1? "lightgreen" : "cyan";
   jetShooterCtx.beginPath();
-  jetShooterCtx.moveTo(jx, jetShooter.y + jetShooter.size);
-  jetShooterCtx.lineTo(jetShooter.x, jetShooter.y);
-  jetShooterCtx.lineTo(jetShooter.x + jetShooter.size, jetShooter.y);
+  jetShooterCtx.moveTo(jx, jetShooter.y - jetShooter.size * 0.3);
+  jetShooterCtx.lineTo(jx - jetShooter.size * 0.35, jetShooter.y + jetShooter.size * 0.9);
+  jetShooterCtx.lineTo(jx + jetShooter.size * 0.35, jetShooter.y + jetShooter.size * 0.9);
   jetShooterCtx.closePath();
+  jetShooterCtx.fillStyle = jetShooterHasShield >= 1 ? "#6aff91" : "cyan";
   jetShooterCtx.fill();
-  jetShooterCtx.fillStyle = "cyan";
+  jetShooterCtx.strokeStyle = "#00bcd4";
+  jetShooterCtx.lineWidth = 2;
+  jetShooterCtx.stroke();
   jetShooterCtx.beginPath();
-  jetShooterCtx.arc(jx, jetShooter.y + jetShooter.size * 0.55, jetShooter.size * 0.15, 0, Math.PI * 2);
+  jetShooterCtx.ellipse(
+    jx,
+    jetShooter.y + jetShooter.size * 0.25,
+    jetShooter.size * 0.15,
+    jetShooter.size * 0.25,
+    0,
+    0,
+    Math.PI * 2
+  );
+  jetShooterCtx.fillStyle = "rgba(0, 150, 255, 0.6)";
   jetShooterCtx.fill();
-  jetShooterCtx.fillStyle = "orange";
+  jetShooterCtx.strokeStyle = "white";
+  jetShooterCtx.lineWidth = 1.5;
+  jetShooterCtx.stroke();
   jetShooterCtx.beginPath();
-  jetShooterCtx.moveTo(jx - jetShooter.size * 0.15, jetShooter.y);
-  jetShooterCtx.lineTo(jx + jetShooter.size * 0.15, jetShooter.y);
-  jetShooterCtx.lineTo(jx, jetShooter.y - jetShooter.size * 0.3);
+  jetShooterCtx.moveTo(jx - jetShooter.size * 0.6, jetShooter.y + jetShooter.size * 0.4);
+  jetShooterCtx.lineTo(jx + jetShooter.size * 0.6, jetShooter.y + jetShooter.size * 0.4);
+  jetShooterCtx.lineTo(jx + jetShooter.size * 0.3, jetShooter.y + jetShooter.size * 0.7);
+  jetShooterCtx.lineTo(jx - jetShooter.size * 0.3, jetShooter.y + jetShooter.size * 0.7);
   jetShooterCtx.closePath();
+  jetShooterCtx.fillStyle = jetShooterHasShield >= 1 ? "#7affb2" : "#00bcd4";
   jetShooterCtx.fill();
+  jetShooterCtx.strokeStyle = "#007bff";
+  jetShooterCtx.stroke();
+  const gradient = jetShooterCtx.createRadialGradient(jx, jetShooter.y + jetShooter.size * 0.95, 2, jx, jetShooter.y + jetShooter.size * 0.95, 20);
+  gradient.addColorStop(0, "rgba(255, 150, 0, 0.9)");
+  gradient.addColorStop(1, "rgba(255, 0, 0, 0)");
+  jetShooterCtx.beginPath();
+  jetShooterCtx.fillStyle = gradient;
+  jetShooterCtx.arc(jx, jetShooter.y + jetShooter.size * 0.95, jetShooter.size * 0.25, 0, Math.PI * 2);
+  jetShooterCtx.fill();
+
   jetShooterCtx.fillStyle = "yellow";
   jetShooterBullets.forEach(b => {
     jetShooterCtx.fillRect(b.x, b.y, b.size, b.size * 2);
@@ -2032,13 +2057,54 @@ function drawJetShooter() {
     jetShooterCtx.closePath();
     jetShooterCtx.fill();
   });
-  jetShooterCtx.fillStyle = "lightgreen";
   jetShooterShields.forEach(s => {
-    jetShooterCtx.fillRect(s.x, s.y, s.size, s.size);
+    jetShooterCtx.beginPath();
+    jetShooterCtx.moveTo(s.x + s.size / 2, s.y);
+    jetShooterCtx.lineTo(s.x, s.y + s.size * 0.4);
+    jetShooterCtx.quadraticCurveTo(
+      s.x + s.size * 0.1,
+      s.y + s.size * 0.9,
+      s.x + s.size / 2,
+      s.y + s.size
+    );
+    jetShooterCtx.quadraticCurveTo(
+      s.x + s.size * 0.9,
+      s.y + s.size * 0.9,
+      s.x + s.size,
+      s.y + s.size * 0.4
+    );
+    jetShooterCtx.closePath();
+    jetShooterCtx.fillStyle = "lightgreen";
+    jetShooterCtx.fill();
+    jetShooterCtx.strokeStyle = "white";
+    jetShooterCtx.lineWidth = 2;
+    jetShooterCtx.stroke();
   });
-  jetShooterCtx.fillStyle = "gold";
   jetShooterBulletBarrel.forEach(b => {
-    jetShooterCtx.fillRect(b.x, b.y, b.size, b.size);
+    const cx = b.x + b.size / 2;
+    const cy = b.y + b.size / 2;
+    const w = b.size * 0.6;
+    const h = b.size * 1.4;
+    jetShooterCtx.beginPath();
+    jetShooterCtx.moveTo(cx - w / 2, cy - h / 4);
+    jetShooterCtx.lineTo(cx - w / 2, cy + h / 2);
+    jetShooterCtx.lineTo(cx + w / 2, cy + h / 2);
+    jetShooterCtx.lineTo(cx + w / 2, cy - h / 4);
+    jetShooterCtx.closePath();
+    jetShooterCtx.fillStyle = "gold";
+    jetShooterCtx.fill();
+    jetShooterCtx.strokeStyle = "#b8860b";
+    jetShooterCtx.lineWidth = 2;
+    jetShooterCtx.stroke();
+    jetShooterCtx.beginPath();
+    jetShooterCtx.moveTo(cx - w / 2, cy - h / 4);
+    jetShooterCtx.lineTo(cx + w / 2, cy - h / 4);
+    jetShooterCtx.lineTo(cx, cy - h / 2);
+    jetShooterCtx.closePath();
+    jetShooterCtx.fillStyle = "silver";
+    jetShooterCtx.fill();
+    jetShooterCtx.strokeStyle = "#999";
+    jetShooterCtx.stroke();
   });
   jetShooterScoreHolder.textContent = "Score: " + jetShooterScore;
   jetShooterBulletHolder.textContent = "Bullets remaining: " + jetShooterBulletRemaining;
