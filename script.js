@@ -1143,6 +1143,9 @@ function showElementInfo(symbol) {
     document.getElementById("element-info-out-electron-configuration").textContent = 'Complete Electron Configuration: ' + element.Electron_Configuration;
     document.getElementById("element-info-out-condensed-electron-configuration").textContent = 'Condensed Electron Configuration: ' + element.Condensed_Electron_Configuration;
     document.getElementById("element-info-out-isotopes").textContent = 'Isotopes: ' + element.Isotopes;
+    if (element && element.Isotopes && element.Isotopes.length > 0) {
+      createIsotopeSlider(element);
+    }
     document.getElementById("element-info-out-natural-isotopic-composition").textContent = 'Natural Isotopic Composition: ' + element.Natural_Isotopic_Composition;
     document.getElementById("element-info-out-isotopic-masses").textContent = 'Isotopic Mass: ' + element.Isotopic_Masses;
     document.getElementById("element-info-out-common-oxidation-states").textContent = 'Common Oxidation States: ' + element.Common_Oxidation_States;
@@ -1197,6 +1200,46 @@ function showElementInfo(symbol) {
   document.getElementById("ptInfoBtn").classList.remove('ptInfoBtnHidden');
   document.getElementById("ptInfoBtn").classList.add('ptInfoBtnVisible');
 }
+function createIsotopeSlider(element) {
+  if (!element || !element.Isotopes) return;
+
+  const container = document.getElementById('isotopeContainer');
+  container.innerHTML = '';
+
+  const section = document.createElement('div');
+  section.className = 'isotope-section';
+  section.innerHTML = `
+    <h3>${element.Name} Isotopes</h3>
+    <div class="slider-container">
+      <button class="nav-btn nav-left">&#10094;</button>
+      <div class="slider"></div>
+      <button class="nav-btn nav-right">&#10095;</button>
+    </div>
+  `;
+  container.appendChild(section);
+  const slider = section.querySelector('.slider');
+  element.Isotopes.forEach(iso => {
+    const box = document.createElement('div');
+    box.className = 'iso-box';
+    box.innerHTML = `
+      <div class="iso-symbol">${iso.symbol}</div>
+      <div class="iso-details">
+        <div>Mass: ${iso.mass}</div>
+        <div>Half-life: ${iso.halfLife}</div>
+        <div>Spin: ${iso.spin}</div>
+      </div>
+    `;
+    slider.appendChild(box);
+  });
+  section.querySelector('.nav-left').onclick = () => {
+    slider.scrollBy({ left: -250, behavior: 'smooth' });
+  };
+  section.querySelector('.nav-right').onclick = () => {
+    slider.scrollBy({ left: 250, behavior: 'smooth' });
+  };
+}
+
+
 document.querySelectorAll('.element-box').forEach(box => {
   box.addEventListener('click', () => {
     const symbol = box.getAttribute('data-symbol');
@@ -1809,6 +1852,8 @@ const jetShooterCanvas = document.getElementById('jetShooterCanvas');
 const jetShooterCtx = jetShooterCanvas.getContext("2d");
 
 const jetShooterScoreHolder = document.getElementById("jetShooterScore");
+const jetShooterShieldHolder = document.getElementById("jetShooterShield");
+const jetShooterBulletHolder = document.getElementById("jetShooterBullets");
 const jetShooterLeftBtn = document.getElementById("leftJetShooter");
 const jetShooterRightBtn = document.getElementById("rightJetShooter");
 const jetShooterShootBtn = document.getElementById("shootJetShooter");
@@ -1819,28 +1864,34 @@ const jetShooterSize = Math.floor(window.innerHeight * 0.65);
 jetShooterCanvas.width = 100 * Math.floor(jetShooterSize / 100);
 jetShooterCanvas.height = 100 * Math.floor(jetShooterSize / 100);
 let jetShooterBox = Math.floor(jetShooterCanvas.width / 100);
-
+let jetShooterMessage = "";
+let jetShooterMessageTimeout = null;
 let jetShooterHighScore = parseInt(localStorage.getItem("jetShooterHighScore")) || 0;
 document.getElementById("jetShooterHighScore").textContent = "High score = " + jetShooterHighScore;
 
-let jetShooter, jetShooterBullets, jetShooterEnemies, jetShooterShields, jetShooterScore;
+let jetShooter, jetShooterBullets, jetShooterEnemies, jetShooterShields, jetShooterBulletBarrel, jetShooterScore;
 let jetShooterPaused = false;
 let jetShooterRunning = false;
 let jetShooterLastFrameTime = 0;
 let jetShooterEnemyTimer = 0;
 let jetShooterEnemySpawnRate = 2000;
+let jetShooterBulletBarrelRate = 10000;
 let jetShooterShieldTimer = 0;
-let jetShooterShieldSpawnRate = 10000;
-let jetShooterHasShield = false;
+let jetShooterBulletTimer = 0;
+let jetShooterShieldSpawnRate = 15000;
+let jetShooterHasShield = 0;
+let jetShooterBulletRemaining = 100;
 function jetShooterGameStart() {
   jetShooter = { x: 50 * jetShooterBox, y: 97 * jetShooterBox, size: jetShooterBox * 4 };
   jetShooterBullets = [];
   jetShooterEnemies = [];
   jetShooterShields = [];
+  jetShooterBulletBarrel = [];
   jetShooterScore = 0;
   jetShooterPaused = false;
   jetShooterRunning = true;
-  jetShooterHasShield = false;
+  jetShooterHasShield = 0;
+  jetShooterBulletRemaining = 100;
   jetShooterPauseBtn.textContent = "Pause";
   jetShooterCanvas.focus();
   jetShooterLastFrameTime = performance.now();
@@ -1871,12 +1922,22 @@ function updateJetShooter(delta) {
     spawnShield();
     jetShooterShieldTimer = 0;
   }
+  jetShooterBulletTimer += delta;
+  if (jetShooterBulletTimer > jetShooterBulletBarrelRate) {
+    spawnBulletBarrel();
+    jetShooterBulletTimer = 0;
+  }
   jetShooterEnemies.forEach(e => (e.y += e.speed));
   jetShooterEnemies = jetShooterEnemies.filter(e => e.y < jetShooterCanvas.height);
   jetShooterShields.forEach(s => {
     s.y += s.speedY;
     s.angle += s.oscillationSpeed;
     s.x = s.baseX + Math.sin(s.angle) * s.amplitude;
+  });
+  jetShooterBulletBarrel.forEach(b => {
+    b.y += b.speedY;
+    b.angle += b.oscillationSpeed;
+    b.x = b.baseX + Math.sin(b.angle) * b.amplitude;
   });
   jetShooterShields = jetShooterShields.filter(s => s.y < jetShooterCanvas.height);
   for (let i = jetShooterEnemies.length - 1; i >= 0; i--) {
@@ -1891,14 +1952,21 @@ function updateJetShooter(delta) {
   }
   for (let i = 0; i < jetShooterEnemies.length; i++) {
     if (jetShooterCheckCollision(jetShooterEnemies[i], jetShooter)) {
-      if (jetShooterHasShield) {
-        jetShooterHasShield = false;
+      if (jetShooterHasShield >= 1) {
+        jetShooterHasShield--;
+        jetShooterShieldHolder.textContent = "Shields: " +jetShooterHasShield; 
         jetShooterEnemies.splice(i, 1);
         break;
       } else {
         jetShooterGameOver();
         return;
       }
+    }
+    if (jetShooterEnemies[i].y + jetShooterEnemies[i].size >= jetShooterCanvas.height) {
+      jetShooterScore -= 5;
+      jetShooterScoreHolder.textContent = "Score: " + jetShooterScore;
+      jetShooterEnemies.splice(i, 1);
+      break;
     }
   }
   for (let i = 0; i < jetShooterShields.length; i++) {
@@ -1908,12 +1976,19 @@ function updateJetShooter(delta) {
       break;
     }
   }
+  for (let i = 0; i < jetShooterBulletBarrel.length; i++) {
+    if (jetShooterCheckCollision(jetShooterBulletBarrel[i], jetShooter)) {
+      jetShooterAddBullets();
+      jetShooterBulletBarrel.splice(i, 1);
+      break;
+    }
+  }
 }
 function drawJetShooter() {
   jetShooterCtx.clearRect(0, 0, jetShooterCanvas.width, jetShooterCanvas.height);
   const jx = jetShooter.x + jetShooter.size / 2;
   const jy = jetShooter.y + jetShooter.size / 2;
-  jetShooterCtx.fillStyle = jetShooterHasShield ? "lightgreen" : "cyan";
+  jetShooterCtx.fillStyle = jetShooterHasShield >= 1? "lightgreen" : "cyan";
   jetShooterCtx.beginPath();
   jetShooterCtx.moveTo(jx, jetShooter.y + jetShooter.size);
   jetShooterCtx.lineTo(jetShooter.x, jetShooter.y);
@@ -1957,11 +2032,27 @@ function drawJetShooter() {
     jetShooterCtx.closePath();
     jetShooterCtx.fill();
   });
-  jetShooterCtx.fillStyle = "gold";
+  jetShooterCtx.fillStyle = "lightgreen";
   jetShooterShields.forEach(s => {
     jetShooterCtx.fillRect(s.x, s.y, s.size, s.size);
   });
+  jetShooterCtx.fillStyle = "gold";
+  jetShooterBulletBarrel.forEach(b => {
+    jetShooterCtx.fillRect(b.x, b.y, b.size, b.size);
+  });
   jetShooterScoreHolder.textContent = "Score: " + jetShooterScore;
+  jetShooterBulletHolder.textContent = "Bullets remaining: " + jetShooterBulletRemaining;
+  jetShooterShieldHolder.textContent = "Shields: " + jetShooterHasShield;
+  if (jetShooterMessage) {
+    jetShooterCtx.save();
+    jetShooterCtx.font = "28px Arial";
+    jetShooterCtx.fillStyle = "white";
+    jetShooterCtx.textAlign = "center";
+    const cx = jetShooterCanvas.width / 2;
+    const cy = jetShooterCanvas.height / 3;
+    jetShooterCtx.fillText(jetShooterMessage, cx, cy);
+    jetShooterCtx.restore();
+  }
 }
 function jetShooterCheckCollision(a, b) {
   return (
@@ -1991,11 +2082,31 @@ function spawnShield() {
     oscillationSpeed
   });
 }
+function spawnBulletBarrel() {
+  const size = jetShooterBox * 3;
+  const y = -size;
+  const speedY = 3 + Math.random() * 4;
+  const baseX = Math.random() * (jetShooterCanvas.width - size);
+  const amplitude = 30 + (Math.random() * 30);
+  const oscillationSpeed = 0.02 + (Math.random() * 0.03);
+  const angle = Math.random() * Math.PI / 180;
+  const x = baseX + Math.sin(angle) * amplitude;
+  jetShooterBulletBarrel.push({
+    x,
+    y,
+    size,
+    speedY,
+    baseX,
+    angle,
+    amplitude,
+    oscillationSpeed
+  });
+}
 function spawnEnemy() {
   const size = jetShooterBox * 4;
   const x = Math.random() * (jetShooterCanvas.width - size);
   const y = -size;
-  const speed = 2 + Math.random() * 2;
+  const speed = Math.random() * 16 + 4;
   jetShooterEnemies.push({ x, y, size, speed });
 }
 jetShooterStartBtn.onclick = () => {
@@ -2018,7 +2129,7 @@ document.addEventListener("keydown", (e) => {
   if (["arrowleft", "arrowright", "arrowup", "arrowdown", " "].includes(e.key.toLowerCase())) e.preventDefault();
   if (keys["arrowleft"] || keys["a"]) movement = -1;
   if (keys["arrowright"] || keys["d"]) movement = 1;
-  if (keys[" "]) shootJetShooter();
+  if (keys[" "]) jetShooterBulletRemaining == 0? noBulletJetShooter(): shootJetShooter();
 });
 document.addEventListener("keyup", (e) => {
   keys[e.key.toLowerCase()] = false;
@@ -2042,7 +2153,7 @@ jetShooterLeftBtn.addEventListener('touchcancel', () => { if (movement === -1) m
 jetShooterRightBtn.addEventListener('touchstart', (e) => { if (!jetShooterRunning) { return; } e.preventDefault(); movement = 1; }, { passive: false });
 jetShooterRightBtn.addEventListener('touchend', () => { if (movement === 1) movement = 0; });
 jetShooterRightBtn.addEventListener('touchcancel', () => { if (movement === 1) movement = 0; });
-jetShooterShootBtn.addEventListener('touchstart', (e) => { if (!jetShooterRunning) { return; } e.preventDefault(); isShooting = true; }, { passive: false });
+jetShooterShootBtn.addEventListener('touchstart', (e) => { if (!jetShooterRunning) { return; } e.preventDefault(); jetShooterBulletRemaining == 0? noBulletJetShooter(): isShooting = true; }, { passive: false });
 jetShooterShootBtn.addEventListener('touchend', () => { isShooting = false; });
 jetShooterShootBtn.addEventListener('touchcancel', () => { isShooting = false; });
 function gameLoop() {
@@ -2073,15 +2184,34 @@ function shootJetShooter() {
     size: 4,
     speed: 10,
   });
+  jetShooterBulletRemaining--;
+  jetShooterBulletHolder.textContent = "Bullets remaining: " + jetShooterBulletRemaining;
 }
 function jetShooterExtraLife() {
-  jetShooterHasShield = true;
+  jetShooterHasShield++;
+  jetShooterShieldHolder.textContent = "Shields: " +jetShooterHasShield; 
+}
+function jetShooterAddBullets() {
+  jetShooterBulletRemaining+=100;
+  jetShooterBulletHolder.textContent = "Bullets remaining: " +jetShooterBulletRemaining;
+}
+function noBulletJetShooter(duration = 1500) {
+  if (jetShooterMessageTimeout) {
+    clearTimeout(jetShooterMessageTimeout);
+    jetShooterMessageTimeout = null;
+  }
+  jetShooterMessage = "No bullets remaining! Capture a bullet barrel.";
+  jetShooterMessageTimeout = setTimeout(() => {
+    jetShooterMessage = "";
+    jetShooterMessageTimeout = null;
+  }, duration);
 }
 function jetShooterGameOver() {
   jetShooterRunning = false;
   jetShooterEnemies = [];
   jetShooterBullets = [];
   jetShooterShields = [];
+  jetShooterBulletBarrel = [];
   if (jetShooterScore > jetShooterHighScore) {
     jetShooterHighScore = jetShooterScore;
     localStorage.setItem("jetShooterHighScore", jetShooterHighScore);
