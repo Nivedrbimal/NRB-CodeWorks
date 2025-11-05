@@ -1120,15 +1120,15 @@ function showElementInfo(symbol) {
         break;
       }
     }
-    document.getElementById("element-info-out-number").textContent = element.Z; 
-    document.getElementById("element-info-out-symbol").textContent = element.Symbol; 
-    document.getElementById("element-info-out-name").textContent = element.Name; 
-    document.getElementById("element-info-out-classification").textContent = 'Classification: ' + element.Classification; 
-    document.getElementById("element-info-out-standard-state").textContent = 'State: ' + element.Standard_State; 
+    document.getElementById("element-info-out-number").textContent = element.Z;
+    document.getElementById("element-info-out-symbol").textContent = element.Symbol;
+    document.getElementById("element-info-out-name").textContent = element.Name;
+    document.getElementById("element-info-out-classification").textContent = 'Classification: ' + element.Classification;
+    document.getElementById("element-info-out-standard-state").textContent = 'State: ' + element.Standard_State;
     // * temp 
-    document.getElementById("element-info-out-period").textContent = 'Period: ' + element.Period; 
-    document.getElementById("element-info-out-group").textContent = 'Group: ' + element.Group; 
-    document.getElementById("element-info-out-block").textContent = 'Block: ' + element.Block; 
+    document.getElementById("element-info-out-period").textContent = 'Period: ' + element.Period;
+    document.getElementById("element-info-out-group").textContent = 'Group: ' + element.Group;
+    document.getElementById("element-info-out-block").textContent = 'Block: ' + element.Block;
     document.getElementById("element-info-out-atomic-mass").textContent = 'Atomic Mass: ' + element.Atomic_Mass;
     document.getElementById("element-info-out-protons").textContent = 'Protons: ' + element.Protons;
     document.getElementById("element-info-out-neutrons").textContent = 'Neutrons: ' + element.Neutrons;
@@ -1850,7 +1850,6 @@ snakeStartBtn.addEventListener("click", startSnakeGame);
 // --------- Jet Shooter Game ----------
 const jetShooterCanvas = document.getElementById('jetShooterCanvas');
 const jetShooterCtx = jetShooterCanvas.getContext("2d");
-
 const jetShooterScoreHolder = document.getElementById("jetShooterScore");
 const jetShooterShieldHolder = document.getElementById("jetShooterShield");
 const jetShooterBulletHolder = document.getElementById("jetShooterBullets");
@@ -1859,55 +1858,68 @@ const jetShooterRightBtn = document.getElementById("rightJetShooter");
 const jetShooterShootBtn = document.getElementById("shootJetShooter");
 const jetShooterStartBtn = document.getElementById("startJetShooterBtn");
 const jetShooterPauseBtn = document.getElementById("pauseJetShooterBtn");
-
 const jetShooterSize = Math.floor(window.innerHeight * 0.65);
 jetShooterCanvas.width = 100 * Math.floor(jetShooterSize / 100);
 jetShooterCanvas.height = 100 * Math.floor(jetShooterSize / 100);
 let jetShooterBox = Math.floor(jetShooterCanvas.width / 100);
+let jetShooterFrameId = null;
+let gameFrameId = null;
 let jetShooterMessage = "";
 let jetShooterMessageTimeout = null;
+let movement = 0;
+const keys = {};
+let lastKeyPressed = null; 
 let jetShooterHighScore = parseInt(localStorage.getItem("jetShooterHighScore")) || 0;
 document.getElementById("jetShooterHighScore").textContent = "High score = " + jetShooterHighScore;
-
 let jetShooter, jetShooterBullets, jetShooterEnemies, jetShooterShields, jetShooterBulletBarrel, jetShooterScore;
 let jetShooterPaused = false;
 let jetShooterRunning = false;
+let isShooting = false;
 let jetShooterLastFrameTime = 0;
+let lastShotTime = 0;
+const FIRE_RATE = 100;
 let jetShooterEnemyTimer = 0;
-let jetShooterEnemySpawnRate = 2000;
-let jetShooterBulletBarrelRate = 10000;
 let jetShooterShieldTimer = 0;
 let jetShooterBulletTimer = 0;
+let jetShooterEnemySpawnRate = 2000;
+let jetShooterBulletBarrelRate = 10000;
 let jetShooterShieldSpawnRate = 15000;
 let jetShooterHasShield = 0;
 let jetShooterBulletRemaining = 100;
 function jetShooterGameStart() {
+  if (jetShooterFrameId) cancelAnimationFrame(jetShooterFrameId);
+  if (gameFrameId) cancelAnimationFrame(gameFrameId);
+  jetShooterLastFrameTime = 0;
+  jetShooterPaused = false;
+  jetShooterRunning = true;
   jetShooter = { x: 50 * jetShooterBox, y: 95 * jetShooterBox, size: jetShooterBox * 4 };
   jetShooterBullets = [];
   jetShooterEnemies = [];
   jetShooterShields = [];
   jetShooterBulletBarrel = [];
   jetShooterScore = 0;
-  jetShooterPaused = false;
-  jetShooterRunning = true;
+  jetShooterEnemyTimer = 0;
+  jetShooterShieldTimer = 0;
+  jetShooterBulletTimer = 0;
   jetShooterHasShield = 0;
   jetShooterBulletRemaining = 100;
   jetShooterPauseBtn.textContent = "Pause";
   jetShooterCanvas.focus();
   jetShooterLastFrameTime = performance.now();
-  requestAnimationFrame(jetShooterGameLoop);
+  jetShooterFrameId = requestAnimationFrame(jetShooterGameLoop);
+  gameFrameId = requestAnimationFrame(gameLoop);
 }
 function jetShooterGameLoop(timestamp) {
   if (!jetShooterRunning) return;
   if (jetShooterPaused) {
-    requestAnimationFrame(jetShooterGameLoop);
+    jetShooterFrameId = requestAnimationFrame(jetShooterGameLoop);
     return;
   }
   const delta = timestamp - jetShooterLastFrameTime;
   jetShooterLastFrameTime = timestamp;
   updateJetShooter(delta);
   drawJetShooter();
-  requestAnimationFrame(jetShooterGameLoop);
+  jetShooterFrameId = requestAnimationFrame(jetShooterGameLoop);
 }
 function updateJetShooter(delta) {
   jetShooterBullets.forEach(b => (b.y -= b.speed));
@@ -1954,7 +1966,7 @@ function updateJetShooter(delta) {
     if (jetShooterCheckCollision(jetShooterEnemies[i], jetShooter)) {
       if (jetShooterHasShield >= 1) {
         jetShooterHasShield--;
-        jetShooterShieldHolder.textContent = "Shields: " +jetShooterHasShield; 
+        jetShooterShieldHolder.textContent = "Shields: " + jetShooterHasShield;
         jetShooterEnemies.splice(i, 1);
         break;
       } else {
@@ -2187,53 +2199,69 @@ jetShooterPauseBtn.onclick = () => {
   jetShooterPaused = !jetShooterPaused;
   jetShooterPauseBtn.textContent = jetShooterPaused ? "Resume" : "Pause";
 };
-let movement = 0;
-const keys = {};
 document.addEventListener("keydown", (e) => {
-  keys[e.key.toLowerCase()] = true;
+  const key = e.key.toLowerCase();
+  keys[key] = true;
   if (!jetShooterRunning) return;
-  if (["arrowleft", "arrowright", "arrowup", "arrowdown", " "].includes(e.key.toLowerCase())) e.preventDefault();
-  if (keys["arrowleft"] || keys["a"]) movement = -1;
-  if (keys["arrowright"] || keys["d"]) movement = 1;
-  if (keys[" "]) jetShooterBulletRemaining == 0? noBulletJetShooter(): shootJetShooter();
+  if (["arrowleft", "arrowright", "a", "d", " "].includes(key)) e.preventDefault();
+  if (!jetShooterPaused) {
+    if (key === "arrowleft" || key === "a" || key === "arrowright" || key === "d") lastKeyPressed = key;
+    if (lastKeyPressed === "arrowleft" || lastKeyPressed === "a") movement = -1;
+    else if (lastKeyPressed === "arrowright" || lastKeyPressed === "d") movement = 1;
+    else movement = 0;
+  } 
+  else movement = 0;
+  if (key === " " && !jetShooterPaused) {
+    if (jetShooterBulletRemaining === 0) { isShooting = false; noBulletJetShooter(); } 
+    else isShooting = true;
+  }
 });
 document.addEventListener("keyup", (e) => {
-  keys[e.key.toLowerCase()] = false;
-  movement = 0;
+  const key = e.key.toLowerCase();
+  keys[key] = false;
+  if (key === lastKeyPressed) {
+    if (keys["arrowright"] || keys["d"]) lastKeyPressed = keys["arrowright"] ? "arrowright" : "d";
+    else if (keys["arrowleft"] || keys["a"]) lastKeyPressed = keys["arrowleft"] ? "arrowleft" : "a";
+    else lastKeyPressed = null;
+  }
+  if (!jetShooterPaused) {
+    if (lastKeyPressed === "arrowleft" || lastKeyPressed === "a") movement = -1;
+    else if (lastKeyPressed === "arrowright" || lastKeyPressed === "d") movement = 1;
+    else movement = 0;
+  } 
+  else movement = 0;
+  if (key === " " && isShooting) isShooting = false;
 });
-let isShooting = false;
-let lastShotTime = 0;
-const FIRE_RATE = 150;
-jetShooterLeftBtn.addEventListener('mousedown', () => { movement = -1; });
+jetShooterLeftBtn.addEventListener('mousedown', () => { if (!jetShooterRunning) { return; } jetShooterPaused === true ? movement = 0 : movement = -1; });
 jetShooterLeftBtn.addEventListener('mouseup', () => { if (movement === -1) movement = 0; });
 jetShooterLeftBtn.addEventListener('mouseleave', () => { if (movement === -1) movement = 0; });
-jetShooterRightBtn.addEventListener('mousedown', () => { movement = 1; });
+jetShooterRightBtn.addEventListener('mousedown', () => { if (!jetShooterRunning) { return; } jetShooterPaused === true ? movement = 0 : movement = 1; });
 jetShooterRightBtn.addEventListener('mouseup', () => { if (movement === 1) movement = 0; });
 jetShooterRightBtn.addEventListener('mouseleave', () => { if (movement === 1) movement = 0; });
-jetShooterShootBtn.addEventListener('mousedown', () => { isShooting = true; });
+jetShooterShootBtn.addEventListener('mousedown', () => { if (!jetShooterRunning) { return; } if (jetShooterPaused) isShooting = false; else jetShooterBulletRemaining === 0 ? noBulletJetShooter() : isShooting = true; });
 jetShooterShootBtn.addEventListener('mouseup', () => { isShooting = false; });
 jetShooterShootBtn.addEventListener('mouseleave', () => { isShooting = false; });
-jetShooterLeftBtn.addEventListener('touchstart', (e) => { if (!jetShooterRunning) { return; } e.preventDefault(); movement = -1; }, { passive: false });
+jetShooterLeftBtn.addEventListener('touchstart', (e) => { if (!jetShooterRunning) { return; } e.preventDefault(); jetShooterPaused === true ? movement = 0 : movement = -1; }, { passive: false });
 jetShooterLeftBtn.addEventListener('touchend', () => { if (movement === -1) movement = 0; });
 jetShooterLeftBtn.addEventListener('touchcancel', () => { if (movement === -1) movement = 0; });
-jetShooterRightBtn.addEventListener('touchstart', (e) => { if (!jetShooterRunning) { return; } e.preventDefault(); movement = 1; }, { passive: false });
+jetShooterRightBtn.addEventListener('touchstart', (e) => { if (!jetShooterRunning) { return; } e.preventDefault(); jetShooterPaused === true ? movement = 0 : movement = 1; }, { passive: false });
 jetShooterRightBtn.addEventListener('touchend', () => { if (movement === 1) movement = 0; });
 jetShooterRightBtn.addEventListener('touchcancel', () => { if (movement === 1) movement = 0; });
-jetShooterShootBtn.addEventListener('touchstart', (e) => { if (!jetShooterRunning) { return; } e.preventDefault(); jetShooterBulletRemaining == 0? noBulletJetShooter(): isShooting = true; }, { passive: false });
+jetShooterShootBtn.addEventListener('touchstart', (e) => { if (!jetShooterRunning) { return; } e.preventDefault(); if (jetShooterPaused) isShooting = false; else jetShooterBulletRemaining === 0 ? noBulletJetShooter() : isShooting = true; }, { passive: false });
 jetShooterShootBtn.addEventListener('touchend', () => { isShooting = false; });
 jetShooterShootBtn.addEventListener('touchcancel', () => { isShooting = false; });
 function gameLoop() {
-  if (movement === -1) {
-    moveJetShooter(-0.25);
-  } else if (movement === 1) {
-    moveJetShooter(0.25);
-  }
+  if (movement === -1) moveJetShooter(-0.25);
+  else if (movement === 1) moveJetShooter(0.25);
   const now = performance.now();
   if (isShooting && (now - lastShotTime > FIRE_RATE)) {
+    if (jetShooterBulletRemaining === 0) noBulletJetShooter();
+    else {
     shootJetShooter();
     lastShotTime = now;
+    }
   }
-  requestAnimationFrame(gameLoop);
+  gameFrameId = requestAnimationFrame(gameLoop);
 }
 gameLoop();
 function moveJetShooter(dir) {
@@ -2248,18 +2276,18 @@ function shootJetShooter() {
     x: jetShooter.x + jetShooter.size / 2 - 2,
     y: jetShooter.y - 10,
     size: 4,
-    speed: 10,
+    speed: 15,
   });
   jetShooterBulletRemaining--;
   jetShooterBulletHolder.textContent = "Bullets remaining: " + jetShooterBulletRemaining;
 }
 function jetShooterExtraLife() {
   jetShooterHasShield++;
-  jetShooterShieldHolder.textContent = "Shields: " +jetShooterHasShield; 
+  jetShooterShieldHolder.textContent = "Shields: " + jetShooterHasShield;
 }
 function jetShooterAddBullets() {
-  jetShooterBulletRemaining+=100;
-  jetShooterBulletHolder.textContent = "Bullets remaining: " +jetShooterBulletRemaining;
+  jetShooterBulletRemaining += 100;
+  jetShooterBulletHolder.textContent = "Bullets remaining: " + jetShooterBulletRemaining;
 }
 function noBulletJetShooter(duration = 1500) {
   if (jetShooterMessageTimeout) {
