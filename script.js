@@ -1975,10 +1975,13 @@ function updateJetShooter(delta) {
       }
     }
     if (jetShooterEnemies[i].y + jetShooterEnemies[i].size >= jetShooterCanvas.height) {
+      if (jetShooterScore === 0) jetShooterGameOver();
+      else {
       jetShooterScore -= 5;
       jetShooterScoreHolder.textContent = "Score: " + jetShooterScore;
       jetShooterEnemies.splice(i, 1);
       break;
+      }
     }
   }
   for (let i = 0; i < jetShooterShields.length; i++) {
@@ -2251,8 +2254,8 @@ jetShooterShootBtn.addEventListener('touchstart', (e) => { if (!jetShooterRunnin
 jetShooterShootBtn.addEventListener('touchend', () => { isShooting = false; });
 jetShooterShootBtn.addEventListener('touchcancel', () => { isShooting = false; });
 function gameLoop() {
-  if (movement === -1) moveJetShooter(-0.25);
-  else if (movement === 1) moveJetShooter(0.25);
+  if (movement === -1) moveJetShooter(-0.75);
+  else if (movement === 1) moveJetShooter(0.75);
   const now = performance.now();
   if (isShooting && (now - lastShotTime > FIRE_RATE)) {
     if (jetShooterBulletRemaining === 0) noBulletJetShooter();
