@@ -86,7 +86,7 @@ window.addEventListener('load', () => {
     document.body.style.overflow = 'auto';
     return;
   }
-  setTimeout(() => { intro.classList.add('fade-out'); }, 1250);
+  setTimeout(() => { intro.classList.add('fade-out'); }, 5000);
   setTimeout(() => {
     if (intro && intro.parentNode) intro.parentNode.removeChild(intro);
     if (header) header.classList.remove('hidden');
@@ -99,7 +99,7 @@ window.addEventListener('load', () => {
 
     document.body.style.overflow = 'auto';
     main && main.focus();
-  }, 1250);
+  }, 6000);
 });
 
 // =========== MATHEMATICS ============
