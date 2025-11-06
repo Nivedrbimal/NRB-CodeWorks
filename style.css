@@ -70,9 +70,8 @@ body {
   position: relative;
   display: inline-block;
 }
-
 .nrb-outline {
-  font-size: 3.5rem;
+  font-size: 3em;
   font-weight: 700;
   color: transparent;
   -webkit-text-stroke: 2px var(--gradient-secondary);
@@ -91,7 +90,7 @@ body {
   animation: reveal-gradient 2s cubic-bezier(.7,.2,.3,1) forwards;
 }
 .nrb-gradient-fill {
-  font-size: 3.5rem;
+  font-size: 3em;
   font-weight: 700;
   font-family: inherit;
   background: var(--gradient-nrb);
