@@ -14,7 +14,7 @@
   --glass: rgba(255, 255, 255, 0.03);
   --mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, 'Courier New', monospace;
   --radius: 12px;
-  --card-padding: 1vw;
+  --card-padding: 2.5vw;
   --header-height: 70px;
   --header-height-responsive: 7vh;
   --sidebar-width-collapsed: 70px;
