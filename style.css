@@ -1065,7 +1065,7 @@ font-size:20px;
   overflow: hidden;
   border: 2px solid;
   border-image: var(--gradient-primary) 5;
-  background-color: var(--glass);
+  background-color: rgb(0, 0, 0);
 }
 #upSnake {
   top: 5px;
