@@ -6,6 +6,19 @@ const toNum = v => isNum(v) ? Number(v) : null;
 const known = x => x !== null;
 const deg2rad = d => d * Math.PI / 180;
 const rad2deg = r => r * 180 / Math.PI;
+// ------ Favicon Selection ------
+function setFavicon() {
+    const darkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const favicon = document.querySelector('link[rel="icon"]');
+    if(darkMode) {
+      favicon.href = 'faviconNRB.ico';
+    } else {
+      favicon.href = 'faviconNRB.png';
+    }
+  }
+  setFavicon();
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', setFavicon);
+
 // ---------- Navigation ----------
 const topLinks = document.querySelectorAll(".top-link");
 function switchTopPanel(e) {
