@@ -12,7 +12,7 @@
   --glass: rgba(0, 0, 0, 0.03);
   --mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, 'Courier New', monospace;
   --radius: 12px;
-  --card-padding: 2.5vw;
+  --card-padding: 1vw;
   --header-height: 70px;
   --header-height-responsive: 7vh;
   --sidebar-width-collapsed: 70px;
@@ -396,7 +396,7 @@ body {
   background: var(--gradient-tertiary);
   padding: var(--card-padding);
   border-radius: var(--radius);
-  border: 1px solid var(--glass);
+  border: 2px solid var(--glass);
   box-shadow: 0 8px 30px var(--glass);
   margin-bottom: 12px;
 }
@@ -1317,7 +1317,9 @@ font-size:20px;
     overflow: hidden !important;
     padding: 10px;
   }
-
+  .card {
+    padding: 1vw !important;
+  }
   .home-content {
     padding: 20px;
     width: 40vh;

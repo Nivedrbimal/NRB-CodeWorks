@@ -98,7 +98,6 @@ window.addEventListener('load', () => {
     main && main.classList.add('visible');
 
     document.body.style.overflow = 'auto';
-    main && main.focus();
   }, 5000);
 });
 
