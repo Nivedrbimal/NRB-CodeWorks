@@ -7,11 +7,9 @@
   --background2: rgb(72, 10, 113);
   --accent1: #3c78d8ff;
   --accent2: #9900ffff;
-  --accent3: #2a7fff;
-  --accent4: #4d3bff;
   --accent5: #0c3b83;
   --accent6: #241b77;
-  --glass: rgba(255, 255, 255, 0.03);
+  --glass: rgba(0, 0, 0, 0.03);
   --mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, 'Courier New', monospace;
   --radius: 12px;
   --card-padding: 2.5vw;
@@ -21,7 +19,7 @@
   --sidebar-width-collapsed-resonsive: clamp(10px, 10vw, 70px);
   --sidebar-width-expanded: 200px;
   --gradient-primary: linear-gradient(45deg, var(--accent1), var(--accent2));
-  --gradient-secondary: linear-gradient(45deg, var(--accent3), var(--accent4));
+  --gradient-secondary: linear-gradient(45deg, var(--background1), var(--background2));
   --gradient-tertiary: linear-gradient(45deg, var(--accent5), var(--accent6));
   --gradient-nrb: linear-gradient(45deg, var(--accent1), var(--accent2), var(--accent1));
 }
@@ -143,7 +141,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: rgb(0, 0, 0, 0.35);
+  background: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(6px);
   z-index: 40;
   transition: opacity .6s ease;
@@ -206,7 +204,7 @@ body {
   left: 0;
   height: calc(100% - var(--header-height));
   width: clamp(70px, 15vw, 200px);
-  background: var(--glass);
+  background: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(8px);
   display: flex;
   flex-direction: column;
