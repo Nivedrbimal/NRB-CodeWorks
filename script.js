@@ -3230,6 +3230,8 @@ const accent1Picker = document.getElementById('accent1Picker');
 const accent2Picker = document.getElementById('accent2Picker');
 const background1Picker = document.getElementById('background1Picker');
 const background2Picker = document.getElementById('background2Picker');
+const card1Picker = document.getElementById('card1Picker');
+const card2Picker = document.getElementById('card2Picker');
 const root = document.documentElement;
 const resetBtn = document.getElementById('resetColors');
 function updateColor(varName, color) {
@@ -3238,7 +3240,6 @@ function updateColor(varName, color) {
 window.addEventListener('load', () => {
   const savedAccent1 = localStorage.getItem('accent1');
   const savedAccent2 = localStorage.getItem('accent2');
-
   if (savedAccent1) {
     accent1Picker.value = savedAccent1;
     updateColor('--accent1', savedAccent1);
@@ -3250,7 +3251,6 @@ window.addEventListener('load', () => {
 
   const savedBg1 = localStorage.getItem('background1');
   const savedBg2 = localStorage.getItem('background2');
-
   if (savedBg1) {
     background1Picker.value = savedBg1;
     updateColor('--background1', savedBg1);
@@ -3258,6 +3258,17 @@ window.addEventListener('load', () => {
   if (savedBg2) {
     background2Picker.value = savedBg2;
     updateColor('--background2', savedBg2);
+  }
+
+  const savedCard1 = localStorage.getItem('accent5');
+  const savedCard2 = localStorage.getItem('accent6');
+  if (savedCard1) {
+    card1Picker.value = savedCard1;
+    updateColor('--accent5', savedCard1);
+  }
+  if (savedCard2) {
+    card2Picker.value = savedCard2;
+    updateColor('--accent6', savedCard2);
   }
 });
 accent1Picker.addEventListener('input', (e) => {
@@ -3276,6 +3287,14 @@ background2Picker.addEventListener('input', (e) => {
   updateColor('--background2', e.target.value);
   localStorage.setItem('background2', e.target.value);
 });
+card1Picker.addEventListener('input', (e) => {
+  updateColor('--accent5', e.target.value);
+  localStorage.setItem('accent5', e.target.value);
+});
+card2Picker.addEventListener('input', (e) => {
+  updateColor('--accent6', e.target.value);
+  localStorage.setItem('accent6', e.target.value);
+});
 resetBtn.addEventListener('click', () => {
   const defaultAccent1 = '#3c78d8';
   const defaultAccent2 = '#9900ff';
@@ -3293,4 +3312,12 @@ resetBtn.addEventListener('click', () => {
   updateColor('--background2', defaultBackGround2);
   localStorage.removeItem('background1');
   localStorage.removeItem('background2');
+  const defaultCard1 = '#0c3b83';
+  const defaultCard2 = '#241b77';
+  card1Picker.value = defaultCard1;
+  card2Picker.value = defaultCard2;
+  updateColor('--accent5', defaultCard1);
+  updateColor('--accent6', defaultCard2);
+  localStorage.removeItem('accent5');
+  localStorage.removeItem('accent6');
 });

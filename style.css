@@ -206,7 +206,7 @@ body {
   left: 0;
   height: calc(100% - var(--header-height));
   width: clamp(70px, 15vw, 200px);
-  background: rgba(0, 0, 0, 0.35);
+  background: var(--glass);
   backdrop-filter: blur(8px);
   display: flex;
   flex-direction: column;
@@ -321,7 +321,7 @@ body {
 }
 
 .menu-btn.active {
-  box-shadow: 0 0 12px rgba(171, 71, 188, 0.6);
+  box-shadow: 0 0 12px var(--accent2);
   transform: translateY(-1px);
 }
 
@@ -399,7 +399,7 @@ body {
   padding: var(--card-padding);
   border-radius: var(--radius);
   border: 1px solid var(--glass);
-  box-shadow: 0 8px 30px rgba(2, 6, 23, 0.6);
+  box-shadow: 0 8px 30px var(--glass);
   margin-bottom: 12px;
 }
 
@@ -469,7 +469,7 @@ input[type="text"] {
   width: 100%;
   padding: 8px;
   border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--glass);
   background: #07141c;
   color: var(--text);
   font-family: var(--mono);
@@ -480,7 +480,7 @@ input[type="color"] {
   width: 100%;
   padding: 2px;
   border-radius: 25px;
-  border: 1px solid rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--glass);
   background: #000000;
   color: var(--text);
   font-family: var(--mono);
@@ -517,7 +517,7 @@ input[type="color"] {
 
 .btn:hover {
   transform: scale(1.05);
-  box-shadow: 0 0 12px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 0 12px var(--glass);
 }
 
 .btn:active {
@@ -529,7 +529,7 @@ input[type="color"] {
   padding: 12px;
   border-radius: 10px;
   background: linear-gradient(180deg, #061018, #041016);
-  border: 1px dashed rgba(255, 255, 255, 0.03);
+  border: 1px dashed var(--glass);
   min-height: 48px;
   white-space: pre-wrap;
 }
@@ -599,12 +599,12 @@ input[type="color"] {
 .element-box:hover:not(.highlighted) {
   transform: scale(2);
   z-index: 10 ;
-  box-shadow: 0 0 12px rgba(60, 120, 216, 0.4);
+  box-shadow: 0 0 12px var(--accent1);
 }
 .hover-element {
   transform: scale(2);
   z-index: 10 ;
-  box-shadow: 0 0 12px rgba(60, 120, 216, 0.4);
+  box-shadow: 0 0 12px var(--accent1);
 }
 .element-box.highlighted {
   outline: 1px solid;
@@ -634,7 +634,7 @@ input[type="color"] {
 }
 
 .element-box-legend {
-  border: 0.5px solid rgba(255, 255, 255, 0.03);
+  border: 0.5px solid var(--glass);
   align-content: center;
   width: 180px;
   height: 30px;
@@ -646,7 +646,7 @@ input[type="color"] {
 }
 .element-box-legend:hover {
   transform: scale(1.03);
-  box-shadow: 0 0 12px rgba(60, 120, 216, 0.4);
+  box-shadow: 0 0 12px var(--accent1);
 }
 
 .element-type {
@@ -1016,28 +1016,28 @@ font-size:20px;
 .dropdown-button {
   padding: 8px;
   border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.03);
-  background: rgba(7, 20, 28, 0.8);
+  border: 1px solid var(--glass);
+  background: var(--glass);
   color: var(--text);
   cursor: pointer;
 }
 
 .dropdown-button:focus {
-  box-shadow: 0 0 0 3px rgba(60, 120, 216, 0.18);
-  border-color: rgba(60, 120, 216, 0.4);
+  box-shadow: 0 0 0 3px var(--glass);
+  border-color: var(--glass);
 }
 
 .dropdown-content {
   display: none;
   position: absolute;
-  background: rgba(7, 20, 28, 0.95);
-  border: 1px solid rgba(255, 255, 255, 0.03);
+  background: var(--glass);
+  border: 1px solid var(--glass);
   border-radius: 8px;
   padding: 8px;
   max-height: 220px;
   overflow: auto;
   z-index: 60;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 10px 30px var(--glass);
 }
 
 .dropdown.open .dropdown-content,
@@ -1067,7 +1067,7 @@ font-size:20px;
   overflow: hidden;
   border: 2px solid;
   border-image: var(--gradient-primary) 5;
-  background-color: #111;
+  background-color: var(--glass);
 }
 #upSnake {
   top: 5px;
