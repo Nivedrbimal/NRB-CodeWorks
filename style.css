@@ -1028,7 +1028,7 @@ font-size:20px;
   padding: 8px;
   border-radius: 8px;
   border: 1px solid var(--glass);
-  background: var(--glass);
+  background: rgb(0, 0, 0);
   color: var(--text);
   cursor: pointer;
 }
@@ -1041,7 +1041,7 @@ font-size:20px;
 .dropdown-content {
   display: none;
   position: absolute;
-  background: var(--glass);
+  background: rgb(0, 0, 0);
   border: 1px solid var(--glass);
   border-radius: 8px;
   padding: 8px;

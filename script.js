@@ -1,23 +1,21 @@
 document.body.style.overflow = 'hidden';
-// ---------- Utilities ----------
+// ---------- Supporter ----------
 const isNum = v => v !== null && v !== '' && !Number.isNaN(Number(v));
 const toNum = v => isNum(v) ? Number(v) : null;
 // const fmt = n => (n === null || n === undefined || !Number.isFinite(n)) ? '—' : (Math.abs(n) < 1e-8 ? n.toExponential(4) : Number(n.toPrecision(12)).toString());
 const known = x => x !== null;
 const deg2rad = d => d * Math.PI / 180;
 const rad2deg = r => r * 180 / Math.PI;
+
 // ------ Favicon Selection ------
 function setFavicon() {
-    const darkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const favicon = document.querySelector('link[rel="icon"]');
-    if(darkMode) {
-      favicon.href = 'faviconNRB.ico';
-    } else {
-      favicon.href = 'faviconNRB.png';
-    }
-  }
-  setFavicon();
-  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', setFavicon);
+  const darkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const favicon = document.querySelector('link[rel="icon"]');
+  if(darkMode) favicon.href = 'faviconNRB.ico'; 
+  else favicon.href = 'faviconNRB.png';
+}
+setFavicon();
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', setFavicon);
 
 // ---------- Navigation ----------
 const topLinks = document.querySelectorAll(".top-link");
@@ -122,63 +120,81 @@ function genCalcCompute() {
   const mode = document.getElementById('genCalcAngleMode').value;
   const round = document.getElementById('genCalcRound').value || 10000;
   let expr = input
-    .replace(/×/g, '*')
+    .replace(/x/g, '*')
     .replace(/÷/g, '/')
     .replace(/\^/g, '**')
     .replace(/π/g, 'Math.PI');
-
-  if (mode === 'deg') {
-    expr = expr.replace(/sin⁻¹\(([^)]+)\)/g, '(Math.asin($1) * 180 / Math.PI)');
-    expr = expr.replace(/cos⁻¹\(([^)]+)\)/g, '(Math.acos($1) * 180 / Math.PI)');
-    expr = expr.replace(/tan⁻¹\(([^)]+)\)/g, '(Math.atan($1) * 180 / Math.PI)');
-    expr = expr.replace(/csc⁻¹\(([^)]+)\)/g, '(Math.asin(1 / $1) * 180 / Math.PI)');
-    expr = expr.replace(/sec⁻¹\(([^)]+)\)/g, '(Math.acos(1 / $1) * 180 / Math.PI)');
-    expr = expr.replace(/cot⁻¹\(([^)]+)\)/g, '(Math.atan(1 / $1) * 180 / Math.PI)');
-    expr = expr.replace(/sin\(([^)]+)\)/g, 'Math.sin(($1) * Math.PI / 180)');
-    expr = expr.replace(/cos\(([^)]+)\)/g, 'Math.cos(($1) * Math.PI / 180)');
-    expr = expr.replace(/tan\(([^)]+)\)/g, 'Math.tan(($1) * Math.PI / 180)');
-    expr = expr.replace(/csc\(([^)]+)\)/g, '1 / Math.sin(($1) * Math.PI / 180)');
-    expr = expr.replace(/sec\(([^)]+)\)/g, '1 / Math.cos(($1) * Math.PI / 180)');
-    expr = expr.replace(/cot\(([^)]+)\)/g, '1 / Math.tan(($1) * Math.PI / 180)');
-    expr = expr.replace(/asin\(([^)]+)\)/g, '(Math.asin($1) * 180 / Math.PI)');
-    expr = expr.replace(/acos\(([^)]+)\)/g, '(Math.acos($1) * 180 / Math.PI)');
-    expr = expr.replace(/atan\(([^)]+)\)/g, '(Math.atan($1) * 180 / Math.PI)');
-    expr = expr.replace(/acsc\(([^)]+)\)/g, '(Math.asin(1 / $1) * 180 / Math.PI)');
-    expr = expr.replace(/asec\(([^)]+)\)/g, '(Math.acos(1 / $1) * 180 / Math.PI)');
-    expr = expr.replace(/acot\(([^)]+)\)/g, '(Math.atan(1 / $1) * 180 / Math.PI)');
-  } else {
-    expr = expr.replace(/sin⁻¹\(([^)]+)\)/g, 'Math.asin($1)');
-    expr = expr.replace(/cos⁻¹\(([^)]+)\)/g, 'Math.acos($1)');
-    expr = expr.replace(/tan⁻¹\(([^)]+)\)/g, 'Math.atan($1)');
-    expr = expr.replace(/csc⁻¹\(([^)]+)\)/g, 'Math.asin(1 / $1)');
-    expr = expr.replace(/sec⁻¹\(([^)]+)\)/g, 'Math.acos(1 / $1)');
-    expr = expr.replace(/cot⁻¹\(([^)]+)\)/g, 'Math.atan(1 / $1)');
-    expr = expr.replace(/sin\(([^)]+)\)/g, 'Math.sin($1)');
-    expr = expr.replace(/cos\(([^)]+)\)/g, 'Math.cos($1)');
-    expr = expr.replace(/tan\(([^)]+)\)/g, 'Math.tan($1)');
-    expr = expr.replace(/csc\(([^)]+)\)/g, '1 / Math.sin($1)');
-    expr = expr.replace(/sec\(([^)]+)\)/g, '1 / Math.cos($1)');
-    expr = expr.replace(/cot\(([^)]+)\)/g, '1 / Math.tan($1)');
-    expr = expr.replace(/asin\(([^)]+)\)/g, 'Math.asin($1)');
-    expr = expr.replace(/acos\(([^)]+)\)/g, 'Math.acos($1)');
-    expr = expr.replace(/atan\(([^)]+)\)/g, 'Math.atan($1)');
-    expr = expr.replace(/acsc\(([^)]+)\)/g, 'Math.asin(1 / $1)');
-    expr = expr.replace(/asec\(([^)]+)\)/g, 'Math.acos(1 / $1)');
-    expr = expr.replace(/acot\(([^)]+)\)/g, 'Math.atan(1 / $1)');
+  function processNestedTrig(expr, mode) {
+    const trigFuncs = [
+      'sin','cos','tan','csc','sec','cot',
+      'asin','acos','atan','acsc','asec','acot',
+      'sin⁻¹','cos⁻¹','tan⁻¹','csc⁻¹','sec⁻¹','cot⁻¹'
+    ];
+    let prev;
+    do {
+      prev = expr;
+      trigFuncs.forEach(fn => {
+        const regex = new RegExp(`${fn}\\(([^()]+)\\)`, 'g');
+        expr = expr.replace(regex, (match, val) => {
+          if (mode === 'deg') {
+            switch(fn){
+              case 'sin': return `(Math.sin(${val} * Math.PI / 180))`;
+              case 'cos': return `(Math.cos(${val} * Math.PI / 180))`;
+              case 'tan': return `(Math.tan(${val} * Math.PI / 180))`;
+              case 'csc': return `(1 / Math.sin(${val} * Math.PI / 180))`;
+              case 'sec': return `(1 / Math.cos(${val} * Math.PI / 180))`;
+              case 'cot': return `(1 / Math.tan(${val} * Math.PI / 180))`;
+              case 'asin': return `(Math.asin(${val}) * 180 / Math.PI)`;
+              case 'acos': return `(Math.acos(${val}) * 180 / Math.PI)`;
+              case 'atan': return `(Math.atan(${val}) * 180 / Math.PI)`;
+              case 'acsc': return `(Math.asin(1 / ${val}) * 180 / Math.PI)`;
+              case 'asec': return `(Math.acos(1 / ${val}) * 180 / Math.PI)`;
+              case 'acot': return `(Math.atan(1 / ${val}) * 180 / Math.PI)`;
+              case 'sin⁻¹': return `(Math.asin(${val}) * 180 / Math.PI)`;
+              case 'cos⁻¹': return `(Math.acos(${val}) * 180 / Math.PI)`;
+              case 'tan⁻¹': return `(Math.atan(${val}) * 180 / Math.PI)`;
+              case 'csc⁻¹': return `(Math.asin(1 / ${val}) * 180 / Math.PI)`;
+              case 'sec⁻¹': return `(Math.acos(1 / ${val}) * 180 / Math.PI)`;
+              case 'cot⁻¹': return `(Math.atan(1 / ${val}) * 180 / Math.PI)`;
+            }
+          } else {
+            switch(fn){
+              case 'sin': return `Math.sin(${val})`;
+              case 'cos': return `Math.cos(${val})`;
+              case 'tan': return `Math.tan(${val})`;
+              case 'csc': return `1 / Math.sin(${val})`;
+              case 'sec': return `1 / Math.cos(${val})`;
+              case 'cot': return `1 / Math.tan(${val})`;
+              case 'asin': return `Math.asin(${val})`;
+              case 'acos': return `Math.acos(${val})`;
+              case 'atan': return `Math.atan(${val})`;
+              case 'acsc': return `Math.asin(1 / ${val})`;
+              case 'asec': return `Math.acos(1 / ${val})`;
+              case 'acot': return `Math.atan(1 / ${val})`;
+              case 'sin⁻¹': return `Math.asin(${val})`;
+              case 'cos⁻¹': return `Math.acos(${val})`;
+              case 'tan⁻¹': return `Math.atan(${val})`;
+              case 'csc⁻¹': return `Math.asin(1 / ${val})`;
+              case 'sec⁻¹': return `Math.acos(1 / ${val})`;
+              case 'cot⁻¹': return `Math.atan(1 / ${val})`;
+            }
+          }
+        });
+      });
+    } while(prev !== expr);
+    return expr;
   }
+  expr = processNestedTrig(expr, mode);
   try {
     const result = eval(expr);
-    if (round === 0) {
-      document.getElementById('genCalcOut').textContent = result;
-    }
-    else {
-      document.getElementById('genCalcOut').textContent = Math.round(result * round) / round;
-    }
+    const display = round === 0 ? result : Math.round(result * round) / round;
+    document.getElementById('genCalcOut').textContent = display;
   }
   catch (e) {
     document.getElementById('genCalcOut').textContent = "Invalid Expression";
   }
 }
+
 function genCalcClear() {
   document.getElementById('genCalcVal').value = '';
   document.getElementById('genCalcRound').value = 'select'
