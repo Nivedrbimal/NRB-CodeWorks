@@ -2023,15 +2023,6 @@
           <canvas id="snakeCanvas" class="snake-canvas" tabindex="0"></canvas>
           <div class="snake-controls">
             <div class="row" style="padding: 5px;">
-              <div id="snakeHighScore" class="mono">High score: 0</div>
-              <label><span class="muted">Player Name:</span>
-                <input id="snakeGamePlayerName" type="text" step="any" placeholder="Please enter your player name" aria-label="player input" />
-              </label>
-            </div>
-            <div class="leaderboard-container">Leaderboard:
-              <div id="snakeGameLeaderboard"></div>
-            </div>
-            <div class="row" style="padding: 5px;">
               <div id="snakeScore" class="mono">Score: 0</div>
             </div>
             <div class="snake-direction-pad">
@@ -2045,6 +2036,17 @@
               <button class="btn primary" id="pauseSnakeBtn">Pause Game</button>
             </div>
           </div>
+          <div class="game-inputs">
+            <div class="row" style="padding: 5px;">
+              <div id="snakeHighScore" class="mono">High score: 0</div>
+            </div>
+            <label style="width:100%;" ><span class="muted">Player Name:</span>
+              <input id="snakeGamePlayerName" type="text" step="any" placeholder="Player name" aria-label="player input" />
+            </label>
+            <div class="leaderboard-container">Leaderboard:
+              <div id="snakeGameLeaderboard"></div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -2054,15 +2056,6 @@
         <div class=" row jet-shooter-game-container">
           <canvas id="jetShooterCanvas" class="jet-shooter-canvas" tabindex="0"></canvas>
           <div class="jet-shooter-controls">
-            <div class="row" style="padding: 5px;">
-              <div id="jetShooterHighScore" class="mono">High score: 0</div>
-              <label><span class="muted">Player Name:</span>
-                <input id="jetShooterGamePlayerName" type="text" step="any" placeholder="Please enter your player name" aria-label="player input" />
-              </label>
-            </div>
-            <div class="leaderboard-container">Leaderboard:
-              <div id="jetShooterGameLeaderboard"></div>
-            </div>
             <div class="row" style="padding: 5px; justify-content: center;">
               <div id="jetShooterScore" class="mono">Score: 0</div>
               <div id="jetShooterShield" class="mono">Shields: 0</div>
@@ -2076,6 +2069,17 @@
             <div class="row" style="padding: 5px;">
               <button class="btn primary" id="startJetShooterBtn" onclick="startJetShooterGame()">Start</button>
               <button class="btn primary" id="pauseJetShooterBtn">Pause</button>
+            </div>
+          </div>
+          <div class="game-inputs">
+            <div class="row" style="padding: 5px;">
+                <div id="jetShooterHighScore" class="mono">High score: 0</div>
+              </div>
+              <label><span class="muted">Player Name:</span>
+                <input id="jetShooterGamePlayerName" type="text" step="any" placeholder="Player name" aria-label="player input" />
+              </label>
+            <div class="leaderboard-container">Leaderboard:
+              <div id="jetShooterGameLeaderboard"></div>
             </div>
           </div>
         </div>
