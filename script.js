@@ -1,29 +1,11 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
-import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-database.js";
+const app = firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
 
-// Your config (same as in HTML)
-const firebaseConfig = {
-  apiKey: "AIzaSyDRTudYlNmrMCA-mS_sD728w3kEbc4Yc-w",
-  authDomain: "neutroxity-9c5f6.firebaseapp.com",
-  databaseURL: "https://neutroxity-9c5f6-default-rtdb.firebaseio.com",
-  projectId: "neutroxity-9c5f6",
-  storageBucket: "neutroxity-9c5f6.firebasestorage.app",
-  messagingSenderId: "729204963407",
-  appId: "1:729204963407:web:f561d70d4cd9e12556523a",
-  measurementId: "G-EBHBKRW3KK"
-};
-
-// Initialize
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
-
-// Write data
-set(ref(db, "test"), { message: "Hello, Blaze!" });
-
-// Listen for updates
-onValue(ref(db, "test"), snapshot => {
-  console.log("Database updated:", snapshot.val());
+db.ref("test").set({ message: "Hello, Blaze!" });
+db.ref("test").on("value", snapshot => {
+  console.log(snapshot.val());
 });
+
 
 
 document.body.style.overflow = 'hidden';
@@ -220,15 +202,6 @@ function fmt(v) { return Number(v.toFixed(6)); }
 function parseRadianInput(raw) {
   try { return eval(raw.replace(/π/g, 'Math.PI')); }
   catch { return NaN; }
-}
-function parseRadianInput(raw) {
-  let str = raw.replace(/π/g, 'Math.PI');
-
-  try {
-    return eval(str);
-  } catch (e) {
-    return NaN;
-  }
 }
 function parsePolarInput(raw) {
   const match = raw.match(/^\s*([\d.]+)\s*∠\s*([\d.π\/+-]+)\s*$/i);
