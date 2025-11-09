@@ -1,9 +1,30 @@
-const db = firebase.database();
-db.ref("test").set({ message: "Hello, Blaze!" });
-db.ref("test").on("value", snapshot => {
-  console.log(snapshot.val());
-});
 
+const firebaseConfig = {
+  apiKey: "AIzaSyDRTudYlNmrMCA-mS_sD728w3kEbc4Yc-w",
+  authDomain: "neutroxity-9c5f6.firebaseapp.com",
+  databaseURL: "https://neutroxity-9c5f6-default-rtdb.firebaseio.com",
+  projectId: "neutroxity-9c5f6",
+  storageBucket: "neutroxity-9c5f6.firebasestorage.app",
+  messagingSenderId: "729204963407",
+  appId: "1:729204963407:web:f561d70d4cd9e12556523a",
+  measurementId: "G-EBHBKRW3KK"
+};
+firebase.initializeApp(firebaseConfig);
+firebase.appCheck().activate('6LdbiwcsAAAAAI1ZW4dAvR9yJuDT0sYBAaMtDmyF', true);
+const auth = firebase.auth();
+auth.signInWithEmailAndPassword("nivedrbimal2@gmail.com", "Neutroxity@&0")
+  .then((userCredential) => {
+    console.log("Signed in as UID:", userCredential.user.uid);
+    const db = firebase.database();
+    db.ref("test").set({ message: "Hello, Blaze!" })
+      .then(() => console.log("Data written successfully!"))
+      .catch(err => console.error("Write failed:", err));
+    db.ref("test").on("value", snapshot => {
+      console.log("Database value:", snapshot.val());
+    });
+
+  })
+  .catch(err => console.error("Auth error:", err));
 
 document.body.style.overflow = 'hidden';
 // ---------- Supporter ----------
