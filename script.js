@@ -1304,29 +1304,6 @@ function ptInfoClear() {
 
 // ========== GAMES ==========
 
-// --- Testing Online Game ---
-const joinBtn = document.getElementById('joinBtn');
-const snakePlayerNameInput = document.getElementById('snakePlayerName');
-const playerList = document.getElementById('playerList');
-
-let playerId = null;
-joinBtn.addEventListener('click', () => {
-  const name = snakePlayerNameInput.value.trim();
-  if (!name) return alert("Enter your name!");
-  playerId = "player_" + Date.now();
-  db.ref(`room/players/${playerId}`).set({ name });
-  db.ref(`room/players/${playerId}`).onDisconnect().remove();
-});
-db.ref('room/players').on('value', snapshot => {
-  const players = snapshot.val() || {};
-  playerList.innerHTML = '';
-  Object.values(players).forEach(p => {
-    const li = document.createElement('li');
-    li.textContent = p.name;
-    playerList.appendChild(li);
-  });
-});
-
 
 // --------- Pi Game ---------
 const pi = '141592653589793238462643383279502884197169399375105820974944592307816406286208998628034825342117067982148086513282306647093844609550582231725359408128481117450284102701938521105559644622948954930381964428810975665933446128475648233786783165271201909145648566923460348610454326648213393607260249141';
