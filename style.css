@@ -1231,6 +1231,89 @@ font-size:20px;
 }
 
 
+.theme-previews {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+}
+.theme-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  border-radius: 12px;
+  padding: 8px;
+  width: 130px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border: 2px solid;
+}
+.theme-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 10px rgba(255,255,255,0.2);
+}
+.theme-btn span {
+  font-size: 0.9rem;
+  color: var(--text-color, #fff);
+}
+.preview-box {
+  width: 100%;
+  height: 70px;
+  border-radius: 10px;
+  position: relative;
+  overflow: hidden;
+}
+.preview-box::before {
+  content: "";
+  position: absolute;
+  bottom: 10%;
+  left: 10%;
+  width: 40%;
+  height: 35%;
+  border-radius: 8px;
+  background: var(--card);
+  opacity: 0.9;
+}
+.preview-box::after {
+  content: "";
+  position: absolute;
+  top: 10%;
+  right: 10%;
+  width: 30%;
+  height: 25%;
+  border-radius: 6px;
+  background: var(--accent);
+  opacity: 0.9;
+}
+.preview-box.aurora {
+  --background: linear-gradient(45deg, #141e30, #243b55);
+  --card: linear-gradient(45deg, #1e6369, #0072ff);
+  --accent: linear-gradient(45deg,#2ae9c0, #2ea6ab);
+  background: var(--background);
+}
+.preview-box.neonDark {
+  --background: linear-gradient(45deg, #0f0c29, #24243e);
+  --card: linear-gradient(45deg,#302b63,#4134a1);
+  --accent: linear-gradient(45deg,#ff00cc,#3333ff);
+  background: var(--background);
+}
+.preview-box.cosmicDawn {
+  --background: linear-gradient(45deg, #0b0c10, #1f2833);
+  --card: linear-gradient(45deg,#2e3239,#3d3f45);
+  --accent: linear-gradient(45deg,#ff6f61,#ff9966);
+  background: var(--background);
+}
+.preview-box.galacticVoid {
+  --background: linear-gradient(45deg, #0a0a23, #12122b);
+  --card: linear-gradient(45deg,#1a1a40,#2d2d5a);
+  --accent: linear-gradient(45deg,#6a11cb,#2575fc);
+  background: var(--background);
+}
+
+
 /* ====  Responsive ====  */
 
 @media screen and (max-width:800px) {

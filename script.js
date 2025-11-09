@@ -3243,6 +3243,7 @@ const background2Picker = document.getElementById('background2Picker');
 const card1Picker = document.getElementById('card1Picker');
 const card2Picker = document.getElementById('card2Picker');
 const root = document.documentElement;
+const themeButtons = document.querySelectorAll('.theme-btn');
 const resetBtn = document.getElementById('resetColors');
 function updateColor(varName, color) {
   root.style.setProperty(varName, color);
@@ -3280,6 +3281,62 @@ window.addEventListener('load', () => {
     card2Picker.value = savedCard2;
     updateColor('--accent6', savedCard2);
   }
+});
+const themes = {
+  aurora: {
+    accent1: '#2ae9c0',
+    accent2: '#2ea6ab',
+    background1: '#141e30',
+    background2: '#243b55',
+    card1: '#1e6369',
+    card2: '#0072ff',
+  },
+  neonDark: {
+    accent1: '#ff00cc',
+    accent2: '#3333ff',
+    background1: '#0f0c29',
+    background2: '#24243e',
+    card1: '#302b63',
+    card2: '#4134a1',
+  },
+  cosmicDawn: {
+    accent1: '#ff6f61',
+    accent2: '#ff9966',
+    background1: '#0b0c10',
+    background2: '#1f2833',
+    card1: '#2e3239',
+    card2: '#3d3f45',
+  },
+  galacticVoid: {
+    accent1: '#6a11cb',
+    accent2: '#2575fc',
+    background1: '#0a0a23',
+    background2: '#12122b',
+    card1: '#1a1a40',
+    card2: '#2d2d5a',
+  }
+};
+themeButtons.forEach(button => {
+  button.addEventListener('click', () => {
+    const theme = themes[button.dataset.theme];
+    for (const [key, value] of Object.entries(theme)) {
+      const varName =
+        key === 'accent1' ? '--accent1' :
+        key === 'accent2' ? '--accent2' :
+        key === 'background1' ? '--background1' :
+        key === 'background2' ? '--background2' :
+        key === 'card1' ? '--accent5' :
+        '--accent6';
+      updateColor(varName, value);
+      localStorage.setItem(key, value);
+    }
+    accent1Picker.value = theme.accent1;
+    accent2Picker.value = theme.accent2;
+    background1Picker.value = theme.background1;
+    background2Picker.value = theme.background2;
+    card1Picker.value = theme.card1;
+    card2Picker.value = theme.card2;
+  });
 });
 accent1Picker.addEventListener('input', (e) => {
   updateColor('--accent1', e.target.value);
