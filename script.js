@@ -1,4 +1,17 @@
 document.body.style.overflow = 'hidden';
+// Initialize Firebase (you already have this in the script tag)
+const db = firebase.database();
+
+// Test writing data
+db.ref("test").set({
+  message: "Hello from Blaze!"
+});
+
+// Test reading data
+db.ref("test").on("value", snapshot => {
+  console.log("Realtime Database update:", snapshot.val());
+});
+
 // ---------- Supporter ----------
 const isNum = v => v !== null && v !== '' && !Number.isNaN(Number(v));
 const toNum = v => isNum(v) ? Number(v) : null;
