@@ -1079,6 +1079,21 @@ font-size:20px;
     font-weight: bold;
     font-size: 1.1em;
 }
+.leaderboard-container {
+  width:max-content;
+  border-width:2px;
+  border-style: solid;
+  border-image: var(--gradient-primary) 5;
+  padding:4px;
+  overflow: hidden;
+  color: #fff;
+  font-weight: bold;
+  font-size: 1.1em;
+}
+#snakeGameLeaderboard {
+  padding:10%;
+  font-size: 12px;
+}
 .snake-direction-pad {
   min-width: 150px;
   min-height: 150px;
@@ -1173,6 +1188,10 @@ font-size:20px;
     color: #fff;
     font-weight: bold;
     font-size: 1.1em;
+}
+#jetShooterGameLeaderboard {
+  padding:10%;
+  font-size: 12px;
 }
 .jet-shooter-direction-pad {
   min-width: 180px;

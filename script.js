@@ -1,10 +1,5 @@
-// Use the already initialized Firebase app
 const db = firebase.database();
-
-// Write test data
 db.ref("test").set({ message: "Hello, Blaze!" });
-
-// Listen for updates
 db.ref("test").on("value", snapshot => {
   console.log(snapshot.val());
 });
@@ -1309,6 +1304,30 @@ function ptInfoClear() {
 
 // ========== GAMES ==========
 
+// --- Testing Online Game ---
+const joinBtn = document.getElementById('joinBtn');
+const snakePlayerNameInput = document.getElementById('snakePlayerName');
+const playerList = document.getElementById('playerList');
+
+let playerId = null;
+joinBtn.addEventListener('click', () => {
+  const name = snakePlayerNameInput.value.trim();
+  if (!name) return alert("Enter your name!");
+  playerId = "player_" + Date.now();
+  db.ref(`room/players/${playerId}`).set({ name });
+  db.ref(`room/players/${playerId}`).onDisconnect().remove();
+});
+db.ref('room/players').on('value', snapshot => {
+  const players = snapshot.val() || {};
+  playerList.innerHTML = '';
+  Object.values(players).forEach(p => {
+    const li = document.createElement('li');
+    li.textContent = p.name;
+    playerList.appendChild(li);
+  });
+});
+
+
 // --------- Pi Game ---------
 const pi = '141592653589793238462643383279502884197169399375105820974944592307816406286208998628034825342117067982148086513282306647093844609550582231725359408128481117450284102701938521105559644622948954930381964428810975665933446128475648233786783165271201909145648566923460348610454326648213393607260249141';
 let piIndex = 0;
@@ -1695,6 +1714,7 @@ let snakeLastFrameTime = 0;
 let snakeMoveDelay = 100;
 let snakeAccumulatedTime = 0;
 let snakeRunning = false;
+let snakePlayerName = document.getElementById("snakeGamePlayerName");
 function startSnakeGame() {
   snakeMoveDelay = 200;
   snake = [{ x: 3 * snakeBox, y: 3 * snakeBox }];
@@ -1823,19 +1843,65 @@ function gameOver() {
   snakeCtx.textAlign = "center";
   const cx = snakeCanvas.width / 2;
   const cy = snakeCanvas.height / 2;
-  if (snakeScore > snakeHighScore) {
-    snakeHighScore = snakeScore;
-    localStorage.setItem("snakeHighScore", snakeHighScore);
-    document.getElementById("snakeHighScore").textContent =
-      "High score = " + snakeHighScore;
-    snakeCtx.fillText("Game Over!", cx, cy - 40);
-    snakeCtx.fillText("Score: " + snakeScore, cx, cy);
-    snakeCtx.fillText("New High Score: " + snakeHighScore + "!", cx, cy + 40);
-  } else {
-    snakeCtx.fillText("Game Over!", cx, cy - 20);
-    snakeCtx.fillText("Score: " + snakeScore, cx, cy + 20);
-  }
+  let snakePlayerNameValue = snakePlayerName.value.trim() || "Player";
+  const playerId = "player_" + Date.now();
+  db.ref(`highScores/snakeGame/${playerId}`).set({
+    name: snakePlayerNameValue,
+    score: snakeScore
+  });
+  db.ref(`highScores/snakeGame`).once('value').then(snapshot => {
+    const scores = snapshot.val() || {};
+    const sorted = Object.values(scores)
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 10);
+    const position = sorted.findIndex(entry => entry.name === snakePlayerNameValue && entry.score === snakeScore) + 1;
+    if (position > 0 && position <= 10) {
+      if (snakeScore > snakeHighScore) {
+        snakeHighScore = snakeScore;
+        localStorage.setItem("snakeHighScore", snakeHighScore);
+        document.getElementById("snakeHighScore").textContent = "High score = " + snakeHighScore;
+        snakeCtx.fillText("New High Score: " + snakeHighScore + "!", cx, cy - 40);
+      }
+      else snakeCtx.fillText(`Game Over! Score: ${snakeScore}`, cx, cy - 40);
+      snakeCtx.fillText(`Congrats! You're #${position} on the leaderboard!`, cx, cy + 10);
+    } 
+    else {
+      if (snakeScore > snakeHighScore) {
+        snakeHighScore = snakeScore;
+        localStorage.setItem("snakeHighScore", snakeHighScore);
+        document.getElementById("snakeHighScore").textContent = "High score = " + snakeHighScore;
+        snakeCtx.fillText("New High Score: " + snakeHighScore + "!", cx, cy - 20);
+      }
+      else snakeCtx.fillText("Game Over!", cx, cy - 20);
+      snakeCtx.fillText(`Score: ${snakeScore}`, cx, cy + 20);
+    }
+  });
+  snakeCtx.font = "20px Arial";
+  snakeCtx.fillText("Press Restart to Play Again", cx, cy + 90);
 }
+function showSnakeLeaderScores() {
+  const leaderboard = document.getElementById('snakeGameLeaderboard');
+  const scoresRef = db.ref(`highScores/snakeGame`);
+  scoresRef.off('value');
+  scoresRef.on('value', snapshot => {
+    const scores = snapshot.val() || {};
+    const sorted = Object.values(scores)
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 10);
+    leaderboard.innerHTML = '';
+    sorted.forEach(entry => {
+      const li = document.createElement('li');
+      li.textContent = `${entry.name}: ${entry.score}`;
+      leaderboard.appendChild(li);
+    });
+  });
+}
+showSnakeLeaderScores();
+snakePlayerName.addEventListener("input", () => {
+  if (snakePlayerName.value.length > 12) {
+    snakePlayerName.value = snakePlayerName.value.slice(0, 12);
+  }
+});
 function snakeGameLoop(timestamp) {
   if (!snakeRunning) return;
   if (snakePaused) {
@@ -1899,6 +1965,7 @@ let jetShooterBulletBarrelRate = 10000;
 let jetShooterShieldSpawnRate = 15000;
 let jetShooterHasShield = 0;
 let jetShooterBulletRemaining = 100;
+let jetPlayerName = document.getElementById("jetShooterGamePlayerName");
 function jetShooterGameStart() {
   if (jetShooterFrameId) cancelAnimationFrame(jetShooterFrameId);
   if (gameFrameId) cancelAnimationFrame(gameFrameId);
@@ -2322,12 +2389,6 @@ function jetShooterGameOver() {
   jetShooterBullets = [];
   jetShooterShields = [];
   jetShooterBulletBarrel = [];
-  if (jetShooterScore > jetShooterHighScore) {
-    jetShooterHighScore = jetShooterScore;
-    localStorage.setItem("jetShooterHighScore", jetShooterHighScore);
-    document.getElementById("jetShooterHighScore").textContent =
-      "High score = " + jetShooterHighScore;
-  }
   requestAnimationFrame(() => {
     jetShooterCtx.clearRect(0, 0, jetShooterCanvas.width, jetShooterCanvas.height);
     jetShooterCtx.font = "32px Arial";
@@ -2335,15 +2396,66 @@ function jetShooterGameOver() {
     jetShooterCtx.textAlign = "center";
     const cx = jetShooterCanvas.width / 2;
     const cy = jetShooterCanvas.height / 2;
-    jetShooterCtx.fillText("GAME OVER!", cx, cy - 40);
-    jetShooterCtx.fillText("Score: " + jetShooterScore, cx, cy);
-    if (jetShooterScore >= jetShooterHighScore) {
-      jetShooterCtx.fillText("New High Score: " + jetShooterHighScore + "!", cx, cy + 40);
-    }
+    let jetPlayerNameValue = jetPlayerName.value.trim() || "Player";
+    const playerId = "player_" + Date.now();
+    db.ref(`highScores/jetShooterGame/${playerId}`).set({
+      name: jetPlayerNameValue,
+      score: jetShooterScore
+    });
+    db.ref(`highScores/jetShooterGame`).once('value').then(snapshot => {
+      const scores = snapshot.val() || {};
+      const sorted = Object.values(scores)
+        .sort((a, b) => b.score - a.score)
+        .slice(0, 10);
+      const position = sorted.findIndex(entry => entry.name === jetPlayerNameValue && entry.score === snakeScore) + 1;
+      if (position > 0 && position <= 10) {
+        if (jetShooterScore > jetShooterHighScore) {
+          jetShooterHighScore = jetShooterScore;
+          localStorage.setItem("jetShooterHighScore", jetShooterHighScore);
+          document.getElementById("jetShooterHighScore").textContent = "High score = " + jetShooterHighScore;
+          jetShooterCtx.fillText("New High Score: " + jetShooterHighScore + "!", cx, cy + 40);
+        }
+        else jetShooterCtx.fillText(`Game Over! Score: ${jetShooterScore}`, cx, cy - 40);
+        jetShooterCtx.fillText(`Congrats! You're #${position} on the leaderboard!`, cx, cy + 10);
+      } 
+      else {
+        jetShooterCtx.fillText("GAME OVER!", cx, cy - 40);
+        if (jetShooterScore > jetShooterHighScore) {
+          jetShooterHighScore = jetShooterScore;
+          localStorage.setItem("jetShooterHighScore", jetShooterHighScore);
+          document.getElementById("jetShooterHighScore").textContent = "High score = " + jetShooterHighScore;
+          jetShooterCtx.fillText("New High Score: " + jetShooterHighScore + "!", cx, cy + 40);
+        }
+        else jetShooterCtx.fillText("Score: " + jetShooterScore, cx, cy);
+      }
+    });
     jetShooterCtx.font = "20px Arial";
-    jetShooterCtx.fillText("Press Start to Play Again", cx, cy + 90);
+    jetShooterCtx.fillText("Press Restart to Play Again", cx, cy + 90);
   });
 }
+function showJetShooterLeaderScores() {
+  const leaderboard = document.getElementById('jetShooterGameLeaderboard');
+  const scoresRef = db.ref(`highScores/jetShooterGame`);
+  scoresRef.off('value');
+  scoresRef.on('value', snapshot => {
+    const scores = snapshot.val() || {};
+    const sorted = Object.values(scores)
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 10);
+    leaderboard.innerHTML = '';
+    sorted.forEach(entry => {
+      const li = document.createElement('li');
+      li.textContent = `${entry.name}: ${entry.score}`;
+      leaderboard.appendChild(li);
+    });
+  });
+}
+showJetShooterLeaderScores();
+jetPlayerName.addEventListener("input", () => {
+  if (jetPlayerName.value.length > 12) {
+    jetPlayerName.value = jetPlayerName.value.slice(0, 12);
+  }
+});
 
 // ========== UTILITIES =============
 

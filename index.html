@@ -1964,6 +1964,17 @@
     <section id="panel-games" class="panel hidden" aria-labelledby="gamesTitle">
       <h2 id="gamesTitle" class="title">Games</h2>
 
+      <!-- Testing Online Game -->
+       <div class="card" role="region" aria-labelledby="ogTitle">
+        <h3>Mini Multiplayer Demo</h3>
+
+        <input id="playerName" placeholder="Enter your name" />
+        <button class="btn" id="joinBtn">Join Room</button>
+
+        <p>Players in room:</p>
+        <ul id="playerList"></ul>
+       </div>
+
       <!-- Pi Game -->
       <div class="card" role="region" aria-labelledby="piTitle">
         <h3 id="piTitle">Pi Memory Game</h3>
@@ -2024,6 +2035,12 @@
           <div class="snake-controls">
             <div class="row" style="padding: 5px;">
               <div id="snakeHighScore" class="mono">High score: 0</div>
+              <label><span class="muted">Player Name:</span>
+                <input id="snakeGamePlayerName" type="text" step="any" placeholder="Please enter your player name" aria-label="player input" />
+              </label>
+            </div>
+            <div class="leaderboard-container">Leaderboard:
+              <div id="snakeGameLeaderboard"></div>
             </div>
             <div class="row" style="padding: 5px;">
               <div id="snakeScore" class="mono">Score: 0</div>
@@ -2050,6 +2067,12 @@
           <div class="jet-shooter-controls">
             <div class="row" style="padding: 5px;">
               <div id="jetShooterHighScore" class="mono">High score: 0</div>
+              <label><span class="muted">Player Name:</span>
+                <input id="jetShooterGamePlayerName" type="text" step="any" placeholder="Please enter your player name" aria-label="player input" />
+              </label>
+            </div>
+            <div class="leaderboard-container">Leaderboard:
+              <div id="jetShooterGameLeaderboard"></div>
             </div>
             <div class="row" style="padding: 5px; justify-content: center;">
               <div id="jetShooterScore" class="mono">Score: 0</div>
@@ -2264,11 +2287,8 @@
       </div>
     </section>
   </main>
-  <!-- Firebase scripts (compat version) -->
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
-
-  <!-- Firebase config & initialization -->
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyDRTudYlNmrMCA-mS_sD728w3kEbc4Yc-w",
@@ -2280,12 +2300,8 @@
       appId: "1:729204963407:web:f561d70d4cd9e12556523a",
       measurementId: "G-EBHBKRW3KK"
     };
-
-    // Initialize Firebase **once**
     firebase.initializeApp(firebaseConfig);
   </script>
-
-  <!-- Your main JS -->
   <script src="script.js"></script>
 
 </body>
