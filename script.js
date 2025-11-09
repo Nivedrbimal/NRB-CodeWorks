@@ -3283,6 +3283,14 @@ window.addEventListener('load', () => {
   }
 });
 const themes = {
+  neutroxity: {
+    accent1: '#3c78d8',
+    accent2: '#9900ff',
+    background1: '#172D50',
+    background2: '#480A71',
+    card1: '#0c3b83',
+    card2: '#241b77',
+  },
   aurora: {
     accent1: '#2ae9c0',
     accent2: '#2ea6ab',

@@ -3,10 +3,10 @@
   --panel: #071019;
   --muted: #9aa3b2;
   --text: #e6eef6;
-  --background1: rgb(23, 45, 80);
-  --background2: rgb(72, 10, 113);
-  --accent1: #3c78d8ff;
-  --accent2: #9900ffff;
+  --background1: #172D50;
+  --background2: #480A71;
+  --accent1: #3c78d8;
+  --accent2: #9900ff;
   --accent5: #0c3b83;
   --accent6: #241b77;
   --glass: rgba(0, 0, 0, 0.03);
@@ -1287,6 +1287,12 @@ font-size:20px;
   border-radius: 6px;
   background: var(--accent);
   opacity: 0.9;
+}
+.preview-box.neutroxity {
+  --background: linear-gradient(45deg, #172D50, #480A71);
+  --card: linear-gradient(45deg, #0c3b83, #241b77);
+  --accent: linear-gradient(45deg,#3c78d8, #9900ff);
+  background: var(--background);
 }
 .preview-box.aurora {
   --background: linear-gradient(45deg, #141e30, #243b55);
