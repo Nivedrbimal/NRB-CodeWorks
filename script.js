@@ -1,11 +1,13 @@
-const app = firebase.initializeApp(firebaseConfig);
+// Use the already initialized Firebase app
 const db = firebase.database();
 
+// Write test data
 db.ref("test").set({ message: "Hello, Blaze!" });
+
+// Listen for updates
 db.ref("test").on("value", snapshot => {
   console.log(snapshot.val());
 });
-
 
 
 document.body.style.overflow = 'hidden';
