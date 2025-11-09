@@ -1,17 +1,32 @@
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
+import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-database.js";
+
+// Your config (same as in HTML)
+const firebaseConfig = {
+  apiKey: "AIzaSyDRTudYlNmrMCA-mS_sD728w3kEbc4Yc-w",
+  authDomain: "neutroxity-9c5f6.firebaseapp.com",
+  databaseURL: "https://neutroxity-9c5f6-default-rtdb.firebaseio.com",
+  projectId: "neutroxity-9c5f6",
+  storageBucket: "neutroxity-9c5f6.firebasestorage.app",
+  messagingSenderId: "729204963407",
+  appId: "1:729204963407:web:f561d70d4cd9e12556523a",
+  measurementId: "G-EBHBKRW3KK"
+};
+
+// Initialize
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+// Write data
+set(ref(db, "test"), { message: "Hello, Blaze!" });
+
+// Listen for updates
+onValue(ref(db, "test"), snapshot => {
+  console.log("Database updated:", snapshot.val());
+});
+
+
 document.body.style.overflow = 'hidden';
-// Initialize Firebase (you already have this in the script tag)
-const db = firebase.database();
-
-// Test writing data
-db.ref("test").set({
-  message: "Hello from Blaze!"
-});
-
-// Test reading data
-db.ref("test").on("value", snapshot => {
-  console.log("Realtime Database update:", snapshot.val());
-});
-
 // ---------- Supporter ----------
 const isNum = v => v !== null && v !== '' && !Number.isNaN(Number(v));
 const toNum = v => isNum(v) ? Number(v) : null;
