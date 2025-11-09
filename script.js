@@ -1738,7 +1738,7 @@ snakePauseBtn.addEventListener("click", () => {
   if (!snakeRunning) return;
   snakePaused = !snakePaused;
   snakePauseBtn.textContent = snakePaused ? "Resume" : "Pause";
-  if (!snakePaused) requestAnimationFrame(gameLoop);
+  if (!snakePaused) requestAnimationFrame(snakeGameLoop);
 });
 function drawGame() {
   snakeCtx.fillStyle = "#000";
@@ -1812,9 +1812,11 @@ function updateGame() {
 function gameOver() {
   snakeRunning = false;
   clearTimeout(snakeSpecialFoodTimer);
-  drawGame();
   snake = [];
-  snakeFood = [];
+  snakeFood = null;
+  snakeCtx.clearRect(0, 0, snakeCanvas.width, snakeCanvas.height);
+  snakeCtx.fillStyle = "#000";
+  snakeCtx.fillRect(0, 0, snakeCanvas.width, snakeCanvas.height);
   snakeCtx.font = "32px Arial";
   snakeCtx.fillStyle = "white";
   snakeCtx.textAlign = "center";
@@ -1837,9 +1839,13 @@ function gameOver() {
         snakeHighScore = snakeScore;
         localStorage.setItem("snakeHighScore", snakeHighScore);
         document.getElementById("snakeHighScore").textContent = "High score = " + snakeHighScore;
+        snakeCtx.fillStyle = "white";
         snakeCtx.fillText("New High Score: " + snakeHighScore + "!", cx, cy - 40);
       }
-      else snakeCtx.fillText(`Game Over! Score: ${snakeScore}`, cx, cy - 40);
+      else {
+        snakeCtx.fillStyle = "white";
+        snakeCtx.fillText(`Game Over! Score: ${snakeScore}`, cx, cy - 40);
+      }
       snakeCtx.fillText(`Congrats! You're #${position} on the leaderboard!`, cx, cy + 10);
     } 
     else {
@@ -1847,13 +1853,19 @@ function gameOver() {
         snakeHighScore = snakeScore;
         localStorage.setItem("snakeHighScore", snakeHighScore);
         document.getElementById("snakeHighScore").textContent = "High score = " + snakeHighScore;
+        snakeCtx.fillStyle = "white";
         snakeCtx.fillText("New High Score: " + snakeHighScore + "!", cx, cy - 20);
       }
-      else snakeCtx.fillText("Game Over!", cx, cy - 20);
+      else {
+        snakeCtx.fillStyle = "white";
+        snakeCtx.fillText("Game Over!", cx, cy - 20);
+      }
+      snakeCtx.fillStyle = "white";
       snakeCtx.fillText(`Score: ${snakeScore}`, cx, cy + 20);
     }
   });
   snakeCtx.font = "20px Arial";
+  snakeCtx.fillStyle = "white";
   snakeCtx.fillText("Press Restart to Play Again", cx, cy + 90);
 }
 function showSnakeLeaderScores() {
@@ -1893,10 +1905,6 @@ function snakeGameLoop(timestamp) {
   if (snakeAccumulatedTime >= snakeMoveDelay) {
     updateGame();
     snakeAccumulatedTime = 0;
-    if (!snakeRunning) {
-      gameOver();
-      return;
-    }
   }
   drawGame();
   requestAnimationFrame(snakeGameLoop);
@@ -2032,13 +2040,8 @@ function updateJetShooter(delta) {
       }
     }
     if (jetShooterEnemies[i].y + jetShooterEnemies[i].size >= jetShooterCanvas.height) {
-      // if (jetShooterScore === 0) jetShooterGameOver();
-      // else {
-      jetShooterScore -= 5;
       jetShooterScoreHolder.textContent = "Score: " + jetShooterScore;
       jetShooterEnemies.splice(i, 1);
-      // break;
-      // }
     }
   }
   for (let i = 0; i < jetShooterShields.length; i++) {
