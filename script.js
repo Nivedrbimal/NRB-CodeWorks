@@ -9,13 +9,14 @@ const firebaseConfig = {
   appId: "1:729204963407:web:f561d70d4cd9e12556523a",
   measurementId: "G-EBHBKRW3KK"
 };
+let db;
 firebase.initializeApp(firebaseConfig);
 firebase.appCheck().activate('6LdbiwcsAAAAAI1ZW4dAvR9yJuDT0sYBAaMtDmyF', true);
 const auth = firebase.auth();
 auth.signInWithEmailAndPassword("nivedrbimal2@gmail.com", "Neutroxity@&0")
   .then((userCredential) => {
     console.log("Signed in as UID:", userCredential.user.uid);
-    const db = firebase.database();
+    db = firebase.database();
     db.ref("test").set({ message: "Hello, Blaze!" })
       .then(() => console.log("Data written successfully!"))
       .catch(err => console.error("Write failed:", err));
