@@ -12,7 +12,7 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 firebase.appCheck().activate('6LdbiwcsAAAAAI1ZW4dAvR9yJuDT0sYBAaMtDmyF', true);
 let db;
-
+const auth = firebase.auth();
 auth.signInWithEmailAndPassword("nivedrbimal2@gmail.com", "Neutroxity@&0")
   .then((userCredential) => {
     console.log("Signed in as UID:", userCredential.user.uid);
@@ -25,8 +25,10 @@ auth.signInWithEmailAndPassword("nivedrbimal2@gmail.com", "Neutroxity@&0")
     });
     showSnakeLeaderScores();
     showJetShooterLeaderScores();
+
   })
   .catch(err => console.error("Auth error:", err));
+
 
 document.body.style.overflow = 'hidden';
 // ---------- Supporter ----------
@@ -1892,10 +1894,6 @@ function gameOver() {
   snakeCtx.fillText("Press Restart to Play Again", cx, cy + 90);
 }
 function showSnakeLeaderScores() {
-  if (!db) {
-    console.warn("Database not initialized yet!");
-    return;
-  }
   const leaderboard = document.getElementById('snakeGameLeaderboard');
   const scoresRef = db.ref(`highScores/snakeGame`);
   scoresRef.off('value');
