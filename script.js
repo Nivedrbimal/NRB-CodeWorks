@@ -21,7 +21,7 @@ auth.onAuthStateChanged(user => {
     console.log("Signing in...");
     auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
       .then(() => {
-        return auth.signInWithEmailAndPassword("nivedrbimal2@gmail.com", "Neutroxity@&0");
+        return auth.signInWithEmailAndPassword("Neutroxity@neutroxity.com", "Neutroxity@&0");
       })
       .then(() => startApp())
       .catch(err => console.error("Auth error:", err));
