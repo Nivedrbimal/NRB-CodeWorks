@@ -2338,8 +2338,8 @@ jetShooterShootBtn.addEventListener('touchstart', (e) => { if (!jetShooterRunnin
 jetShooterShootBtn.addEventListener('touchend', () => { isShooting = false; });
 jetShooterShootBtn.addEventListener('touchcancel', () => { isShooting = false; });
 function gameLoop() {
-  if (movement === -1) moveJetShooter(-0.5);
-  else if (movement === 1) moveJetShooter(0.5);
+  if (movement === -1) moveJetShooter(-0.25);
+  else if (movement === 1) moveJetShooter(0.25);
   const now = performance.now();
   if (isShooting && (now - lastShotTime > FIRE_RATE)) {
     if (jetShooterBulletRemaining === 0) noBulletJetShooter();
