@@ -11,24 +11,34 @@ const firebaseConfig = {
 };
 firebase.initializeApp(firebaseConfig);
 firebase.appCheck().activate('6LdbiwcsAAAAAI1ZW4dAvR9yJuDT0sYBAaMtDmyF', true);
-let db;
 const auth = firebase.auth();
-auth.signInWithEmailAndPassword("nivedrbimal2@gmail.com", "Neutroxity@&0")
-  .then((userCredential) => {
-    console.log("Signed in as UID:", userCredential.user.uid);
-    db = firebase.database();
-    db.ref("test").set({ message: "Hello, Blaze!" })
-      .then(() => console.log("Data written successfully!"))
-      .catch(err => console.error("Write failed:", err));
-    db.ref("test").on("value", snapshot => {
-      console.log("Database value:", snapshot.val());
-    });
-    showSnakeLeaderScores();
-    showJetShooterLeaderScores();
+let db;
+auth.onAuthStateChanged(user => {
+  if (user) {
+    console.log("Already signed in as:", user.email);
+    startApp();
+  } else {
+    console.log("Signing in...");
+    auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+      .then(() => {
+        return auth.signInWithEmailAndPassword("nivedrbimal2@gmail.com", "Neutroxity@&0");
+      })
+      .then(() => startApp())
+      .catch(err => console.error("Auth error:", err));
+  }
+});
+function startApp() {
+  db = firebase.database();
+  db.ref("test").set({ message: "Hello, Blaze!" })
+    .then(() => console.log("Data written successfully!"))
+    .catch(err => console.error("Write failed:", err));
+  db.ref("test").on("value", snapshot => {
+    console.log("Database value:", snapshot.val());
+  });
 
-  })
-  .catch(err => console.error("Auth error:", err));
-
+  showSnakeLeaderScores();
+  showJetShooterLeaderScores();
+}
 
 document.body.style.overflow = 'hidden';
 // ---------- Supporter ----------
