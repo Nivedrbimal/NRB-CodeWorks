@@ -228,7 +228,7 @@ function genCalcClear() {
 
 // ---------- TRIG EVALUATOR ----------
 
-function fmt(v) { return Number(v.toFixed(6)); }
+function fmt(v) { v = Number(v); if (isNaN(v)) return 0; return Number(v.toFixed(6)); }
 
 function parseRadianInput(raw) {
   try { return eval(raw.replace(/π/g, 'Math.PI')); }
