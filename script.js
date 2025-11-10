@@ -24,7 +24,7 @@ auth.signInWithEmailAndPassword("nivedrbimal2@gmail.com", "Neutroxity@&0")
       console.log("Database value:", snapshot.val());
     });
     showSnakeLeaderScores();
-    updateLeaderboard();
+    showJetShooterLeaderScores();
   })
   .catch(err => console.error("Auth error:", err));
 
@@ -1892,6 +1892,10 @@ function gameOver() {
   snakeCtx.fillText("Press Restart to Play Again", cx, cy + 90);
 }
 function showSnakeLeaderScores() {
+  if (!db) {
+    console.warn("Database not initialized yet!");
+    return;
+  }
   const leaderboard = document.getElementById('snakeGameLeaderboard');
   const scoresRef = db.ref(`highScores/snakeGame`);
   scoresRef.off('value');
@@ -1908,7 +1912,6 @@ function showSnakeLeaderScores() {
     });
   });
 }
-showSnakeLeaderScores();
 snakePlayerName.addEventListener("input", () => {
   if (snakePlayerName.value.length > 12) {
     snakePlayerName.value = snakePlayerName.value.slice(0, 12);
@@ -2453,7 +2456,6 @@ function showJetShooterLeaderScores() {
     });
   });
 }
-showJetShooterLeaderScores();
 jetPlayerName.addEventListener("input", () => {
   if (jetPlayerName.value.length > 12) {
     jetPlayerName.value = jetPlayerName.value.slice(0, 12);
