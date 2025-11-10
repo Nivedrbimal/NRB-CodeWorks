@@ -9,10 +9,10 @@ const firebaseConfig = {
   appId: "1:729204963407:web:f561d70d4cd9e12556523a",
   measurementId: "G-EBHBKRW3KK"
 };
-let db;
 firebase.initializeApp(firebaseConfig);
 firebase.appCheck().activate('6LdbiwcsAAAAAI1ZW4dAvR9yJuDT0sYBAaMtDmyF', true);
-const auth = firebase.auth();
+let db;
+
 auth.signInWithEmailAndPassword("nivedrbimal2@gmail.com", "Neutroxity@&0")
   .then((userCredential) => {
     console.log("Signed in as UID:", userCredential.user.uid);
@@ -23,7 +23,8 @@ auth.signInWithEmailAndPassword("nivedrbimal2@gmail.com", "Neutroxity@&0")
     db.ref("test").on("value", snapshot => {
       console.log("Database value:", snapshot.val());
     });
-
+    showSnakeLeaderScores();
+    updateLeaderboard();
   })
   .catch(err => console.error("Auth error:", err));
 
