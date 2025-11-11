@@ -3437,7 +3437,6 @@ window.addEventListener('load', () => {
       if (input) input.value = value;
     }
   });
-  displayMyThemes();
 });
 [accent1Picker, accent2Picker, background1Picker, background2Picker, card1Picker, card2Picker].forEach(picker => {
   picker.addEventListener('input', e => {
@@ -3569,12 +3568,14 @@ function saveThemeSelf() {
   const myThemes = JSON.parse(localStorage.getItem('myThemes')) || {};
   myThemes[themeData.name] = themeData;
   localStorage.setItem('myThemes', JSON.stringify(myThemes));
+  ownThemeOut.textContent = `"${themeData.name}" saved.`;
   setTimeout (() => {
-    ownThemeOut.textContent = `"${themeData.name}" saved.`;
     ownThemeSave.classList.add('hidden');
   }, 4000);
   addThemeToPreviews(themeData);
   };
+  ownThemeNameInput.value = "";
+  ownThemeOut.textContent = "";
 }
 function saveThemePublic() {
   ownThemeSave.classList.remove('hidden');
@@ -3589,10 +3590,12 @@ function saveThemePublic() {
     const db = firebase.database();
     db.ref('publicThemes').push(themeData)
       .then(() => {
+        ownThemeOut.textContent = `Published "${themeData.name}" to public themes!\nWill be reviewed before appearing.`;
         setTimeout (() => {
-          ownThemeOut.textContent = `Published "${themeData.name}" to public themes!\nWill be reviewed before appearing.`;
           ownThemeSave.classList.add('hidden');
         }, 4000);
+        ownThemeNameInput.value = "";
+        ownThemeOut.textContent = "";
       })
       .catch(err => {
         ownThemeOut.textContent = 'Error: ' + err.message;
