@@ -1284,6 +1284,7 @@ font-size:20px;
 }
 .theme-btn span {
   font-size: 0.9rem;
+  width: clamp(200px, 15vw, 250px);
   color: var(--text-color, #fff);
 }
 .preview-box {
