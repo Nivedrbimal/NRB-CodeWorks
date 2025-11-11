@@ -35,7 +35,7 @@ function startApp() {
   db.ref("test").on("value", snapshot => {
     console.log("Database value:", snapshot.val());
   });
-
+  loadElementData();
   showSnakeLeaderScores();
   showJetShooterLeaderScores();
 }
@@ -1160,16 +1160,18 @@ function showElementInfoOut(button) {
   }
 }
 let elementData = [];
-fetch('elementData.json')
-  .then(response => response.json())
-  .then(data => {
-    elementData = data;
-    if (!Array.isArray(elementData)) {
-      elementData = Object.values(elementData);
-    }
-    console.log("Element data loaded:", elementData.length, "elements");
-  })
-  .catch(err => console.error("Error loading elementData.json:", err));
+function loadElementData() {
+  if (!db) {
+    console.error("Firebase DB not initialized yet!");
+    return;
+  }
+  db.ref("elementData").once("value")
+    .then(snapshot => {
+      elementData = Object.values(snapshot.val()); // convert object to array
+      console.log("Element data loaded:", elementData.length, "elements");
+    })
+    .catch(err => console.error("Error loading elementData from Firebase:", err));
+}
 function showElementInfo(symbol) {
   document.getElementById('ptOutElementInfo').classList.add("visible");
   const element = elementData.find(e => e.Symbol === symbol);
@@ -3555,27 +3557,27 @@ function getCurrentThemeData() {
 function saveThemeSelf() {
   ownThemeSave.classList.remove('hidden');
   saveThemeNameBtn.onclick = () => {
-  const themeData = {
-    name: ownThemeNameInput.value.trim() || 'My Theme',
-    accent1: accent1Picker.value,
-    accent2: accent2Picker.value,
-    background1: background1Picker.value,
-    background2: background2Picker.value,
-    card1: card1Picker.value,
-    card2: card2Picker.value,
-    timestamp: Date.now()
+    const themeData = {
+      name: ownThemeNameInput.value.trim() || 'My Theme',
+      accent1: accent1Picker.value,
+      accent2: accent2Picker.value,
+      background1: background1Picker.value,
+      background2: background2Picker.value,
+      card1: card1Picker.value,
+      card2: card2Picker.value,
+      timestamp: Date.now()
+    };
+    const myThemes = JSON.parse(localStorage.getItem('myThemes')) || {};
+    myThemes[themeData.name] = themeData;
+    localStorage.setItem('myThemes', JSON.stringify(myThemes));
+    setTimeout (() => {
+      ownThemeOut.textContent = `${themeData.name} saved.`;
+      ownThemeSave.classList.add('hidden');
+    }, 4000);
+    addThemeToPreviews(themeData);
+    ownThemeNameInput.value = "";
+    ownThemeOut.textContent = "";
   };
-  const myThemes = JSON.parse(localStorage.getItem('myThemes')) || {};
-  myThemes[themeData.name] = themeData;
-  localStorage.setItem('myThemes', JSON.stringify(myThemes));
-  setTimeout (() => {
-    ownThemeOut.textContent = `${themeData.name} saved.`;
-    ownThemeSave.classList.add('hidden');
-  }, 4000);
-  addThemeToPreviews(themeData);
-  };
-  ownThemeNameInput.value = "";
-  ownThemeOut.textContent = "";
 }
 function saveThemePublic() {
   ownThemeSave.classList.remove('hidden');
@@ -3597,9 +3599,9 @@ function saveThemePublic() {
       .catch(err => {
         ownThemeOut.textContent = 'Error: ' + err.message;
       });
+      ownThemeNameInput.value = "";
+      ownThemeOut.textContent = "";
   };
-  ownThemeNameInput.value = "";
-  ownThemeOut.textContent = "";
 }
 function addThemeToPreviews(themeData) {
   const previewsContainer = document.querySelector('.theme-previews');
