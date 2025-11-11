@@ -3408,107 +3408,53 @@ const background2Picker = document.getElementById('background2Picker');
 const card1Picker = document.getElementById('card1Picker');
 const card2Picker = document.getElementById('card2Picker');
 const root = document.documentElement;
-const themeButtons = document.querySelectorAll('.theme-btn');
 const resetBtn = document.getElementById('resetColors');
+const themeButtons = document.querySelectorAll('.theme-btn');
+const ownThemeNameInput = document.getElementById('ownThemeName');
+const ownThemeOut = document.getElementById('ownThemeOut');
+const ownThemeSave = document.getElementById('ownThemeSave');
+const saveThemeNameBtn = document.getElementById('saveThemeName');
 function updateColor(varName, color) {
   root.style.setProperty(varName, color);
 }
 window.addEventListener('load', () => {
-  const savedAccent1 = localStorage.getItem('accent1');
-  const savedAccent2 = localStorage.getItem('accent2');
-  if (savedAccent1) {
-    accent1Picker.value = savedAccent1;
-    updateColor('--accent1', savedAccent1);
-  }
-  if (savedAccent2) {
-    accent2Picker.value = savedAccent2;
-    updateColor('--accent2', savedAccent2);
-  }
-
-  const savedBg1 = localStorage.getItem('background1');
-  const savedBg2 = localStorage.getItem('background2');
-  if (savedBg1) {
-    background1Picker.value = savedBg1;
-    updateColor('--background1', savedBg1);
-  }
-  if (savedBg2) {
-    background2Picker.value = savedBg2;
-    updateColor('--background2', savedBg2);
-  }
-
-  const savedCard1 = localStorage.getItem('accent5');
-  const savedCard2 = localStorage.getItem('accent6');
-  if (savedCard1) {
-    card1Picker.value = savedCard1;
-    updateColor('--accent5', savedCard1);
-  }
-  if (savedCard2) {
-    card2Picker.value = savedCard2;
-    updateColor('--accent6', savedCard2);
-  }
-});
-const themes = {
-  neutroxity: {
-    accent1: '#3c78d8',
-    accent2: '#9900ff',
-    background1: '#172D50',
-    background2: '#480A71',
-    card1: '#0c3b83',
-    card2: '#241b77',
-  },
-  aurora: {
-    accent1: '#2ae9c0',
-    accent2: '#2ea6ab',
-    background1: '#141e30',
-    background2: '#243b55',
-    card1: '#1e6369',
-    card2: '#0072ff',
-  },
-  neonDark: {
-    accent1: '#ff00cc',
-    accent2: '#3333ff',
-    background1: '#0f0c29',
-    background2: '#24243e',
-    card1: '#302b63',
-    card2: '#4134a1',
-  },
-  cosmicDawn: {
-    accent1: '#ff6f61',
-    accent2: '#ff9966',
-    background1: '#0b0c10',
-    background2: '#1f2833',
-    card1: '#2e3239',
-    card2: '#3d3f45',
-  },
-  galacticVoid: {
-    accent1: '#6a11cb',
-    accent2: '#2575fc',
-    background1: '#0a0a23',
-    background2: '#12122b',
-    card1: '#1a1a40',
-    card2: '#2d2d5a',
-  }
-};
-themeButtons.forEach(button => {
-  button.addEventListener('click', () => {
-    const theme = themes[button.dataset.theme];
-    for (const [key, value] of Object.entries(theme)) {
+  ['accent1', 'accent2', 'background1', 'background2', 'accent5', 'accent6'].forEach(key => {
+    const value = localStorage.getItem(key);
+    if (value) {
       const varName =
         key === 'accent1' ? '--accent1' :
         key === 'accent2' ? '--accent2' :
         key === 'background1' ? '--background1' :
         key === 'background2' ? '--background2' :
-        key === 'card1' ? '--accent5' :
+        key === 'accent5' ? '--accent5' :
         '--accent6';
       updateColor(varName, value);
-      localStorage.setItem(key, value);
+      const input = document.getElementById(
+        key === 'accent5' ? 'card1Picker' :
+        key === 'accent6' ? 'card2Picker' :
+        key + 'Picker'
+      );
+      if (input) input.value = value;
     }
-    accent1Picker.value = theme.accent1;
-    accent2Picker.value = theme.accent2;
-    background1Picker.value = theme.background1;
-    background2Picker.value = theme.background2;
-    card1Picker.value = theme.card1;
-    card2Picker.value = theme.card2;
+  });
+  displayMyThemes();
+});
+[accent1Picker, accent2Picker, background1Picker, background2Picker, card1Picker, card2Picker].forEach(picker => {
+  picker.addEventListener('input', e => {
+    const id = e.target.id;
+    const varName =
+      id === 'accent1Picker' ? '--accent1' :
+      id === 'accent2Picker' ? '--accent2' :
+      id === 'background1Picker' ? '--background1' :
+      id === 'background2Picker' ? '--background2' :
+      id === 'card1Picker' ? '--accent5' :
+      '--accent6';
+    const key =
+      id === 'card1Picker' ? 'accent5' :
+      id === 'card2Picker' ? 'accent6' :
+      id.replace('Picker', '');
+    updateColor(varName, e.target.value);
+    localStorage.setItem(key, e.target.value);
   });
 });
 accent1Picker.addEventListener('input', (e) => {
@@ -3536,28 +3482,155 @@ card2Picker.addEventListener('input', (e) => {
   localStorage.setItem('accent6', e.target.value);
 });
 resetBtn.addEventListener('click', () => {
-  const defaultAccent1 = '#3c78d8';
-  const defaultAccent2 = '#9900ff';
-  accent1Picker.value = defaultAccent1;
-  accent2Picker.value = defaultAccent2;
-  updateColor('--accent1', defaultAccent1);
-  updateColor('--accent2', defaultAccent2);
-  localStorage.removeItem('accent1');
-  localStorage.removeItem('accent2');
-  const defaultBackGround1 = '#172D50';
-  const defaultBackGround2 = '#480A71';
-  background1Picker.value = defaultBackGround1;
-  background2Picker.value = defaultBackGround2;
-  updateColor('--background1', defaultBackGround1);
-  updateColor('--background2', defaultBackGround2);
-  localStorage.removeItem('background1');
-  localStorage.removeItem('background2');
-  const defaultCard1 = '#0c3b83';
-  const defaultCard2 = '#241b77';
-  card1Picker.value = defaultCard1;
-  card2Picker.value = defaultCard2;
-  updateColor('--accent5', defaultCard1);
-  updateColor('--accent6', defaultCard2);
-  localStorage.removeItem('accent5');
-  localStorage.removeItem('accent6');
+  const defaults = {
+    accent1: '#3c78d8',
+    accent2: '#9900ff',
+    background1: '#172D50',
+    background2: '#480A71',
+    accent5: '#0c3b83',
+    accent6: '#241b77'
+  };
+  for (const [key, value] of Object.entries(defaults)) {
+    const varName =
+      key === 'accent1' ? '--accent1' :
+      key === 'accent2' ? '--accent2' :
+      key === 'background1' ? '--background1' :
+      key === 'background2' ? '--background2' :
+      key === 'accent5' ? '--accent5' :
+      '--accent6';
+    updateColor(varName, value);
+    localStorage.removeItem(key);
+    const input = document.getElementById(
+      key === 'accent5' ? 'card1Picker' :
+      key === 'accent6' ? 'card2Picker' :
+      key + 'Picker'
+    );
+    if (input) input.value = value;
+  }
+});
+const themes = {
+  neutroxity: { accent1: '#3c78d8', accent2: '#9900ff', background1: '#172D50', background2: '#480A71', card1: '#0c3b83', card2: '#241b77' },
+  aurora: { accent1: '#2ae9c0', accent2: '#2ea6ab', background1: '#141e30', background2: '#243b55', card1: '#1e6369', card2: '#0072ff' },
+  neonDark: { accent1: '#ff00cc', accent2: '#3333ff', background1: '#0f0c29', background2: '#24243e', card1: '#302b63', card2: '#4134a1' },
+  cosmicDawn: { accent1: '#ff6f61', accent2: '#ff9966', background1: '#0b0c10', background2: '#1f2833', card1: '#2e3239', card2: '#3d3f45' },
+  galacticVoid: { accent1: '#6a11cb', accent2: '#2575fc', background1: '#0a0a23', background2: '#12122b', card1: '#1a1a40', card2: '#2d2d5a' }
+};
+themeButtons.forEach(button => {
+  button.addEventListener('click', () => {
+    const theme = themes[button.dataset.theme];
+    Object.entries(theme).forEach(([key, val]) => {
+      const varName =
+        key === 'accent1' ? '--accent1' :
+        key === 'accent2' ? '--accent2' :
+        key === 'background1' ? '--background1' :
+        key === 'background2' ? '--background2' :
+        key === 'card1' ? '--accent5' :
+        '--accent6';
+      updateColor(varName, val);
+      localStorage.setItem(
+        key === 'card1' ? 'accent5' :
+        key === 'card2' ? 'accent6' : key, val
+      );
+    });
+    accent1Picker.value = theme.accent1;
+    accent2Picker.value = theme.accent2;
+    background1Picker.value = theme.background1;
+    background2Picker.value = theme.background2;
+    card1Picker.value = theme.card1;
+    card2Picker.value = theme.card2;
+  });
+});
+function getCurrentThemeData() {
+  return {
+    name: ownThemeNameInput.value.trim() || 'My Theme',
+    accent1: localStorage.getItem('accent1') || '#3c78d8',
+    accent2: localStorage.getItem('accent2') || '#9900ff',
+    background1: localStorage.getItem('background1') || '#172D50',
+    background2: localStorage.getItem('background2') || '#480A71',
+    card1: localStorage.getItem('accent5') || '#0c3b83',
+    card2: localStorage.getItem('accent6') || '#241b77',
+    timestamp: Date.now()
+  };
+}
+function saveThemeSelf() {
+  ownThemeSave.classList.remove('hidden');
+  ownThemeOut.style.color = 'var(--accent1)';
+  saveThemeNameBtn.onclick = () => {
+  const themeData = {
+    name: ownThemeNameInput.value.trim() || 'My Theme',
+    accent1: accent1Picker.value,
+    accent2: accent2Picker.value,
+    background1: background1Picker.value,
+    background2: background2Picker.value,
+    card1: card1Picker.value,
+    card2: card2Picker.value,
+    timestamp: Date.now()
+  };
+  const myThemes = JSON.parse(localStorage.getItem('myThemes')) || {};
+  myThemes[themeData.name] = themeData;
+  localStorage.setItem('myThemes', JSON.stringify(myThemes));
+  setTimeout (() => {
+    ownThemeOut.textContent = `"${themeData.name}" saved.`;
+    ownThemeSave.classList.add('hidden');
+  }, 4000);
+  addThemeToPreviews(themeData);
+  };
+}
+function saveThemePublic() {
+  ownThemeSave.classList.remove('hidden');
+  ownThemeOut.textContent = "Enter a name and click Save Theme.";
+  ownThemeOut.style.color = 'var(--accent1)';
+  saveThemeNameBtn.onclick = () => {
+    const themeData = getCurrentThemeData();
+    if (!window.firebase || !firebase.database) {
+      ownThemeOut.textContent = 'Unable to save theme. Try again later.';
+      return;
+    }
+    const db = firebase.database();
+    db.ref('publicThemes').push(themeData)
+      .then(() => {
+        setTimeout (() => {
+          ownThemeOut.textContent = `Published "${themeData.name}" to public themes!\nWill be reviewed before appearing.`;
+          ownThemeSave.classList.add('hidden');
+        }, 4000);
+      })
+      .catch(err => {
+        ownThemeOut.textContent = 'Error: ' + err.message;
+      });
+  };
+}
+function addThemeToPreviews(themeData) {
+  const previewsContainer = document.querySelector('.theme-previews');
+  if (document.getElementById('theme-' + themeData.name)) return;
+  const btn = document.createElement('button');
+  btn.className = 'theme-btn';
+  btn.id = 'theme-' + themeData.name;
+  btn.innerHTML = `
+    <div class="preview-box" style="
+      --background: linear-gradient(45deg, ${themeData.background1}, ${themeData.background2});
+      --card: linear-gradient(45deg, ${themeData.card1}, ${themeData.card2});
+      --accent: linear-gradient(45deg, ${themeData.accent1}, ${themeData.accent2});
+      background: var(--background);
+    "></div>
+    <span>${themeData.name}</span>
+  `;
+  btn.addEventListener('click', () => {
+    updateColor('--accent1', themeData.accent1);
+    updateColor('--accent2', themeData.accent2);
+    updateColor('--background1', themeData.background1);
+    updateColor('--background2', themeData.background2);
+    updateColor('--accent5', themeData.card1);
+    updateColor('--accent6', themeData.card2);
+    accent1Picker.value = themeData.accent1;
+    accent2Picker.value = themeData.accent2;
+    background1Picker.value = themeData.background1;
+    background2Picker.value = themeData.background2;
+    card1Picker.value = themeData.card1;
+    card2Picker.value = themeData.card2;
+  });
+  previewsContainer.appendChild(btn);
+}
+window.addEventListener('load', () => {
+  const myThemes = JSON.parse(localStorage.getItem('myThemes')) || {};
+  Object.values(myThemes).forEach(themeData => addThemeToPreviews(themeData));
 });

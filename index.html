@@ -2157,7 +2157,7 @@
         <div class="row">
           <button id="resetColors" class="btn">Reset</button>
         </div>
-        <p>Don't know which colors to choose? Try the ready made themes:</p>
+        <p class="muted">Don't know which colors to choose? Try the ready made themes:</p>
         <div class="row theme-previews">
           <button class="theme-btn" data-theme="neutroxity">
             <div class="preview-box neutroxity"></div>
@@ -2179,6 +2179,23 @@
             <div class="preview-box galacticVoid"></div>
             <span>Galactic Void</span>
           </button>
+        </div>
+        <p class="muted">Wan't to save your own theme to the public or for yourself? Click the submit button.</p>
+        <div class="row">
+          <button class="btn" onclick="saveThemePublic()">Save for public</button>
+          <button class="btn" onclick="saveThemeSelf()">Save only for me</button>
+        </div>
+        <div class="hidden" id="ownThemeSave">
+          <div class="row">
+            <label><span class="muted">Enter a name for your theme:</span>
+              <input type="text" step="any" id="ownThemeName" placeholder="Name for your theme">
+            </label>
+            <label><span></span><br>
+              <button class="btn" id="saveThemeName" onclick="saveThemeName()">Save Theme</button>
+            </label>
+          </div>
+          <br>
+          <div class="mono" id="ownThemeOut"></div>
         </div>
       </div>
     </section>
