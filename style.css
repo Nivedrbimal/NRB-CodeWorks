@@ -1262,7 +1262,7 @@ font-size:20px;
   flex-wrap: nowrap;
   overflow-x: scroll;
   gap: 12px;
-  justify-content: center;
+  justify-content: start;
   -webkit-overflow-scrolling: touch;
 }
 .theme-btn {

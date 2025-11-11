@@ -2334,9 +2334,9 @@ jetShooterPauseBtn.onclick = () => {
   jetShooterPauseBtn.textContent = jetShooterPaused ? "Resume" : "Pause";
 };
 document.addEventListener("keydown", (e) => {
+  if (!jetShooterRunning) return;
   const key = e.key.toLowerCase();
   keys[key] = true;
-  if (!jetShooterRunning) return;
   if (["arrowleft", "arrowright", "a", "d", " "].includes(key)) e.preventDefault();
   if (!jetShooterPaused) {
     if (key === "arrowleft" || key === "a" || key === "arrowright" || key === "d") lastKeyPressed = key;
@@ -2351,6 +2351,7 @@ document.addEventListener("keydown", (e) => {
   }
 });
 document.addEventListener("keyup", (e) => {
+  if (!jetShooterRunning) return;
   const key = e.key.toLowerCase();
   keys[key] = false;
   if (key === lastKeyPressed) {
@@ -3553,7 +3554,6 @@ function getCurrentThemeData() {
 }
 function saveThemeSelf() {
   ownThemeSave.classList.remove('hidden');
-  ownThemeOut.style.color = 'var(--accent1)';
   saveThemeNameBtn.onclick = () => {
   const themeData = {
     name: ownThemeNameInput.value.trim() || 'My Theme',
@@ -3568,8 +3568,8 @@ function saveThemeSelf() {
   const myThemes = JSON.parse(localStorage.getItem('myThemes')) || {};
   myThemes[themeData.name] = themeData;
   localStorage.setItem('myThemes', JSON.stringify(myThemes));
-  ownThemeOut.textContent = `"${themeData.name}" saved.`;
   setTimeout (() => {
+    ownThemeOut.textContent = `${themeData.name} saved.`;
     ownThemeSave.classList.add('hidden');
   }, 4000);
   addThemeToPreviews(themeData);
@@ -3580,7 +3580,6 @@ function saveThemeSelf() {
 function saveThemePublic() {
   ownThemeSave.classList.remove('hidden');
   ownThemeOut.textContent = "Enter a name and click Save Theme.";
-  ownThemeOut.style.color = 'var(--accent1)';
   saveThemeNameBtn.onclick = () => {
     const themeData = getCurrentThemeData();
     if (!window.firebase || !firebase.database) {
@@ -3590,17 +3589,17 @@ function saveThemePublic() {
     const db = firebase.database();
     db.ref('publicThemes').push(themeData)
       .then(() => {
-        ownThemeOut.textContent = `Published "${themeData.name}" to public themes!\nWill be reviewed before appearing.`;
         setTimeout (() => {
+          ownThemeOut.textContent = `Published ${themeData.name} to public themes!\nWill be reviewed before appearing.`;
           ownThemeSave.classList.add('hidden');
         }, 4000);
-        ownThemeNameInput.value = "";
-        ownThemeOut.textContent = "";
       })
       .catch(err => {
         ownThemeOut.textContent = 'Error: ' + err.message;
       });
   };
+  ownThemeNameInput.value = "";
+  ownThemeOut.textContent = "";
 }
 function addThemeToPreviews(themeData) {
   const previewsContainer = document.querySelector('.theme-previews');
