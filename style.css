@@ -1276,15 +1276,19 @@ font-size:20px;
   align-items: center;
   gap: 6px;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
-  border: 2px solid var(--background1)
+  border: 2px solid var(--background1);
+  flex-shrink:0;
 }
 .theme-btn:hover {
   transform: scale(1.05);
   box-shadow: 0 0 10px rgba(255,255,255,0.2);
 }
 .theme-btn span {
+  display: block;
+  text-align: center;
+  word-wrap: nowrap;
   font-size: 0.9rem;
-  width: clamp(200px, 15vw, 250px);
+  width: 100%;
   color: var(--text-color, #fff);
 }
 .preview-box {
