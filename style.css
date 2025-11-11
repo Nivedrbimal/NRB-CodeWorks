@@ -1257,6 +1257,7 @@ font-size:20px;
 
 
 .theme-previews {
+  padding:5px;
   display: flex;
   flex-wrap: nowrap;
   overflow-x: scroll;
@@ -1270,7 +1271,7 @@ font-size:20px;
   border-radius: 12px;
   padding: 8px;
   width: clamp(150px, 15vw, 250px);
-  aspect-ratio: 4/3;
+  aspect-ratio: 5/3;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1293,7 +1294,8 @@ font-size:20px;
 }
 .preview-box {
   width: 100%;
-  height: 70px;
+  width:95%;
+  aspect-ratio:5/3;
   border-radius: 10px;
   position: relative;
   overflow: hidden;
