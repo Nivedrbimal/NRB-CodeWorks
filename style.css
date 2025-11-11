@@ -1,5 +1,4 @@
 :root {
-  --bg: #05060a;
   --panel: #071019;
   --muted: #9aa3b2;
   --text: #e6eef6;
@@ -1259,13 +1258,14 @@ font-size:20px;
 
 .theme-previews {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  overflow-x: scroll;
   gap: 12px;
   justify-content: center;
+  -webkit-overflow-scrolling: touch;
 }
 .theme-btn {
   background: none;
-  border: none;
   cursor: pointer;
   border-radius: 12px;
   padding: 8px;
@@ -1275,7 +1275,7 @@ font-size:20px;
   align-items: center;
   gap: 6px;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
-  border: 2px solid;
+  border: 2px solid var(--background1)
 }
 .theme-btn:hover {
   transform: scale(1.05);
