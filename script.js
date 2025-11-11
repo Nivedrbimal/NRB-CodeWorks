@@ -41,6 +41,44 @@ function startApp() {
 }
 
 document.body.style.overflow = 'hidden';
+
+function updateColor(varName, color) {
+  root.style.setProperty(varName, color);
+}
+window.addEventListener('load', () => {
+  const savedAccent1 = localStorage.getItem('accent1');
+  const savedAccent2 = localStorage.getItem('accent2');
+  if (savedAccent1) {
+    accent1Picker.value = savedAccent1;
+    updateColor('--accent1', savedAccent1);
+  }
+  if (savedAccent2) {
+    accent2Picker.value = savedAccent2;
+    updateColor('--accent2', savedAccent2);
+  }
+
+  const savedBg1 = localStorage.getItem('background1');
+  const savedBg2 = localStorage.getItem('background2');
+  if (savedBg1) {
+    background1Picker.value = savedBg1;
+    updateColor('--background1', savedBg1);
+  }
+  if (savedBg2) {
+    background2Picker.value = savedBg2;
+    updateColor('--background2', savedBg2);
+  }
+
+  const savedCard1 = localStorage.getItem('accent5');
+  const savedCard2 = localStorage.getItem('accent6');
+  if (savedCard1) {
+    card1Picker.value = savedCard1;
+    updateColor('--accent5', savedCard1);
+  }
+  if (savedCard2) {
+    card2Picker.value = savedCard2;
+    updateColor('--accent6', savedCard2);
+  }
+});
 // ---------- Supporter ----------
 const isNum = v => v !== null && v !== '' && !Number.isNaN(Number(v));
 const toNum = v => isNum(v) ? Number(v) : null;
