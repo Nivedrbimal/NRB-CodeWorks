@@ -11,7 +11,7 @@ const firebaseConfig = {
 let db = null;
 let currentUser = null;
 firebase.initializeApp(firebaseConfig);
-firebase.appCheck().activate('6LdbiwcsAAAAAI1ZW4dAvR9yJuDT0sYBAaMtDmyF', true);
+firebase.appCheck().activate('6LdbiwcsAAAAAI1ZW4dAvR9yJuDT0sYBAaMtDmyF',true);
 const auth = firebase.auth();
 const signUpLoginScreen = document.getElementById('signUpLoginScreen');
 const profileScreen = document.getElementById('profileScreen');
@@ -22,7 +22,8 @@ auth.onAuthStateChanged(user => {
     console.log("Signed in as:", user.email);
     showScreen(profileScreen);
     startApp(user);
-  } else {
+  } 
+  else {
     currentUser = null;
     db = firebase.database();
     console.log("No user signed in");
@@ -62,8 +63,12 @@ async function signUp() {
     const userData = {
       uid: user.uid,
       email: email,
-      score: 0,
-      preferences: {}
+      username: username,
+      highscores: {
+        snakeHighScore: 0,
+        jetShooterHighScore: 0,
+      },
+      themes: {}
     };
     await db.ref(`users/${user.uid}`).set(userData);
     signUpOut.textContent = `User created: ${user.email}`;
@@ -134,7 +139,9 @@ function startApp(user) {
         console.log("Database value:", snapshot.val());
       });
     })
-    .catch(err => console.error("App Check failed:", err));
+    .catch(err => {
+      if (err) console.error("App Check failed, unidentified domain")
+    });
 }
 function addUserData(newData) {
   if (!db || !currentUser) return console.error("Database or user not initialized!");
@@ -1417,7 +1424,7 @@ function loadElementData() {
 function showElementInfo(symbol) {
   if (!db || !currentUser) return;
   document.getElementById('ptOutElementInfo').classList.add("visible");
-  const element = elementData.find(e => e.Symbol === symbol);
+  const element = elementDataDB.find(e => e.Symbol === symbol);
   const mainInfo = document.getElementById('elementInfoOutMain');
   mainInfo.classList.remove(
     "alkaliMetalsLegend", "metalloidsLegend", "actinidesLegend",
@@ -1519,7 +1526,8 @@ function showElementInfo(symbol) {
     document.getElementById("element-info-out-half-life").textContent = 'Half Life: ' + element["Half-life"];
     document.getElementById("element-info-out-toxicity").textContent = 'Toxicity: ' + element["Toxicity"];
     document.getElementById("element-info-out-bio-role").textContent = 'Biological Role: ' + element["Biological_Role"];
-  } else {
+  } 
+  else {
     console.warn("No element found for symbol:", symbol);
   }
   document.getElementById("ptInfoBtn").classList.remove('ptInfoBtnHidden');
@@ -1960,7 +1968,14 @@ snakeCanvas.width = 25 * snakeBox;
 snakeCanvas.height = 25 * snakeBox;
 let snake, snakeDirection, snakeFood, snakeScore, snakeFoodsEaten;
 let snakeSpecialFood = null;
-let snakeHighScore = localStorage.getItem("snakeHighScore") || 0;
+let snakeHighScore;
+if (db && currentUser) {
+  db.ref(`users/${currentUser.uid}/highscores/snakeHighScore`).once('value')
+    .then(snapshot => {
+      snakeHighScore = snapshot.val();
+    });
+}
+else snakeHighScore = parseInt(localStorage.getItem("snakeHighScore")) || 0;
 document.getElementById("snakeHighScore").textContent = "High score = " + snakeHighScore;
 let snakeSpecialFoodTimer = null;
 let snakeSpecialFoodTime = 5000;
@@ -1969,7 +1984,6 @@ let snakeLastFrameTime = 0;
 let snakeMoveDelay = 100;
 let snakeAccumulatedTime = 0;
 let snakeRunning = false;
-let snakePlayerName = document.getElementById("snakeGamePlayerName");
 function startSnakeGame() {
   snakeMoveDelay = 200;
   snake = [{ x: 3 * snakeBox, y: 3 * snakeBox }];
@@ -2100,48 +2114,75 @@ function gameOver() {
   snakeCtx.textAlign = "center";
   const cx = snakeCanvas.width / 2;
   const cy = snakeCanvas.height / 2;
-  let snakePlayerNameValue = snakePlayerName.value.trim() || "Player";
-  const playerId = "player_" + Date.now();
-  db.ref(`highScores/snakeGame/${playerId}`).set({
-    name: snakePlayerNameValue,
-    score: snakeScore
-  });
-  db.ref(`highScores/snakeGame`).once('value').then(snapshot => {
-    const scores = snapshot.val() || {};
-    const sorted = Object.values(scores)
-      .sort((a, b) => b.score - a.score)
-      .slice(0, 10);
-    const position = sorted.findIndex(entry => entry.name === snakePlayerNameValue && entry.score === snakeScore) + 1;
-    if (position > 0 && position <= 10) {
-      if (snakeScore > snakeHighScore) {
-        snakeHighScore = snakeScore;
-        localStorage.setItem("snakeHighScore", snakeHighScore);
-        document.getElementById("snakeHighScore").textContent = "High score = " + snakeHighScore;
-        snakeCtx.fillStyle = "white";
-        snakeCtx.fillText("New High Score: " + snakeHighScore + "!", cx, cy - 40);
-      }
+  if (!db || !currentUser) {
+    let snakePlayerNameValue;
+    db.ref(`users/${currentUser.uid}/username`).once('value')
+    .then(snapshot => {
+      snakePlayerNameValue = snapshot.val();
+    });
+    const playerId = "player_" + Date.now();
+    db.ref(`highScores/snakeGame/${playerId}`).set({
+      name: snakePlayerNameValue,
+      score: snakeScore
+    });
+    db.ref(`highScores/snakeGame`).once('value').then(snapshot => {
+      const scores = snapshot.val() || {};
+      const sorted = Object.values(scores)
+        .sort((a, b) => b.score - a.score)
+        .slice(0, 10);
+      const position = sorted.findIndex(entry => entry.name === snakePlayerNameValue && entry.score === snakeScore) + 1;
+      if (position > 0 && position <= 10) {
+        if (snakeScore > snakeHighScore) {
+          snakeHighScore = snakeScore;
+          localStorage.setItem("snakeHighScore", snakeHighScore);
+          db.ref(`users/${currentUser.uid}/highscores`).set({
+            snakeHighscore: snakeHighScore
+          });
+          document.getElementById("snakeHighScore").textContent = "High score = " + snakeHighScore;
+          snakeCtx.fillStyle = "white";
+          snakeCtx.fillText("New High Score: " + snakeHighScore + "!", cx, cy - 40);
+        }
+        else {
+          snakeCtx.fillStyle = "white";
+          snakeCtx.fillText(`Game Over! Score: ${snakeScore}`, cx, cy - 40);
+        }
+        snakeCtx.fillText(`Congrats! You're #${position} on the leaderboard!`, cx, cy + 10);
+      } 
       else {
+        if (snakeScore > snakeHighScore) {
+          snakeHighScore = snakeScore;
+          localStorage.setItem("snakeHighScore", snakeHighScore);
+          db.ref(`users/${currentUser.uid}/highscores`).set({
+            snakeHighscore: snakeHighScore
+          });
+          document.getElementById("snakeHighScore").textContent = "High score = " + snakeHighScore;
+          snakeCtx.fillStyle = "white";
+          snakeCtx.fillText("New High Score: " + snakeHighScore + "!", cx, cy - 20);
+        }
+        else {
+          snakeCtx.fillStyle = "white";
+          snakeCtx.fillText("Game Over!", cx, cy - 20);
+        }
         snakeCtx.fillStyle = "white";
-        snakeCtx.fillText(`Game Over! Score: ${snakeScore}`, cx, cy - 40);
+        snakeCtx.fillText(`Score: ${snakeScore}`, cx, cy + 20);
       }
-      snakeCtx.fillText(`Congrats! You're #${position} on the leaderboard!`, cx, cy + 10);
-    } 
-    else {
-      if (snakeScore > snakeHighScore) {
-        snakeHighScore = snakeScore;
-        localStorage.setItem("snakeHighScore", snakeHighScore);
-        document.getElementById("snakeHighScore").textContent = "High score = " + snakeHighScore;
-        snakeCtx.fillStyle = "white";
-        snakeCtx.fillText("New High Score: " + snakeHighScore + "!", cx, cy - 20);
-      }
-      else {
-        snakeCtx.fillStyle = "white";
-        snakeCtx.fillText("Game Over!", cx, cy - 20);
-      }
+    });
+  }
+  else {
+    if (snakeScore > snakeHighScore) {
+      snakeHighScore = snakeScore;
+      localStorage.setItem("snakeHighScore", snakeHighScore);
+      document.getElementById("snakeHighScore").textContent = "High score = " + snakeHighScore;
       snakeCtx.fillStyle = "white";
-      snakeCtx.fillText(`Score: ${snakeScore}`, cx, cy + 20);
+      snakeCtx.fillText("New High Score: " + snakeHighScore + "!", cx, cy - 20);
     }
-  });
+    else {
+      snakeCtx.fillStyle = "white";
+      snakeCtx.fillText("Game Over!", cx, cy - 20);
+    }
+    snakeCtx.fillStyle = "white";
+    snakeCtx.fillText(`Score: ${snakeScore}`, cx, cy + 20);
+  }
   snakeCtx.font = "20px Arial";
   snakeCtx.fillStyle = "white";
   snakeCtx.fillText("Press Restart to Play Again", cx, cy + 90);
@@ -2163,11 +2204,6 @@ function showSnakeLeaderScores() {
     });
   });
 }
-snakePlayerName.addEventListener("input", () => {
-  if (snakePlayerName.value.length > 12) {
-    snakePlayerName.value = snakePlayerName.value.slice(0, 12);
-  }
-});
 function snakeGameLoop(timestamp) {
   if (!snakeRunning) return;
   if (snakePaused) {
@@ -2210,7 +2246,14 @@ let jetShooterMessageTimeout = null;
 let movement = 0;
 const keys = {};
 let lastKeyPressed = null; 
-let jetShooterHighScore = parseInt(localStorage.getItem("jetShooterHighScore")) || 0;
+let jetShooterHighScore;
+if (db && currentUser) {
+  db.ref(`users/${currentUser.uid}/highscores/jetShooterHighScore`).once('value')
+    .then(snapshot => {
+      jetShooterHighScore = snapshot.val();
+    });
+}
+else jetShooterHighScore = parseInt(localStorage.getItem("jetShooterHighScore")) || 0;
 document.getElementById("jetShooterHighScore").textContent = "High score = " + jetShooterHighScore;
 let jetShooter, jetShooterBullets, jetShooterEnemies, jetShooterShields, jetShooterBulletBarrel, jetShooterScore;
 let jetShooterPaused = false;
@@ -2227,7 +2270,6 @@ let jetShooterBulletBarrelRate = 10000;
 let jetShooterShieldSpawnRate = 15000;
 let jetShooterHasShield = 0;
 let jetShooterBulletRemaining = 100;
-let jetPlayerName = document.getElementById("jetShooterGamePlayerName");
 function jetShooterGameStart() {
   if (jetShooterFrameId) cancelAnimationFrame(jetShooterFrameId);
   if (gameFrameId) cancelAnimationFrame(gameFrameId);
@@ -2654,39 +2696,61 @@ function jetShooterGameOver() {
     jetShooterCtx.textAlign = "center";
     const cx = jetShooterCanvas.width / 2;
     const cy = jetShooterCanvas.height / 2;
-    let jetPlayerNameValue = jetPlayerName.value.trim() || "Player";
-    const playerId = "player_" + Date.now();
-    db.ref(`highScores/jetShooterGame/${playerId}`).set({
-      name: jetPlayerNameValue,
-      score: jetShooterScore
-    });
-    db.ref(`highScores/jetShooterGame`).once('value').then(snapshot => {
-      const scores = snapshot.val() || {};
-      const sorted = Object.values(scores)
-        .sort((a, b) => b.score - a.score)
-        .slice(0, 10);
-      const position = sorted.findIndex(entry => entry.name === jetPlayerNameValue && entry.score === snakeScore) + 1;
-      if (position > 0 && position <= 10) {
-        if (jetShooterScore > jetShooterHighScore) {
-          jetShooterHighScore = jetShooterScore;
-          localStorage.setItem("jetShooterHighScore", jetShooterHighScore);
-          document.getElementById("jetShooterHighScore").textContent = "High score = " + jetShooterHighScore;
-          jetShooterCtx.fillText("New High Score: " + jetShooterHighScore + "!", cx, cy + 40);
+    if (db && currentUser) {
+      let jetPlayerNameValue;
+      db.ref(`users/${currentUser.uid}/username`).once('value')
+      .then(snapshot => {
+        jetPlayerNameValue = snapshot.val();
+      });
+      const playerId = "player_" + Date.now();
+      db.ref(`highScores/jetShooterGame/${playerId}`).set({
+        name: jetPlayerNameValue,
+        score: jetShooterScore
+      });
+      db.ref(`highScores/jetShooterGame`).once('value').then(snapshot => {
+        const scores = snapshot.val() || {};
+        const sorted = Object.values(scores)
+          .sort((a, b) => b.score - a.score)
+          .slice(0, 10);
+        const position = sorted.findIndex(entry => entry.name === jetPlayerNameValue && entry.score === snakeScore) + 1;
+        if (position > 0 && position <= 10) {
+          if (jetShooterScore > jetShooterHighScore) {
+            jetShooterHighScore = jetShooterScore;
+            localStorage.setItem("jetShooterHighScore", jetShooterHighScore);
+            db.ref(`users/${currentUser.uid}/highscores`).set({
+              jetShooterHighScore: jetShooterHighScore
+            });
+            document.getElementById("jetShooterHighScore").textContent = "High score = " + jetShooterHighScore;
+            jetShooterCtx.fillText("New High Score: " + jetShooterHighScore + "!", cx, cy + 40);
+          }
+          else jetShooterCtx.fillText(`Game Over! Score: ${jetShooterScore}`, cx, cy - 40);
+          jetShooterCtx.fillText(`Congrats! You're #${position} on the leaderboard!`, cx, cy + 10);
+        } 
+        else {
+          jetShooterCtx.fillText("GAME OVER!", cx, cy - 40);
+          if (jetShooterScore > jetShooterHighScore) {
+            jetShooterHighScore = jetShooterScore;
+            localStorage.setItem("jetShooterHighScore", jetShooterHighScore);
+            db.ref(`users/${currentUser.uid}/highscores`).set({
+              jetShooterHighScore: jetShooterHighScore
+            });
+            document.getElementById("jetShooterHighScore").textContent = "High score = " + jetShooterHighScore;
+            jetShooterCtx.fillText("New High Score: " + jetShooterHighScore + "!", cx, cy + 40);
+          }
+          else jetShooterCtx.fillText("Score: " + jetShooterScore, cx, cy);
         }
-        else jetShooterCtx.fillText(`Game Over! Score: ${jetShooterScore}`, cx, cy - 40);
-        jetShooterCtx.fillText(`Congrats! You're #${position} on the leaderboard!`, cx, cy + 10);
-      } 
-      else {
-        jetShooterCtx.fillText("GAME OVER!", cx, cy - 40);
-        if (jetShooterScore > jetShooterHighScore) {
-          jetShooterHighScore = jetShooterScore;
-          localStorage.setItem("jetShooterHighScore", jetShooterHighScore);
-          document.getElementById("jetShooterHighScore").textContent = "High score = " + jetShooterHighScore;
-          jetShooterCtx.fillText("New High Score: " + jetShooterHighScore + "!", cx, cy + 40);
-        }
-        else jetShooterCtx.fillText("Score: " + jetShooterScore, cx, cy);
+      });
+    }
+    else {
+      jetShooterCtx.fillText("GAME OVER!", cx, cy - 40);
+      if (jetShooterScore > jetShooterHighScore) {
+        jetShooterHighScore = jetShooterScore;
+        localStorage.setItem("jetShooterHighScore", jetShooterHighScore);
+        document.getElementById("jetShooterHighScore").textContent = "High score = " + jetShooterHighScore;
+        jetShooterCtx.fillText("New High Score: " + jetShooterHighScore + "!", cx, cy + 40);
       }
-    });
+      else jetShooterCtx.fillText("Score: " + jetShooterScore, cx, cy);
+    }
     jetShooterCtx.font = "20px Arial";
     jetShooterCtx.fillText("Press Restart to Play Again", cx, cy + 90);
   });
@@ -2708,11 +2772,6 @@ function showJetShooterLeaderScores() {
     });
   });
 }
-jetPlayerName.addEventListener("input", () => {
-  if (jetPlayerName.value.length > 12) {
-    jetPlayerName.value = jetPlayerName.value.slice(0, 12);
-  }
-});
 
 // ========== UTILITIES =============
 
