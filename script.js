@@ -13,7 +13,6 @@ let currentUser = null;
 firebase.initializeApp(firebaseConfig);
 firebase.appCheck().activate('6LdbiwcsAAAAAI1ZW4dAvR9yJuDT0sYBAaMtDmyF', true);
 const auth = firebase.auth();
-db = firebase.database();
 const signUpLoginScreen = document.getElementById('signUpLoginScreen');
 const profileScreen = document.getElementById('profileScreen');
 auth.onAuthStateChanged(user => {
@@ -29,6 +28,8 @@ auth.onAuthStateChanged(user => {
     console.log("No user signed in");
     showScreen(signUpLoginScreen);
   }
+  showSnakeLeaderScores();
+  showJetShooterLeaderScores();
 });
 function showScreen(screenToShow) {
   const screens = [signUpLoginScreen, profileScreen];
@@ -124,7 +125,7 @@ async function signOut() {
 function startApp(user) {
   firebase.appCheck().getToken(false)
     .then(tokenResponse => {
-      console.log("App Check token:", tokenResponse.token);
+      if (tokenResponse) console.log("App Check token recieved");
       db.ref(`users/${user.uid}/test`).set({ message: "Hello!" })
         .then(() => console.log("Data written successfully!"))
         .catch(err => console.error("Write failed:", err));
@@ -1351,6 +1352,45 @@ const elementData = [
   {"Z": 118, "Symbol": "Og", "Name": "Oganesson"}
 ]
 let elementDataDB = [];
+const ptOut = document.getElementById('ptOut');
+document.querySelectorAll('.element-box').forEach(box => {
+  box.addEventListener('click', () => {
+    const symbol = box.getAttribute('data-symbol');
+    if (!db || !currentUser) {
+      ptOut.textContent = `Sign in to see more detailed info on ${symbol}`;
+      setTimeout(() => ptOut.textContent = '', 4000);
+    }
+    else showElementInfo(symbol);
+  });
+});
+function searchElement() {
+  const searchedElement = document.getElementById('ptSearch').value.trim().toLowerCase();
+  const element = elementData.find(el =>
+    el.Symbol.toLowerCase() === searchedElement ||
+    el.Name.toLowerCase() === searchedElement ||
+    el.Z.toString() === searchedElement
+  );
+  if (element) {
+    const elementId = "atom" + element.Symbol;
+    const elementElem = document.getElementById(elementId);
+    if (elementElem) {
+      elementElem.click();
+      elementElem.classList.add("hover-element");
+      setTimeout(() => elementElem.classList.remove("hover-element"), 4000);
+    } 
+    else {
+      ptOut.textContent = `Element found, but no HTML element with ID "${elementId}" exists.`;
+    }
+  } 
+  else {
+    ptOut.textContent = 'Invalid input. Please enter a valid element name, symbol, or atomic number.';
+  }
+}
+document.getElementById('ptSearch').addEventListener('keypress', function (event) {
+  if (event.key === 'Enter') {
+    searchElement();
+  }
+});
 function showElementInfoOut(button) {
   if (!db || !currentUser) return;
   document.querySelectorAll('.element-info-out-display').forEach(e => {
@@ -1523,41 +1563,6 @@ function createIsotopeSlider(element) {
     slider.scrollBy({ left: 250, behavior: 'smooth' });
   };
 }
-
-
-document.querySelectorAll('.element-box').forEach(box => {
-  box.addEventListener('click', () => {
-    const symbol = box.getAttribute('data-symbol');
-    showElementInfo(symbol);
-  });
-});
-function searchElement() {
-  const searchedElement = document.getElementById('ptSearch').value.trim().toLowerCase();
-  const ptOut = document.getElementById('ptOut');
-  const element = elementData.find(el =>
-    el.Symbol.toLowerCase() === searchedElement ||
-    el.Name.toLowerCase() === searchedElement ||
-    el.Z.toString() === searchedElement
-  );
-  if (element) {
-    const elementId = "atom" + element.Symbol;
-    const elementElem = document.getElementById(elementId);
-    if (elementElem) {
-      elementElem.click();
-      elementElem.classList.add("hover-element");
-      setTimeout(() => elementElem.classList.remove("hover-element"), 4000);
-    } else {
-      ptOut.textContent = `Element found, but no HTML element with ID "${elementId}" exists.`;
-    }
-  } else {
-    ptOut.textContent = 'Invalid input. Please enter a valid element name, symbol, or atomic number.';
-  }
-}
-document.getElementById('ptSearch').addEventListener('keypress', function (event) {
-  if (event.key === 'Enter') {
-    searchElement();
-  }
-});
 document.querySelectorAll('.info-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     const targetId = 'info-' + btn.dataset.target;
@@ -2158,7 +2163,6 @@ function showSnakeLeaderScores() {
     });
   });
 }
-showSnakeLeaderScores();
 snakePlayerName.addEventListener("input", () => {
   if (snakePlayerName.value.length > 12) {
     snakePlayerName.value = snakePlayerName.value.slice(0, 12);
@@ -2704,7 +2708,6 @@ function showJetShooterLeaderScores() {
     });
   });
 }
-showJetShooterLeaderScores();
 jetPlayerName.addEventListener("input", () => {
   if (jetPlayerName.value.length > 12) {
     jetPlayerName.value = jetPlayerName.value.slice(0, 12);
