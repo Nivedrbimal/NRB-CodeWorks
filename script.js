@@ -1251,7 +1251,7 @@ function loadElementData() {
   }
   db.ref("elementData").once("value")
     .then(snapshot => {
-      elementData = Object.values(snapshot.val()); // convert object to array
+      elementData = Object.values(snapshot.val());
       console.log("Element data loaded:", elementData.length, "elements");
     })
     .catch(err => console.error("Error loading elementData from Firebase:", err));
@@ -2027,7 +2027,7 @@ function gameOver() {
   snakeCtx.fillText("Press Restart to Play Again", cx, cy + 90);
 }
 function showSnakeLeaderScores() {
-  if (!db || !user) return console.error("Database or user not initialized");
+  if (!db || !currentUser) return console.error("Database or user not initialized");
   const leaderboard = document.getElementById('snakeGameLeaderboard');
   const scoresRef = db.ref(`highScores/snakeGame`);
   scoresRef.off('value');
@@ -2044,7 +2044,6 @@ function showSnakeLeaderScores() {
     });
   });
 }
-showJetShooterLeaderScores();
 snakePlayerName.addEventListener("input", () => {
   if (snakePlayerName.value.length > 12) {
     snakePlayerName.value = snakePlayerName.value.slice(0, 12);
@@ -2573,9 +2572,8 @@ function jetShooterGameOver() {
     jetShooterCtx.fillText("Press Restart to Play Again", cx, cy + 90);
   });
 }
-showSnakeLeaderScores();
 function showJetShooterLeaderScores() {
-  if (!db || !user) return console.error("Database or user not initialized");
+  if (!db || !currentUser) return console.error("Database or user not initialized");
   const leaderboard = document.getElementById('jetShooterGameLeaderboard');
   const scoresRef = db.ref(`highScores/jetShooterGame`);
   scoresRef.off('value');
