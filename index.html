@@ -2130,9 +2130,47 @@
           each project here is built with curiosity and the drive to learn something new.</p>
       </div>
 
+      <!-- User Login/Logout -->
+      <div class="card">
+        <div id="signUpScreen" class="sll-visible">
+          <h3>Sign Up</h3>
+          <div class="row">
+            <label><span class="muted">Enter a username</span>
+              <input type="text" id="signUpUsername" placeholder="Username">
+            </label>
+            <label><span class="muted">Enter a password</span>
+              <input type="password" id="signUpPassword" placeholder="Password">
+            </label>
+            <label><span class="muted"></span><br>
+              <button id="signUp" class="btn" onclick="signUp()">Sign Up</button>
+            </label>
+          </div>
+          <div id="signUpOut" class="output mono"></div>
+        </div>
+        <div id="loginScreen" class="sll-visible">
+          <h3>Login</h3>
+          <div class="row">
+            <label><span class="muted">Enter your username</span>
+              <input type="text" id="loginUsername" placeholder="Username">
+            </label>
+            <label><span class="muted">Enter your password</span>
+              <input type="password" id="loginPassword" placeholder="Password">
+            </label>
+            <label><span class="muted"></span><br>
+              <button id="login" class="btn" onclick="signIn()">Login</button>
+            </label>
+          </div>
+          <div id="loginOut" class="output mono"></div>
+        </div>
+        <div id="profileScreen" class="sll-hidden">
+          <h3>Profile</h3>
+          <button id="logout" class="btn" onclick="signOut()">Logout</button>
+        </div>
+      </div>
+
       <!-- Customization -->
       <div class="card" id="customize">
-        <h3>Customize the website your own way.</h3>
+        <h3>Choose your theme</h3>
         <p class="muted">Choose your theme or create your own theme</p>
         <div id="color-pickers" class="grid">
           <label><span class="muted">Main color first shade:</span><br>

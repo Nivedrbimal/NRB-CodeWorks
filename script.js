@@ -13,32 +13,136 @@ firebase.initializeApp(firebaseConfig);
 firebase.appCheck().activate('6LdbiwcsAAAAAI1ZW4dAvR9yJuDT0sYBAaMtDmyF', true);
 const auth = firebase.auth();
 let db;
+const signUpScreen = document.getElementById('signUpScreen');
+const loginScreen = document.getElementById('loginScreen');
+const profileScreen = document.getElementById('profileScreen');
 auth.onAuthStateChanged(user => {
   if (user) {
-    console.log("Already signed in as:", user.email);
-    startApp();
-  } else {
-    console.log("Signing in...");
-    auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
-      .then(() => {
-        return auth.signInWithEmailAndPassword("Neutroxity@neutroxity.com", "Neutroxity@&0");
-      })
-      .then(() => startApp())
-      .catch(err => console.error("Auth error:", err));
+    console.log("Signed in as:", user.email);
+    signUpScreen.classList.add('sll-hidden');
+    signUpScreen.classList.remove('sll-visible');
+    loginScreen.classList.add('sll-hidden');
+    loginScreen.classList.remove('sll-visible');
+    profileScreen.classList.add('sll-visible');
+    profileScreen.classList.remove('sll-hidden');
+    startApp(user);
+  } 
+  else {
+    console.log("No user signed in");
+    signUpScreen.classList.add('sll-visible');
+    signUpScreen.classList.remove('sll-hidden');
+    loginScreen.classList.add('sll-visible');
+    loginScreen.classList.remove('sll-hidden');
+    profileScreen.classList.add('sll-hidden');
+    profileScreen.classList.remove('sll-visible');
   }
 });
-function startApp() {
-  db = firebase.database();
-  db.ref("test").set({ message: "Hello, Blaze!" })
-    .then(() => console.log("Data written successfully!"))
-    .catch(err => console.error("Write failed:", err));
-  db.ref("test").on("value", snapshot => {
-    console.log("Database value:", snapshot.val());
-  });
-  loadElementData();
-  showSnakeLeaderScores();
-  showJetShooterLeaderScores();
+function signUp() {
+  const usernameInput = document.getElementById('signUpUsername');
+  const passwordInput = document.getElementById('signUpPassword');
+  const signUpOut = document.getElementById('signUpOut');
+  const username = usernameInput.value.trim();
+  const email = username + "@neutroxity.com";
+  const password = passwordInput.value;
+  if (!username || !password) {
+    signUpOut.textContent = "Please enter a username and password.";
+    return;
+  }
+  auth.createUserWithEmailAndPassword(email, password)
+    .then(async result => {
+      const user = result.user;
+      const userData = {
+        uid: user.uid,
+        email: email,
+        score: 0,
+        preferences: {}
+      };
+      await db.ref(`users/${username}`).set(userData);
+      signUpOut.textContent = `User created: ${user.email}`;
+      startApp(user);
+      await wait(4000);
+      signUpScreen.classList.add('sll-hidden');
+      signUpScreen.classList.remove('sll-visible');
+      loginScreen.classList.add('sll-hidden');
+      loginScreen.classList.remove('sll-visible');
+      profileScreen.classList.add('sll-visible');
+      profileScreen.classList.remove('sll-hidden');
+      usernameInput.value = '';
+      passwordInput.value = '';
+    })
+    .catch(err => {
+      console.error("Sign-up error:", err);
+      signUpOut.textContent = "Unable to create an account, please try again later.";
+    });
 }
+function signIn() {
+  const usernameInput = document.getElementById('loginUsername');
+  const passwordInput = document.getElementById('loginPassword');
+  const username = usernameInput.value.trim();
+  const email = username + "@neutroxity.com";
+  const password = passwordInput.value;
+  const loginOut = document.getElementById('loginOut');
+  if (!username || !password) {
+    loginOut.textContent = "Please enter a username and password.";
+    return;
+  }
+  auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+    .then(() => auth.signInWithEmailAndPassword(email, password))
+    .then(async result => {
+      loginOut.textContent = `User signed in: ${result.user.email}`;
+      startApp(result.user);
+      await wait(4000);
+      signUpScreen.classList.add('sll-hidden');
+      signUpScreen.classList.remove('sll-visible');
+      loginScreen.classList.add('sll-hidden');
+      loginScreen.classList.remove('sll-visible');
+      profileScreen.classList.add('sll-visible');
+      profileScreen.classList.remove('sll-hidden');
+      usernameInput.value = '';
+      passwordInput.value = '';
+    })
+    .catch(err => {
+      console.error("Sign-in error:", err)
+      loginOut.textContent = "Unable to login, please check your login info."
+    });
+      
+}
+function signOut() {
+  auth.signOut()
+  .then(async () => {
+    await wait(4000);
+    signUpScreen.classList.add('sll-visible');
+    signUpScreen.classList.remove('sll-hidden');
+    loginScreen.classList.add('sll-visible');
+    loginScreen.classList.remove('sll-hidden');
+    profileScreen.classList.add('sll-hidden');
+    profileScreen.classList.remove('sll-visible');
+  })
+  .catch((err) => {
+    console.error("Sign-in error:", err)
+  });
+}
+function startApp(user) {
+  firebase.appCheck().getToken(false)
+    .then(tokenResponse => {
+      console.log("App Check token:", tokenResponse.token);
+      db = firebase.database();
+      db.ref(`users/${user.uid}/test`).set({ message: "Hello!" })
+        .then(() => {
+          console.log("Data written successfully!");
+          loadElementData();
+        })
+        .catch(err => console.error("Write failed:", err));
+      db.ref(`users/${user.uid}/test`).on("value", snapshot => {
+        console.log("Database value:", snapshot.val());
+      });
+    })
+    .catch(err => {
+      console.error("App Check failed, aborting startApp:", err);
+    });
+}
+
+
 
 document.body.style.overflow = 'hidden';
 
@@ -80,6 +184,9 @@ window.addEventListener('load', () => {
   }
 });
 // ---------- Supporter ----------
+function wait(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
 const isNum = v => v !== null && v !== '' && !Number.isNaN(Number(v));
 const toNum = v => isNum(v) ? Number(v) : null;
 const known = x => x !== null;
@@ -1959,6 +2066,7 @@ function showSnakeLeaderScores() {
     });
   });
 }
+showJetShooterLeaderScores();
 snakePlayerName.addEventListener("input", () => {
   if (snakePlayerName.value.length > 12) {
     snakePlayerName.value = snakePlayerName.value.slice(0, 12);
@@ -2487,6 +2595,7 @@ function jetShooterGameOver() {
     jetShooterCtx.fillText("Press Restart to Play Again", cx, cy + 90);
   });
 }
+showSnakeLeaderScores();
 function showJetShooterLeaderScores() {
   const leaderboard = document.getElementById('jetShooterGameLeaderboard');
   const scoresRef = db.ref(`highScores/jetShooterGame`);
