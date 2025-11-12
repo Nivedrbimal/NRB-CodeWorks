@@ -154,7 +154,7 @@ function addUserData(user, newData) {
     .catch(err => console.error("Failed to update data:", err));
 }
 function getUserData(user) {
-  if (!db || !user) return console.error("Database or user not initialized!");
+  if (!db || !user) return console.error("Database or user not initialized");
   db.ref(`users/${user.uid}`).once("value")
     .then(snapshot => {
       if (snapshot.exists()) {
@@ -2036,6 +2036,7 @@ function gameOver() {
   snakeCtx.fillText("Press Restart to Play Again", cx, cy + 90);
 }
 function showSnakeLeaderScores() {
+  if (!db || !user) return console.error("Database or user not initialized");
   const leaderboard = document.getElementById('snakeGameLeaderboard');
   const scoresRef = db.ref(`highScores/snakeGame`);
   scoresRef.off('value');
@@ -2583,6 +2584,7 @@ function jetShooterGameOver() {
 }
 showSnakeLeaderScores();
 function showJetShooterLeaderScores() {
+  if (!db || !user) return console.error("Database or user not initialized");
   const leaderboard = document.getElementById('jetShooterGameLeaderboard');
   const scoresRef = db.ref(`highScores/jetShooterGame`);
   scoresRef.off('value');
