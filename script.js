@@ -57,7 +57,7 @@ function signUp() {
         score: 0,
         preferences: {}
       };
-      await db.ref(`users/${username}`).set(userData);
+      await db.ref(`users/${user.uid}`).set(userData);
       signUpOut.textContent = `User created: ${user.email}`;
       startApp(user);
       await wait(4000);
@@ -69,6 +69,7 @@ function signUp() {
       profileScreen.classList.remove('sll-hidden');
       usernameInput.value = '';
       passwordInput.value = '';
+      signUpOut.textContent = "";
     })
     .catch(err => {
       console.error("Sign-up error:", err);
@@ -100,6 +101,7 @@ function signIn() {
       profileScreen.classList.remove('sll-hidden');
       usernameInput.value = '';
       passwordInput.value = '';
+      loginOut.textContent = "";
     })
     .catch(err => {
       console.error("Sign-in error:", err)
@@ -108,8 +110,10 @@ function signIn() {
       
 }
 function signOut() {
+  const profileOut = document.getElementById('profileOut');
   auth.signOut()
   .then(async () => {
+    profileOut.textContent = "Successfully signed out";
     await wait(4000);
     signUpScreen.classList.add('sll-visible');
     signUpScreen.classList.remove('sll-hidden');
@@ -117,9 +121,11 @@ function signOut() {
     loginScreen.classList.remove('sll-hidden');
     profileScreen.classList.add('sll-hidden');
     profileScreen.classList.remove('sll-visible');
+    profileOut.textContent = "";
   })
   .catch((err) => {
-    console.error("Sign-in error:", err)
+    console.error("Sign-out error:", err);
+    profileOut.textContent = "Unable to sign out, please try again later";
   });
 }
 function startApp(user) {
@@ -141,48 +147,28 @@ function startApp(user) {
       console.error("App Check failed, aborting startApp:", err);
     });
 }
-
+function addUserData(user, newData) {
+  if (!db || !user) return console.error("Database or user not initialized!");
+  db.ref(`users/${user.uid}`).update(newData)
+    .then(() => console.log("Data updated successfully!"))
+    .catch(err => console.error("Failed to update data:", err));
+}
+function getUserData(user) {
+  if (!db || !user) return console.error("Database or user not initialized!");
+  db.ref(`users/${user.uid}`).once("value")
+    .then(snapshot => {
+      if (snapshot.exists()) {
+        console.log("User data:", snapshot.val());
+      } else {
+        console.log("No data found for this user.");
+      }
+    })
+    .catch(err => console.error("Failed to get data:", err));
+}
 
 
 document.body.style.overflow = 'hidden';
 
-function updateColor(varName, color) {
-  root.style.setProperty(varName, color);
-}
-window.addEventListener('load', () => {
-  const savedAccent1 = localStorage.getItem('accent1');
-  const savedAccent2 = localStorage.getItem('accent2');
-  if (savedAccent1) {
-    accent1Picker.value = savedAccent1;
-    updateColor('--accent1', savedAccent1);
-  }
-  if (savedAccent2) {
-    accent2Picker.value = savedAccent2;
-    updateColor('--accent2', savedAccent2);
-  }
-
-  const savedBg1 = localStorage.getItem('background1');
-  const savedBg2 = localStorage.getItem('background2');
-  if (savedBg1) {
-    background1Picker.value = savedBg1;
-    updateColor('--background1', savedBg1);
-  }
-  if (savedBg2) {
-    background2Picker.value = savedBg2;
-    updateColor('--background2', savedBg2);
-  }
-
-  const savedCard1 = localStorage.getItem('accent5');
-  const savedCard2 = localStorage.getItem('accent6');
-  if (savedCard1) {
-    card1Picker.value = savedCard1;
-    updateColor('--accent5', savedCard1);
-  }
-  if (savedCard2) {
-    card2Picker.value = savedCard2;
-    updateColor('--accent6', savedCard2);
-  }
-});
 // ---------- Supporter ----------
 function wait(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
