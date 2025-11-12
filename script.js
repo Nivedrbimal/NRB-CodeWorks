@@ -13,8 +13,7 @@ let currentUser = null;
 firebase.initializeApp(firebaseConfig);
 firebase.appCheck().activate('6LdbiwcsAAAAAI1ZW4dAvR9yJuDT0sYBAaMtDmyF', true);
 const auth = firebase.auth();
-const signUpScreen = document.getElementById('signUpScreen');
-const loginScreen = document.getElementById('loginScreen');
+const signUpLoginScreen = document.getElementById('signUpLoginScreen');
 const profileScreen = document.getElementById('profileScreen');
 auth.onAuthStateChanged(user => {
   if (user) {
@@ -27,12 +26,11 @@ auth.onAuthStateChanged(user => {
     currentUser = null;
     db = null;
     console.log("No user signed in");
-    showScreen(signUpScreen);
-    showScreen(loginScreen);
+    showScreen(signUpLoginScreen);
   }
 });
 function showScreen(screenToShow) {
-  const screens = [signUpScreen, loginScreen, profileScreen];
+  const screens = [signUpLoginScreen, profileScreen];
   screens.forEach(screen => {
     if (screen === screenToShow) {
       screen.classList.add('sll-visible');
@@ -115,7 +113,7 @@ async function signOut() {
     db = null;
     profileOut.textContent = "Successfully signed out";
     await wait(4000);
-    showScreen(signUpScreen);
+    showScreen(signUpLoginScreen);
     profileOut.textContent = '';
   } catch (err) {
     console.error("Sign-out error:", err);
