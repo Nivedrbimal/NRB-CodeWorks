@@ -13,6 +13,7 @@ let currentUser = null;
 firebase.initializeApp(firebaseConfig);
 firebase.appCheck().activate('6LdbiwcsAAAAAI1ZW4dAvR9yJuDT0sYBAaMtDmyF', true);
 const auth = firebase.auth();
+db = firebase.database();
 const signUpLoginScreen = document.getElementById('signUpLoginScreen');
 const profileScreen = document.getElementById('profileScreen');
 auth.onAuthStateChanged(user => {
@@ -24,7 +25,7 @@ auth.onAuthStateChanged(user => {
     startApp(user);
   } else {
     currentUser = null;
-    db = null;
+    db = firebase.database();
     console.log("No user signed in");
     showScreen(signUpLoginScreen);
   }
@@ -127,13 +128,10 @@ function startApp(user) {
       db.ref(`users/${user.uid}/test`).set({ message: "Hello!" })
         .then(() => console.log("Data written successfully!"))
         .catch(err => console.error("Write failed:", err));
-
+        loadElementData();
       db.ref(`users/${user.uid}/test`).on("value", snapshot => {
         console.log("Database value:", snapshot.val());
       });
-      loadElementData();
-      showJetShooterLeaderScores();
-      showSnakeLeaderScores();
     })
     .catch(err => console.error("App Check failed:", err));
 }
@@ -1232,7 +1230,129 @@ function highlightElementGroup(type) {
     elements.forEach(el => el.classList.add('highlighted'));
   }
 }
+const elementData = [
+  {"Z": 1, "Symbol": "H", "Name": "Hydrogen"},
+  {"Z": 2, "Symbol": "He", "Name": "Helium"},
+  {"Z": 3, "Symbol": "Li", "Name": "Lithium"},
+  {"Z": 4, "Symbol": "Be", "Name": "Beryllium"},
+  {"Z": 5, "Symbol": "B", "Name": "Boron"},
+  {"Z": 6, "Symbol": "C", "Name": "Carbon"},
+  {"Z": 7, "Symbol": "N", "Name": "Nitrogen"},
+  {"Z": 8, "Symbol": "O", "Name": "Oxygen"},
+  {"Z": 9, "Symbol": "F", "Name": "Fluorine"},
+  {"Z": 10, "Symbol": "Ne", "Name": "Neon"},
+  {"Z": 11, "Symbol": "Na", "Name": "Sodium"},
+  {"Z": 12, "Symbol": "Mg", "Name": "Magnesium"},
+  {"Z": 13, "Symbol": "Al", "Name": "Aluminum"},
+  {"Z": 14, "Symbol": "Si", "Name": "Silicon"},
+  {"Z": 15, "Symbol": "P", "Name": "Phosphorus"},
+  {"Z": 16, "Symbol": "S", "Name": "Sulfur"},
+  {"Z": 17, "Symbol": "Cl", "Name": "Chlorine"},
+  {"Z": 18, "Symbol": "Ar", "Name": "Argon"},
+  {"Z": 19, "Symbol": "K", "Name": "Potassium"},
+  {"Z": 20, "Symbol": "Ca", "Name": "Calcium"},
+  {"Z": 21, "Symbol": "Sc", "Name": "Scandium"},
+  {"Z": 22, "Symbol": "Ti", "Name": "Titanium"},
+  {"Z": 23, "Symbol": "V", "Name": "Vanadium"},
+  {"Z": 24, "Symbol": "Cr", "Name": "Chromium"},
+  {"Z": 25, "Symbol": "Mn", "Name": "Manganese"},
+  {"Z": 26, "Symbol": "Fe", "Name": "Iron"},
+  {"Z": 27, "Symbol": "Co", "Name": "Cobalt"},
+  {"Z": 28, "Symbol": "Ni", "Name": "Nickel"},
+  {"Z": 29, "Symbol": "Cu", "Name": "Copper"},
+  {"Z": 30, "Symbol": "Zn", "Name": "Zinc"},
+  {"Z": 31, "Symbol": "Ga", "Name": "Gallium"},
+  {"Z": 32, "Symbol": "Ge", "Name": "Germanium"},
+  {"Z": 33, "Symbol": "As", "Name": "Arsenic"},
+  {"Z": 34, "Symbol": "Se", "Name": "Selenium"},
+  {"Z": 35, "Symbol": "Br", "Name": "Bromine"},
+  {"Z": 36, "Symbol": "Kr", "Name": "Krypton"},
+  {"Z": 37, "Symbol": "Rb", "Name": "Rubidium"},
+  {"Z": 38, "Symbol": "Sr", "Name": "Strontium"},
+  {"Z": 39, "Symbol": "Y", "Name": "Yttrium"},
+  {"Z": 40, "Symbol": "Zr", "Name": "Zirconium"},
+  {"Z": 41, "Symbol": "Nb", "Name": "Niobium"},
+  {"Z": 42, "Symbol": "Mo", "Name": "Molybdenum"},
+  {"Z": 43, "Symbol": "Tc", "Name": "Technetium"},
+  {"Z": 44, "Symbol": "Ru", "Name": "Ruthenium"},
+  {"Z": 45, "Symbol": "Rh", "Name": "Rhodium"},
+  {"Z": 46, "Symbol": "Pd", "Name": "Palladium"},
+  {"Z": 47, "Symbol": "Ag", "Name": "Silver"},
+  {"Z": 48, "Symbol": "Cd", "Name": "Cadmium"},
+  {"Z": 49, "Symbol": "In", "Name": "Indium"},
+  {"Z": 50, "Symbol": "Sn", "Name": "Tin"},
+  {"Z": 51, "Symbol": "Sb", "Name": "Antimony"},
+  {"Z": 52, "Symbol": "Te", "Name": "Tellurium"},
+  {"Z": 53, "Symbol": "I", "Name": "Iodine"},
+  {"Z": 54, "Symbol": "Xe", "Name": "Xenon"},
+  {"Z": 55, "Symbol": "Cs", "Name": "Cesium"},
+  {"Z": 56, "Symbol": "Ba", "Name": "Barium"},
+  {"Z": 57, "Symbol": "La", "Name": "Lanthanum"},
+  {"Z": 58, "Symbol": "Ce", "Name": "Cerium"},
+  {"Z": 59, "Symbol": "Pr", "Name": "Praseodymium"},
+  {"Z": 60, "Symbol": "Nd", "Name": "Neodymium"},
+  {"Z": 61, "Symbol": "Pm", "Name": "Promethium"},
+  {"Z": 62, "Symbol": "Sm", "Name": "Samarium"},
+  {"Z": 63, "Symbol": "Eu", "Name": "Europium"},
+  {"Z": 64, "Symbol": "Gd", "Name": "Gadolinium"},
+  {"Z": 65, "Symbol": "Tb", "Name": "Terbium"},
+  {"Z": 66, "Symbol": "Dy", "Name": "Dysprosium"},
+  {"Z": 67, "Symbol": "Ho", "Name": "Holmium"},
+  {"Z": 68, "Symbol": "Er", "Name": "Erbium"},
+  {"Z": 69, "Symbol": "Tm", "Name": "Thulium"},
+  {"Z": 70, "Symbol": "Yb", "Name": "Ytterbium"},
+  {"Z": 71, "Symbol": "Lu", "Name": "Lutetium"},
+  {"Z": 72, "Symbol": "Hf", "Name": "Hafnium"},
+  {"Z": 73, "Symbol": "Ta", "Name": "Tantalum"},
+  {"Z": 74, "Symbol": "W", "Name": "Tungsten"},
+  {"Z": 75, "Symbol": "Re", "Name": "Rhenium"},
+  {"Z": 76, "Symbol": "Os", "Name": "Osmium"},
+  {"Z": 77, "Symbol": "Ir", "Name": "Iridium"},
+  {"Z": 78, "Symbol": "Pt", "Name": "Platinum"},
+  {"Z": 79, "Symbol": "Au", "Name": "Gold"},
+  {"Z": 80, "Symbol": "Hg", "Name": "Mercury"},
+  {"Z": 81, "Symbol": "Tl", "Name": "Thallium"},
+  {"Z": 82, "Symbol": "Pb", "Name": "Lead"},
+  {"Z": 83, "Symbol": "Bi", "Name": "Bismuth"},
+  {"Z": 84, "Symbol": "Po", "Name": "Polonium"},
+  {"Z": 85, "Symbol": "At", "Name": "Astatine"},
+  {"Z": 86, "Symbol": "Rn", "Name": "Radon"},
+  {"Z": 87, "Symbol": "Fr", "Name": "Francium"},
+  {"Z": 88, "Symbol": "Ra", "Name": "Radium"},
+  {"Z": 89, "Symbol": "Ac", "Name": "Actinium"},
+  {"Z": 90, "Symbol": "Th", "Name": "Thorium"},
+  {"Z": 91, "Symbol": "Pa", "Name": "Protactinium"},
+  {"Z": 92, "Symbol": "U", "Name": "Uranium"},
+  {"Z": 93, "Symbol": "Np", "Name": "Neptunium"},
+  {"Z": 94, "Symbol": "Pu", "Name": "Plutonium"},
+  {"Z": 95, "Symbol": "Am", "Name": "Americium"},
+  {"Z": 96, "Symbol": "Cm", "Name": "Curium"},
+  {"Z": 97, "Symbol": "Bk", "Name": "Berkelium"},
+  {"Z": 98, "Symbol": "Cf", "Name": "Californium"},
+  {"Z": 99, "Symbol": "Es", "Name": "Einsteinium"},
+  {"Z": 100, "Symbol": "Fm", "Name": "Fermium"},
+  {"Z": 101, "Symbol": "Md", "Name": "Mendelevium"},
+  {"Z": 102, "Symbol": "No", "Name": "Nobelium"},
+  {"Z": 103, "Symbol": "Lr", "Name": "Lawrencium"},
+  {"Z": 104, "Symbol": "Rf", "Name": "Rutherfordium"},
+  {"Z": 105, "Symbol": "Db", "Name": "Dubnium"},
+  {"Z": 106, "Symbol": "Sg", "Name": "Seaborgium"},
+  {"Z": 107, "Symbol": "Bh", "Name": "Bohrium"},
+  {"Z": 108, "Symbol": "Hs", "Name": "Hassium"},
+  {"Z": 109, "Symbol": "Mt", "Name": "Meitnerium"},
+  {"Z": 110, "Symbol": "Ds", "Name": "Darmstadtium"},
+  {"Z": 111, "Symbol": "Rg", "Name": "Roentgenium"},
+  {"Z": 112, "Symbol": "Cn", "Name": "Copernicium"},
+  {"Z": 113, "Symbol": "Nh", "Name": "Nihonium"},
+  {"Z": 114, "Symbol": "Fl", "Name": "Flerovium"},
+  {"Z": 115, "Symbol": "Mc", "Name": "Moscovium"},
+  {"Z": 116, "Symbol": "Lv", "Name": "Livermorium"},
+  {"Z": 117, "Symbol": "Ts", "Name": "Tennessine"},
+  {"Z": 118, "Symbol": "Og", "Name": "Oganesson"}
+]
+let elementDataDB = [];
 function showElementInfoOut(button) {
+  if (!db || !currentUser) return;
   document.querySelectorAll('.element-info-out-display').forEach(e => {
     e.classList.remove('active');
   });
@@ -1242,20 +1362,20 @@ function showElementInfoOut(button) {
     contentElement.classList.add('active');
   }
 }
-let elementData = [];
 function loadElementData() {
-  if (!db) {
+  if (!db || !currentUser) {
     console.error("Firebase DB not initialized yet!");
     return;
   }
   db.ref("elementData").once("value")
     .then(snapshot => {
-      elementData = Object.values(snapshot.val());
-      console.log("Element data loaded:", elementData.length, "elements");
+      elementDataDB = Object.values(snapshot.val());
+      console.log("Element data loaded:", elementDataDB.length, "elements");
     })
     .catch(err => console.error("Error loading elementData from Firebase:", err));
 }
 function showElementInfo(symbol) {
+  if (!db || !currentUser) return;
   document.getElementById('ptOutElementInfo').classList.add("visible");
   const element = elementData.find(e => e.Symbol === symbol);
   const mainInfo = document.getElementById('elementInfoOutMain');
@@ -1414,10 +1534,6 @@ document.querySelectorAll('.element-box').forEach(box => {
 function searchElement() {
   const searchedElement = document.getElementById('ptSearch').value.trim().toLowerCase();
   const ptOut = document.getElementById('ptOut');
-  if (!elementData || elementData.length === 0) {
-    ptOut.textContent = 'Data not loaded yet. Please wait a second.';
-    return;
-  }
   const element = elementData.find(el =>
     el.Symbol.toLowerCase() === searchedElement ||
     el.Name.toLowerCase() === searchedElement ||
@@ -2026,7 +2142,6 @@ function gameOver() {
   snakeCtx.fillText("Press Restart to Play Again", cx, cy + 90);
 }
 function showSnakeLeaderScores() {
-  if (!db || !currentUser) return console.error("Database or user not initialized");
   const leaderboard = document.getElementById('snakeGameLeaderboard');
   const scoresRef = db.ref(`highScores/snakeGame`);
   scoresRef.off('value');
@@ -2043,6 +2158,7 @@ function showSnakeLeaderScores() {
     });
   });
 }
+showSnakeLeaderScores();
 snakePlayerName.addEventListener("input", () => {
   if (snakePlayerName.value.length > 12) {
     snakePlayerName.value = snakePlayerName.value.slice(0, 12);
@@ -2572,7 +2688,6 @@ function jetShooterGameOver() {
   });
 }
 function showJetShooterLeaderScores() {
-  if (!db || !currentUser) return console.error("Database or user not initialized");
   const leaderboard = document.getElementById('jetShooterGameLeaderboard');
   const scoresRef = db.ref(`highScores/jetShooterGame`);
   scoresRef.off('value');
@@ -2589,6 +2704,7 @@ function showJetShooterLeaderScores() {
     });
   });
 }
+showJetShooterLeaderScores();
 jetPlayerName.addEventListener("input", () => {
   if (jetPlayerName.value.length > 12) {
     jetPlayerName.value = jetPlayerName.value.slice(0, 12);
