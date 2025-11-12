@@ -2132,35 +2132,37 @@
 
       <!-- User Login/Logout -->
       <div class="card">
-        <div id="signUpScreen" class="sll-visible">
-          <h3>Sign Up</h3>
-          <div class="row">
-            <label><span class="muted">Enter a username</span>
-              <input type="text" id="signUpUsername" placeholder="Username">
-            </label>
-            <label><span class="muted">Enter a password</span>
-              <input type="password" id="signUpPassword" placeholder="Password">
-            </label>
-            <label><span class="muted"></span><br>
-              <button id="signUp" class="btn" onclick="signUp()">Sign Up</button>
-            </label>
+        <div id="signUpLoginScreen" class="grid sll-visible">
+          <div>
+            <h3>Sign Up</h3>
+            <div class="row">
+              <label><span class="muted">Enter a username</span>
+                <input type="text" id="signUpUsername" placeholder="Username">
+              </label>
+              <label><span class="muted">Enter a password</span>
+                <input type="password" id="signUpPassword" placeholder="Password">
+              </label>
+              <label><span class="muted"></span><br>
+                <button id="signUp" class="btn" onclick="signUp()">Sign Up</button>
+              </label>
+            </div>
+            <div id="signUpOut" class="output mono"></div>
           </div>
-          <div id="signUpOut" class="output mono"></div>
-        </div>
-        <div id="loginScreen" class="sll-visible">
-          <h3>Login</h3>
-          <div class="row">
-            <label><span class="muted">Enter your username</span>
-              <input type="text" id="loginUsername" placeholder="Username">
-            </label>
-            <label><span class="muted">Enter your password</span>
-              <input type="password" id="loginPassword" placeholder="Password">
-            </label>
-            <label><span class="muted"></span><br>
-              <button id="login" class="btn" onclick="signIn()">Login</button>
-            </label>
+          <div>
+            <h3>Login</h3>
+            <div class="row">
+              <label><span class="muted">Enter your username</span>
+                <input type="text" id="loginUsername" placeholder="Username">
+              </label>
+              <label><span class="muted">Enter your password</span>
+                <input type="password" id="loginPassword" placeholder="Password">
+              </label>
+              <label><span class="muted"></span><br>
+                <button id="login" class="btn" onclick="signIn()">Login</button>
+              </label>
+            </div>
+            <div id="loginOut" class="output mono"></div>
           </div>
-          <div id="loginOut" class="output mono"></div>
         </div>
         <div id="profileScreen" class="sll-hidden">
           <h3>Profile</h3>

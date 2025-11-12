@@ -101,7 +101,8 @@ async function signIn() {
     usernameInput.value = '';
     passwordInput.value = '';
     loginOut.textContent = '';
-  } catch (err) {
+  } 
+  catch (err) {
     console.error("Sign-in error:", err);
     loginOut.textContent = "Unable to login, please check your login info.";
   }
