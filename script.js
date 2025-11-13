@@ -2219,6 +2219,7 @@ function snakeGameLoop(timestamp) {
     updateGame();
     snakeAccumulatedTime = 0;
   }
+  if (!snakeRunning) return;
   drawGame();
   requestAnimationFrame(snakeGameLoop);
 }
