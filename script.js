@@ -2114,7 +2114,7 @@ function gameOver() {
   snakeCtx.textAlign = "center";
   const cx = snakeCanvas.width / 2;
   const cy = snakeCanvas.height / 2;
-  if (!db || !currentUser) {
+  if (db && currentUser) {
     let snakePlayerNameValue;
     db.ref(`users/${currentUser.uid}/username`).once('value')
     .then(snapshot => {
