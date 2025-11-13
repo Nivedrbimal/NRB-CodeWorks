@@ -2026,6 +2026,13 @@ function hitSpecialFood(snakeX, snakeY) {
 function snakeGameCheckCollision(head, array) {
   return array.some(segment => head.x === segment.x && head.y === segment.y);
 }
+snakeStartBtn.onclick = () => {
+  if (snakeRunning) startSnakeGame();
+  else {
+    startSnakeGame();
+    snakeStartBtn.textContent = "Restart"
+  }
+}
 snakePauseBtn.addEventListener("click", () => {
   if (!snakeRunning) return;
   snakePaused = !snakePaused;
