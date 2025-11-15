@@ -1532,8 +1532,8 @@ function showElementInfo(symbol) {
 function createIsotopeSlider(element) {
   if (!element || !element.Isotopes) return;
   const isotopes = Object.values(element.Isotopes);
-  const slider = document.getElementById('isotopeLeft');
-  const btnLeft = document.getElementById('isotopeSlider');
+  const slider = document.getElementById('isotopeSlider');
+  const btnLeft = document.getElementById('isotopeLeft');
   const btnRight = document.getElementById('isotopeRight');
   slider.innerHTML = "";
   isotopes.forEach(iso => {
