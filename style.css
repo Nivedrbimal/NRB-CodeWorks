@@ -839,32 +839,23 @@ font-size:20px;
   display: flex;
   flex-direction: column;
   justify-content: space-around;
-  position: absolute;
-  right: 10px;
-  top: 10px;
   height: 280px;
 }
 .info-panel {
-  position: absolute;
-  right: 100px;
-  top: 10px;
-  width: 400px;
-  height: 280px;
+  display:none;
+  width: 50vw !important;
   border-image: var(--gradient-primary);
   padding: 15px;
   color: #fff;
-  overflow-y: auto;
-  transform: translateX(110%);
   opacity: 0;
   transition: all 0.4s ease;
   z-index: 1;
 }
 .info-panel.active {
-  transform: translateX(0);
+  display:flex block;
   opacity: 1;
   z-index: 3;
 }
-
 .slider-container {
   display: flex;
   align-items: center;

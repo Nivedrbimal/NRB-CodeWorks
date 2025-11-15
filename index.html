@@ -1764,15 +1764,6 @@
         <button class="btn"onclick="searchElement()">Search</button>
         <div id="ptOut" class="output mono" role="status" aria-live="polite">
           <div id="ptOutElementInfo" class="element-info-out">
-            <div class="element-info-out-list">
-              <button id="element-info-out-general" class="element-info-out-trigger btn" data-target-id="elementInfoOutGeneral" onclick="showElementInfoOut(this)">General</button>
-              <button id="element-info-out-history" class="element-info-out-trigger btn" data-target-id="elementInfoOutHistory" onclick="showElementInfoOut(this)">History</button>
-              <button id="element-info-out-abundance" class="element-info-out-trigger btn" data-target-id="elementInfoOutAbundance" onclick="showElementInfoOut(this)">Abundance</button>
-              <button id="element-info-out-physical" class="element-info-out-trigger btn" data-target-id="elementInfoOutPhysical" onclick="showElementInfoOut(this)">Physical Properties</button>
-              <button id="element-info-out-chemical" class="element-info-out-trigger btn" data-target-id="elementInfoOutChemical" onclick="showElementInfoOut(this)">Chemical Properties</button>
-              <button id="element-info-out-electron" class="element-info-out-trigger btn" data-target-id="elementInfoOutElectron" onclick="showElementInfoOut(this)">Electron Properties</button>
-              <button id="element-info-out-isotopes" class="element-info-out-trigger btn" data-target-id="elementInfoOutIsotopes" onclick="showElementInfoOut(this)">Isotope Info</button>
-            </div>
             <div id="elementInfoOutMain" class="element-info-out-main">
               <div id="element-info-out-number" style="font-size: 25px; text-align: left; font-weight: 500;"></div>
               <div id="element-info-out-symbol" style="font-size: 75px; font-weight: 700;"></div>
@@ -1857,9 +1848,9 @@
               <div id="isotopeContainer">
                 <h3>Isotopes</h3>
                 <div class="slider-container">
-                  <button class="nav-btn nav-left">&#10094;</button>
-                  <div class="slider"></div>
-                  <button class="nav-btn nav-right">&#10095;</button>
+                  <button id="isotopeLeft" class="nav-btn">&#10094;</button>
+                  <div id="isotopeSlider" class="slider"></div>
+                  <button id="isotopeRight" class="nav-btn">&#10095;</button>
                 </div>
               </div>
               <div id="isotope-name"></div>
@@ -1881,6 +1872,15 @@
               <div id="isotope-spin"></div>
               <div id="isotope-notes"></div>
               <div id="isotope-use"></div>
+            </div>
+            <div class="element-info-out-list">
+              <button id="element-info-out-general" class="element-info-out-trigger btn" data-target-id="elementInfoOutGeneral" onclick="showElementInfoOut(this)">General</button>
+              <button id="element-info-out-history" class="element-info-out-trigger btn" data-target-id="elementInfoOutHistory" onclick="showElementInfoOut(this)">History</button>
+              <button id="element-info-out-abundance" class="element-info-out-trigger btn" data-target-id="elementInfoOutAbundance" onclick="showElementInfoOut(this)">Abundance</button>
+              <button id="element-info-out-physical" class="element-info-out-trigger btn" data-target-id="elementInfoOutPhysical" onclick="showElementInfoOut(this)">Physical Properties</button>
+              <button id="element-info-out-chemical" class="element-info-out-trigger btn" data-target-id="elementInfoOutChemical" onclick="showElementInfoOut(this)">Chemical Properties</button>
+              <button id="element-info-out-electron" class="element-info-out-trigger btn" data-target-id="elementInfoOutElectron" onclick="showElementInfoOut(this)">Electron Properties</button>
+              <button id="element-info-out-isotopes" class="element-info-out-trigger btn" data-target-id="elementInfoOutIsotopes" onclick="showElementInfoOut(this)">Isotope Info</button>
             </div>
           </div>
         </div>

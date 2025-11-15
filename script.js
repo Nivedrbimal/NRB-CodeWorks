@@ -1532,29 +1532,29 @@ function showElementInfo(symbol) {
 function createIsotopeSlider(element) {
   if (!element || !element.Isotopes) return;
   const isotopes = Object.values(element.Isotopes);
-  const container = document.getElementById('isotopeContainer');
-  container.innerHTML = '';
-  const section = document.createElement('div');
-  section.className = 'isotope-section';
-  container.appendChild(section);
-  const slider = section.querySelector('.slider');
+  const slider = document.getElementById('isotopeLeft');
+  const btnLeft = document.getElementById('isotopeSlider');
+  const btnRight = document.getElementById('isotopeRight');
+  slider.innerHTML = "";
   isotopes.forEach(iso => {
     const box = document.createElement('div');
     box.className = 'iso-box';
     box.dataset.isoName = iso.Name;
+
     box.innerHTML = `
       <div class="iso-symbol">${iso.Symbol}</div>
     `;
     box.addEventListener('click', () => showIsotopeInfo(iso));
     slider.appendChild(box);
   });
-  document.addEventListener('.nav-left').onclick = () => {
-    slider.scrollBy({ left: -250, behavior: 'smooth' });
+  btnLeft.onclick = () => {
+    slider.scrollBy({ left: -250, behavior: "smooth" });
   };
-  section.querySelector('.nav-right').onclick = () => {
-    slider.scrollBy({ left: 250, behavior: 'smooth' });
+  btnRight.onclick = () => {
+    slider.scrollBy({ left: 250, behavior: "smooth" });
   };
 }
+
 function showIsotopeInfo(iso) {
   document.getElementById("isotope-name").textContent = "Name: " + (iso.Name || "N/A");
   document.getElementById("isotope-symbol").textContent = "Symbol: " + (iso.Symbol || "N/A");
