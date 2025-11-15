@@ -1531,10 +1531,12 @@ function showElementInfo(symbol) {
 }
 function createIsotopeSlider(element) {
   if (!element || !element.Isotopes) return;
+  const isotopes = Object.values(element.Isotopes);
   const container = document.getElementById('isotopeContainer');
   container.innerHTML = '';
   const section = document.createElement('div');
   section.className = 'isotope-section';
+
   section.innerHTML = `
     <h3>${element.Name} Isotopes</h3>
     <div class="slider-container">
@@ -1545,13 +1547,18 @@ function createIsotopeSlider(element) {
   `;
   container.appendChild(section);
   const slider = section.querySelector('.slider');
-  element.Isotopes.forEach(iso => {
+
+  // Build isotope boxes
+  isotopes.forEach(iso => {
     const box = document.createElement('div');
     box.className = 'iso-box';
-    box.dataTargetId = `${iso.Name}`;
+    box.dataset.isoName = iso.Name;   // store name so we can identify the clicked isotope
+
     box.innerHTML = `
       <div class="iso-symbol">${iso.Symbol}</div>
     `;
+    box.addEventListener('click', () => showIsotopeInfo(iso));
+
     slider.appendChild(box);
   });
   section.querySelector('.nav-left').onclick = () => {
@@ -1560,6 +1567,27 @@ function createIsotopeSlider(element) {
   section.querySelector('.nav-right').onclick = () => {
     slider.scrollBy({ left: 250, behavior: 'smooth' });
   };
+}
+function showIsotopeInfo(iso) {
+  document.getElementById("isotope-name").textContent = "Name: " + (iso.Name || "N/A");
+  document.getElementById("isotope-symbol").textContent = "Symbol: " + (iso.Symbol || "N/A");
+  document.getElementById("isotope-neutrons").textContent = "Neutrons: " + (iso.Neutrons || "N/A");
+  document.getElementById("isotope-mass").textContent = "Mass: " + (iso.Mass || "N/A");
+  document.getElementById("isotope-mass-excess").textContent = "Mass Excess: " + (iso.Mass_Excess || "N/A");
+  document.getElementById("element-info-out-natural").textContent = "Natural Abundance: " + (iso.Abundances?.Natural ?? "N/A");
+  document.getElementById("element-info-out-solar").textContent = "Solar Abundance: " + (iso.Abundances?.Solar ?? "N/A");
+  document.getElementById("element-info-out-universe").textContent = "Universe Abundance: " + (iso.Abundances?.Universe ?? "N/A");
+  document.getElementById("isotope-binding-energy").textContent = "Binding Energy: " + (iso.Binding_Energy || "N/A");
+  document.getElementById("isotope-decay-energy").textContent = "Decay Energy: " + (iso.Decay_Energy || "N/A");
+  document.getElementById("isotope-decay-mode").textContent = "Decay Mode: " + (iso.Decay_Mode || "N/A");
+  document.getElementById("isotope-decay-width").textContent = "Decay Width: " + (iso.Decay_Width || "N/A");
+  document.getElementById("isotope-half-life").textContent = "Half-Life: " + (iso.Half_Life || "N/A");
+  document.getElementById("isotope-mag-moment").textContent = "Magnetic Moment: " + (iso.Magnetic_Moment || "N/A");
+  document.getElementById("isotope-quadrupole").textContent = "Quadrupole Moment: " + (iso.Quadrupole_Moment || "N/A");
+  document.getElementById("isotope-specific-activity").textContent = "Specific Activity: " + (iso.Specific_Activity || "N/A");
+  document.getElementById("isotope-spin").textContent = "Spin: " + (iso.Spin || "N/A");
+  document.getElementById("isotope-notes").textContent = "Notes: " + (iso.Notes || "N/A");
+  document.getElementById("isotope-use").textContent = "Use: " + (iso.Use || "N/A");
 }
 document.querySelectorAll('.info-btn').forEach(btn => {
   btn.addEventListener('click', () => {
@@ -1571,32 +1599,6 @@ document.querySelectorAll('.info-btn').forEach(btn => {
     panel.classList.toggle('active');
   });
 });
-document.querySelectorAll('.iso-box').forEach(iso => {
-  const isoId = iso.getAttribute('data-target-id');
-  const isotope = elementData.find(el => 
-    el.Isotopes.Name.toLowerCase() === isoId)
-  document.getElementById("isotope-name").textContent = "Name: " + isotope.Name;
-  document.getElementById("isotope-symbol").textContent = "Symbol: " + isotope.Symbol;
-  document.getElementById("isotope-neutrons").textContent = "Neutrons: " + isotope.Neutrons;
-  document.getElementById("isotope-mass").textContent = "Mass: " + isotope.Mass;
-  document.getElementById("isotope-mass-excess").textContent = "Mass Excess: " + isotope.Mass_Excess;
-  document.getElementById("element-info-out-natural").textContent = "Natural Abundance: " + isotope.Abundances.Natural;
-  document.getElementById("element-info-out-solar").textContent = "Solar Abundance: " + isotope.Abundances.Solar;
-  document.getElementById("element-info-out-universe").textContent = "Universe Abundance: " + isotope.Abundances.Universe;
-  document.getElementById("isotope-binding-energy").textContent = "Binding Energy: " + isotope.Binding_Energy;
-  document.getElementById("isotope-decay-energy").textContent = "Decay Energy: " + isotope.Decay_Energy;
-  document.getElementById("isotope-decay-mode").textContent = "Decay Mode: " + isotope.Decay_Mode;
-  document.getElementById("isotope-decay-width").textContent = "Decay Width: " + isotope.Decay_Width;
-  document.getElementById("isotope-half-life").textContent = "Half-Life: " + isotope.Half_Life;
-  document.getElementById("isotope-mag-moment").textContent = "Magnetic Moment: " + isotope.Magnetic_Moment;
-  document.getElementById("isotope-quadrupole").textContent = "Quadrupole Moment: " + isotope.Quadrupole_Moment;
-  document.getElementById("isotope-specific-activity").textContent = "Specific Activity: " + isotope.Specific_Activity;
-  document.getElementById("isotope-spin").textContent = "Spin: " + isotope.Spin;
-  document.getElementById("isotope-notes").textContent = "Notes: " + isotope.Notes;
-  document.getElementById("isotope-use").textContent = "Use: " + isotope.Use;
-});
-
-
 function ptInfoClear() {
   document.getElementById('ptOutElementInfo').classList.remove("visible");
   document.getElementById("ptInfoBtn").classList.add('ptInfoBtnHidden');
