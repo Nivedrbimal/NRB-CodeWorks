@@ -1536,32 +1536,19 @@ function createIsotopeSlider(element) {
   container.innerHTML = '';
   const section = document.createElement('div');
   section.className = 'isotope-section';
-
-  section.innerHTML = `
-    <h3>${element.Name} Isotopes</h3>
-    <div class="slider-container">
-      <button class="nav-btn nav-left">&#10094;</button>
-      <div class="slider"></div>
-      <button class="nav-btn nav-right">&#10095;</button>
-    </div>
-  `;
   container.appendChild(section);
   const slider = section.querySelector('.slider');
-
-  // Build isotope boxes
   isotopes.forEach(iso => {
     const box = document.createElement('div');
     box.className = 'iso-box';
-    box.dataset.isoName = iso.Name;   // store name so we can identify the clicked isotope
-
+    box.dataset.isoName = iso.Name;
     box.innerHTML = `
       <div class="iso-symbol">${iso.Symbol}</div>
     `;
     box.addEventListener('click', () => showIsotopeInfo(iso));
-
     slider.appendChild(box);
   });
-  section.querySelector('.nav-left').onclick = () => {
+  document.addEventListener('.nav-left').onclick = () => {
     slider.scrollBy({ left: -250, behavior: 'smooth' });
   };
   section.querySelector('.nav-right').onclick = () => {
