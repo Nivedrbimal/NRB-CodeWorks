@@ -1436,7 +1436,7 @@ function showElementInfo(symbol) {
     const atomicNumber = element.Z;
     const elementCategories = {
       "alkaliMetalsLegend": [3, 11, 19, 37, 55, 87],
-      "metalloidsLegend": [5, 14, 32, 33, 51, 52],
+      "metalloidsLegend": [5, 6, 14, 32, 33, 51, 52],
       "actinidesLegend": [89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103],
       "alkalineEarthMetalsLegend": [4, 12, 20, 38, 56, 88],
       "reactiveNonMetalsLegend": [1, 7, 8, 9, 15, 16, 17, 34, 35, 53],
@@ -1469,17 +1469,32 @@ function showElementInfo(symbol) {
     document.getElementById("element-info-out-date").textContent = 'Discovery Date: ' + element.Date;
     document.getElementById("element-info-out-origin").textContent = 'Name Origin: ' + element.Origin;
     document.getElementById("element-info-out-abundance-earth").textContent = 'Abundance on Earth: ' + element.Abundance_On_Earth;
-    document.getElementById("element-info-out-abundance-other").textContent = 'Abundance on: ' + element.Abundance;
-    // ' + abundancePlace + ' 
+    document.getElementById("element-info-out-abundance-other").textContent = 'Abundance: ' + element.Abundance;
     document.getElementById("element-info-out-sources").textContent = 'Sources: ' + element.Sources;
     document.getElementById("element-info-out-electron-configuration").textContent = 'Complete Electron Configuration: ' + element.Electron_Configuration;
     document.getElementById("element-info-out-condensed-electron-configuration").textContent = 'Condensed Electron Configuration: ' + element.Condensed_Electron_Configuration;
-    document.getElementById("element-info-out-isotopes").textContent = 'Isotopes: ' + element.Isotopes;
     if (element && element.Isotopes && element.Isotopes.length > 0) {
       createIsotopeSlider(element);
     }
-    document.getElementById("element-info-out-natural-isotopic-composition").textContent = 'Natural Isotopic Composition: ' + element.Natural_Isotopic_Composition;
-    document.getElementById("element-info-out-isotopic-masses").textContent = 'Isotopic Mass: ' + element.Isotopic_Masses;
+    document.getElementById("isotope-name").textContent = "Name: " + isotope.Name;
+    document.getElementById("isotope-symbol").textContent = "Symbol: " + isotope.Symbol;
+    document.getElementById("isotope-neutrons").textContent = "Neutrons: " + isotope.Neutrons;
+    document.getElementById("isotope-mass").textContent = "Mass: " + isotope.Mass;
+    document.getElementById("isotope-mass-excess").textContent = "Mass Excess: " + isotope.Mass_Excess;
+    document.getElementById("element-info-out-natural").textContent = "Natural Abundance: " + isotope.Abundances.Natural;
+    document.getElementById("element-info-out-solar").textContent = "Solar Abundance: " + isotope.Abundances.Solar;
+    document.getElementById("element-info-out-universe").textContent = "Universe Abundance: " + isotope.Abundances.Universe;
+    document.getElementById("isotope-binding-energy").textContent = "Binding Energy: " + isotope.Binding_Energy;
+    document.getElementById("isotope-decay-energy").textContent = "Decay Energy: " + isotope.Decay_Energy;
+    document.getElementById("isotope-decay-mode").textContent = "Decay Mode: " + isotope.Decay_Mode;
+    document.getElementById("isotope-decay-width").textContent = "Decay Width: " + isotope.Decay_Width;
+    document.getElementById("isotope-half-life").textContent = "Half-Life: " + isotope.Half_Life;
+    document.getElementById("isotope-mag-moment").textContent = "Magnetic Moment: " + isotope.Magnetic_Moment;
+    document.getElementById("isotope-quadrupole").textContent = "Quadrupole Moment: " + isotope.Quadrupole_Moment;
+    document.getElementById("isotope-specific-activity").textContent = "Specific Activity: " + isotope.Specific_Activity;
+    document.getElementById("isotope-spin").textContent = "Spin: " + isotope.Spin;
+    document.getElementById("isotope-notes").textContent = "Notes: " + isotope.Notes;
+    document.getElementById("isotope-use").textContent = "Use: " + isotope.Use;
     document.getElementById("element-info-out-common-oxidation-states").textContent = 'Common Oxidation States: ' + element.Common_Oxidation_States;
     document.getElementById("element-info-out-electron-count-in-ion").textContent = 'Electron Count in Ion: ' + element.Electron_Count_in_Ion;
     document.getElementById("element-info-out-valence-orbital-diagram").textContent = 'Valence Electron Diagram: ' + element.Valence_Orbital_Diagram;
@@ -1557,9 +1572,9 @@ function createIsotopeSlider(element) {
     box.innerHTML = `
       <div class="iso-symbol">${iso.symbol}</div>
       <div class="iso-details">
-        <div>Mass: ${iso.mass}</div>
-        <div>Half-life: ${iso.halfLife}</div>
-        <div>Spin: ${iso.spin}</div>
+        <div>Name: ${iso.Name}</div>
+        <div>Mass: ${iso.Mass}</div>
+        <div>Neutrons: ${iso.Neutron}</div>
       </div>
     `;
     slider.appendChild(box);
@@ -2127,7 +2142,7 @@ function gameOver() {
     .then(snapshot => {
       snakePlayerNameValue = snapshot.val();
     });
-    const playerId = "player_" + Date.now();
+    const playerId = currentUser;
     db.ref(`highScores/snakeGame/${playerId}`).set({
       name: snakePlayerNameValue,
       score: snakeScore
