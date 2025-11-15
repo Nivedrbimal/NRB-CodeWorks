@@ -1550,10 +1550,8 @@ function showElementInfo(symbol) {
 }
 function createIsotopeSlider(element) {
   if (!element || !element.Isotopes) return;
-
   const container = document.getElementById('isotopeContainer');
   container.innerHTML = '';
-
   const section = document.createElement('div');
   section.className = 'isotope-section';
   section.innerHTML = `
@@ -1570,11 +1568,11 @@ function createIsotopeSlider(element) {
     const box = document.createElement('div');
     box.className = 'iso-box';
     box.innerHTML = `
-      <div class="iso-symbol">${iso.symbol}</div>
+      <div class="iso-symbol">${iso.Symbol}</div>
       <div class="iso-details">
         <div>Name: ${iso.Name}</div>
         <div>Mass: ${iso.Mass}</div>
-        <div>Neutrons: ${iso.Neutron}</div>
+        <div>Neutrons: ${iso.Neutrons}</div>
       </div>
     `;
     slider.appendChild(box);
