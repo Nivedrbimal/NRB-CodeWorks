@@ -812,7 +812,7 @@ input[type="color"] {
 }
 .element-info-out-main {
   padding: 1vw;
-  width: 23vw;
+  width: 15vw;
   aspect-ratio: 3.2 / 4;
   border: 5px solid;
   border-radius: 15px;
@@ -823,16 +823,13 @@ input[type="color"] {
   z-index: 2;
 }
 .element-info-out-display {
-display:none;
+  display:none;
 }
 .element-info-out-display.active {
-display:block;
-position: absolute;
-left:25%;
-top:0%;
-display:flex;
-flex-direction: column;
-font-size:20px;
+  display:block;
+  display:flex;
+  flex-direction: column;
+  font-size:20px;
 }
 
 .element-info-out-list {
@@ -865,6 +862,7 @@ font-size:20px;
 }
 .slider {
   display: flex;
+  flex-direction: row;
   gap: clamp(2px, 0.5vw, 8px);
   overflow-x: auto;
   scroll-behavior: smooth;

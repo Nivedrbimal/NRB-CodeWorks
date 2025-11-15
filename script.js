@@ -1540,7 +1540,6 @@ function createIsotopeSlider(element) {
     const box = document.createElement('div');
     box.className = 'iso-box';
     box.dataset.isoName = iso.Name;
-
     box.innerHTML = `
       <div class="iso-symbol">${iso.Symbol}</div>
     `;
