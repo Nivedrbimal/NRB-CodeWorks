@@ -876,21 +876,23 @@ font-size:20px;
 }
 .slider {
   display: flex;
-  gap: 10px;
+  gap: clamp(2px, 0.5vw, 8px);
   overflow-x: auto;
   scroll-behavior: smooth;
   padding: 10px 0;
 }
 .iso-box {
-  min-width: 100px;
-  height: 80px;
-  border: 2px solid;
-  border-image: var(--gradient-primary);
+  aspect-ratio: 6/7;
+  z-index: 1;
+  height: clamp(15px, 4.6vw, 75px);
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   flex-shrink: 0;
+  text-align: center;
+  font-size: clamp(4px, 1vw, 16px);
+  font-weight: 700; 
 }
 .nav-btn {
   background: none;
