@@ -830,6 +830,8 @@ input[type="color"] {
   display:block;
   display:flex;
   flex-direction: column;
+  overflow: hidden;
+  width:75%;
   font-size:14px;
 }
 
