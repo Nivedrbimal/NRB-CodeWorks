@@ -1530,6 +1530,19 @@ function showElementInfo(symbol) {
   document.getElementById("ptInfoBtn").classList.add('ptInfoBtnVisible');
 }
 function createIsotopeSlider(element) {
+  const atomicNumber = element.Z;
+  const elementCategories = {
+    "alkaliMetalsLegend": [3, 11, 19, 37, 55, 87],
+    "metalloidsLegend": [5, 6, 14, 32, 33, 51, 52],
+    "actinidesLegend": [89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103],
+    "alkalineEarthMetalsLegend": [4, 12, 20, 38, 56, 88],
+    "reactiveNonMetalsLegend": [1, 7, 8, 9, 15, 16, 17, 34, 35, 53],
+    "unknownElementsLegend": [109, 110, 111, 112, 113, 114, 115, 116, 117, 118],
+    "transitionMetalsLegend": [21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 72, 73, 74, 75, 76, 77, 78, 79, 80, 104, 105, 106, 107, 108],
+    "nobleGasesLegend": [2, 10, 18, 36, 54, 86],
+    "postTransitionMetalsLegend": [13, 31, 49, 50, 81, 82, 83, 84, 85],
+    "lanthanidesLegend": [57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70]
+  };
   if (!element || !element.Isotopes) return;
   const isotopes = Object.values(element.Isotopes);
   const slider = document.getElementById('isotopeSlider');
@@ -1539,9 +1552,22 @@ function createIsotopeSlider(element) {
   isotopes.forEach(iso => {
     const box = document.createElement('div');
     box.className = 'iso-box';
+    box.classList.remove(
+    "alkaliMetalsLegend", "metalloidsLegend", "actinidesLegend",
+    "alkalineEarthMetalsLegend", "reactiveNonMetalsLegend",
+    "unknownElementsLegend", "transitionMetalsLegend",
+    "nobleGasesLegend", "postTransitionMetalsLegend", "lanthanidesLegend"
+  );
+  for (const [className, atomicNumbers] of Object.entries(elementCategories)) {
+    if (atomicNumbers.includes(atomicNumber)) {
+      box.classList.add(className);
+      break;
+    }
+  }
     box.dataset.isoName = iso.Name;
     box.innerHTML = `
       <div class="iso-symbol">${iso.Symbol}</div>
+      <div class="iso-mass">${iso.Mass}</div>
     `;
     box.addEventListener('click', () => showIsotopeInfo(iso));
     slider.appendChild(box);

@@ -803,7 +803,8 @@ input[type="color"] {
 .element-info-out {
   overflow:hidden;
   display:none;
-  justify-content: space-between;
+  justify-content: space-evenly;
+  gap: 1vw;
   align-items: center;
   padding: 5px;
 }
@@ -812,9 +813,9 @@ input[type="color"] {
 }
 .element-info-out-main {
   padding: 1vw;
-  width: 15vw;
+  width: 15%;
   aspect-ratio: 3.2 / 4;
-  border: 5px solid;
+  border: 0.3vw solid;
   border-radius: 15px;
   display: flex;
   flex-direction: column;
@@ -829,20 +830,23 @@ input[type="color"] {
   display:block;
   display:flex;
   flex-direction: column;
-  font-size:20px;
+  font-size:14px;
 }
 
 .element-info-out-list {
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
-  height: 280px;
+  justify-content: space-evenly;
+  height: 100%;
+  gap:1vw;
+  width: 15%;
 }
 .info-panel {
   display:none;
-  width: 50vw !important;
-  border-image: var(--gradient-primary);
-  padding: 15px;
+  width: 70%;
+  border:2px solid;
+  border-image: var(--gradient-primary) 3;
+  padding: 10px;
   color: #fff;
   opacity: 0;
   transition: all 0.4s ease;
@@ -853,12 +857,16 @@ input[type="color"] {
   opacity: 1;
   z-index: 3;
 }
+#isotopeContainer {
+  display: flex;
+  flex-direction: column;
+}
 .slider-container {
   display: flex;
   align-items: center;
   gap: 5px;
   overflow: auto;
-  max-width:50vw !important;
+  width:100%;
 }
 .slider {
   display: flex;
@@ -882,6 +890,7 @@ input[type="color"] {
   text-align: center;
   font-size: clamp(4px, 1vw, 16px);
   font-weight: 700; 
+  cursor: pointer;
 }
 .nav-btn {
   background: none;
