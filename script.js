@@ -1980,6 +1980,214 @@ function ng_try() {
   else document.getElementById('ng_out').textContent = 'Too high.';
 }
 
+
+
+
+
+// ------------- Monopoly -------------
+let roomId = null;
+let roomRef = null;
+let playerUID = null;
+let currentPlayerUID = null;
+const boardSpaces = [
+  { name: 'Go', type: 'corner' },
+  { name: 'Mediterranean Avenue', type: 'property', price: 60, color: 'brown' },
+  { name: 'Community Chest', type: 'chest' },
+  { name: 'Baltic Avenue', type: 'property', price: 60, color: 'brown' },
+  { name: 'Income Tax', type: 'tax', amount: 200 },
+  { name: 'Reading Railroad', type: 'railroad', price: 200 },
+  { name: 'Oriental Avenue', type: 'property', price: 100, color: 'lightblue' },
+  { name: 'Chance', type: 'chance' },
+  { name: 'Vermont Avenue', type: 'property', price: 100, color: 'lightblue' },
+  { name: 'Connecticut Avenue', type: 'property', price: 120, color: 'lightblue' },
+  { name: 'Jail / Just Visiting', type: 'corner' },
+  { name: 'St. Charles Place', type: 'property', price: 140, color: 'pink' },
+  { name: 'Electric Company', type: 'utility', price: 150 },
+  { name: 'States Avenue', type: 'property', price: 140, color: 'pink' },
+  { name: 'Virginia Avenue', type: 'property', price: 160, color: 'pink' },
+  { name: 'Pennsylvania Railroad', type: 'railroad', price: 200 },
+  { name: 'St. James Place', type: 'property', price: 180, color: 'orange' },
+  { name: 'Community Chest', type: 'chest' },
+  { name: 'Tennessee Avenue', type: 'property', price: 180, color: 'orange' },
+  { name: 'New York Avenue', type: 'property', price: 200, color: 'orange' },
+  { name: 'Free Parking', type: 'corner' },
+  { name: 'Kentucky Avenue', type: 'property', price: 220, color: 'red' },
+  { name: 'Chance', type: 'chance' },
+  { name: 'Indiana Avenue', type: 'property', price: 220, color: 'red' },
+  { name: 'Illinois Avenue', type: 'property', price: 240, color: 'red' },
+  { name: 'B. & O. Railroad', type: 'railroad', price: 200 },
+  { name: 'Atlantic Avenue', type: 'property', price: 260, color: 'yellow' },
+  { name: 'Ventnor Avenue', type: 'property', price: 260, color: 'yellow' },
+  { name: 'Water Works', type: 'utility', price: 150 },
+  { name: 'Marvin Gardens', type: 'property', price: 280, color: 'yellow' },
+  { name: 'Go To Jail', type: 'corner' },
+  { name: 'Pacific Avenue', type: 'property', price: 300, color: 'green' },
+  { name: 'North Carolina Avenue', type: 'property', price: 300, color: 'green' },
+  { name: 'Community Chest', type: 'chest' },
+  { name: 'Pennsylvania Avenue', type: 'property', price: 320, color: 'green' },
+  { name: 'Short Line Railroad', type: 'railroad', price: 200 },
+  { name: 'Chance', type: 'chance' },
+  { name: 'Park Place', type: 'property', price: 350, color: 'darkblue' },
+  { name: 'Luxury Tax', type: 'tax', amount: 100 },
+  { name: 'Boardwalk', type: 'property', price: 400, color: 'darkblue' }
+];
+
+function createPrivateRoom() {
+  if (!currentUser) return alert("Please sign in to create a room!");
+  playerUID = currentUser.uid;
+  roomId = 'room' + Math.floor(Math.random() * 100000);
+  roomRef = db.ref(`privateRooms/${roomId}`);
+  const roomData = {
+    hostUID: playerUID,
+    settings: {
+      allowBots: false,
+      allowMortgage: false,
+      rentWhileInJail: true,
+      vacationMoney: false
+    },
+    players: {},
+    chat: {},
+    status: "waiting",
+    currentTurn: playerUID
+  };
+  roomRef.set(roomData);
+  addPlayerToRoom(playerUID, currentUser.displayName || currentUser.email);
+  document.getElementById('room-header').innerText = `Private Room: ${roomId}`;
+  document.getElementById('private-room').style.display = 'block';
+  renderBoard();
+  listenForRoomUpdates();
+}
+function addPlayerToRoom(uid, name) {
+  if (!roomRef) return;
+  roomRef.child(`players/${uid}`).set({
+    name: name,
+    money: 1500,
+    position: 0,
+    properties: []
+  });
+}
+function renderBoard() {
+  const boardDiv = document.getElementById('board-spaces');
+  boardDiv.innerHTML = '';
+  boardSpaces.forEach((space, i) => {
+    const div = document.createElement('div');
+    div.style.width = '90px';
+    div.style.height = '60px';
+    div.style.border = '1px solid black';
+    div.style.margin = '2px';
+    div.style.textAlign = 'center';
+    div.textContent = `${i}: ${space.name}`;
+    boardDiv.appendChild(div);
+  });
+}
+function listenForRoomUpdates() {
+  if (!roomRef) return;
+  roomRef.child('players').on('value', snapshot => {
+    const players = snapshot.val() || {};
+    const list = document.getElementById('players');
+    list.innerHTML = '';
+    Object.entries(players).forEach(([uid, p]) => {
+      const li = document.createElement('li');
+      li.textContent = `${p.name} - $${p.money} - Pos: ${p.position}`;
+      list.appendChild(li);
+    });
+  });
+  roomRef.child('chat').on('value', snapshot => {
+    const messages = snapshot.val() || {};
+    const chatList = document.getElementById('chat-messages');
+    chatList.innerHTML = '';
+    Object.values(messages).forEach(msg => {
+      const li = document.createElement('li');
+      li.textContent = `[${msg.sender}] ${msg.text}`;
+      chatList.appendChild(li);
+    });
+  });
+  roomRef.child('currentTurn').on('value', snapshot => {
+    currentPlayerUID = snapshot.val();
+    if (currentPlayerUID === playerUID) {
+      document.getElementById('roll-dice').disabled = false;
+    } else {
+      document.getElementById('roll-dice').disabled = true;
+    }
+  });
+}
+document.getElementById('roll-dice').addEventListener('click', () => {
+  if (!roomRef || playerUID !== currentPlayerUID) return;
+  const dice1 = Math.floor(Math.random() * 6) + 1;
+  const dice2 = Math.floor(Math.random() * 6) + 1;
+  const total = dice1 + dice2;
+  document.getElementById('dice-result').innerText = `You rolled: ${dice1} + ${dice2} = ${total}`;
+  movePlayer(total);
+});
+function movePlayer(steps) {
+  roomRef.child(`players/${playerUID}`).once('value').then(snapshot => {
+    const player = snapshot.val();
+    const newPosition = (player.position + steps) % boardSpaces.length;
+    const updates = { position: newPosition };
+    const space = boardSpaces[newPosition];
+    if (space.type === 'property' && (!player.properties || !player.properties.includes(space.name))) {
+      if (player.money >= space.price) {
+        updates.money = player.money - space.price;
+        updates.properties = [...(player.properties || []), space.name];
+        log(`${player.name} bought ${space.name} for $${space.price}`);
+      } else {
+        log(`${player.name} cannot afford ${space.name}`);
+      }
+    }
+    roomRef.child(`players/${playerUID}`).update(updates).then(() => {
+      endTurn();
+    });
+  });
+}
+function endTurn() {
+  roomRef.child('players').once('value').then(snapshot => {
+    const players = Object.keys(snapshot.val());
+    const currentIndex = players.indexOf(currentPlayerUID);
+    const nextIndex = (currentIndex + 1) % players.length;
+    roomRef.child('currentTurn').set(players[nextIndex]);
+  });
+}
+function log(message) {
+  const logList = document.getElementById('log');
+  const li = document.createElement('li');
+  li.textContent = message;
+  logList.appendChild(li);
+}
+document.getElementById('send-chat').addEventListener('click', () => {
+  const text = document.getElementById('chat-input').value.trim();
+  if (!text || !playerUID || !roomRef) return;
+  const messageId = 'msg' + Date.now();
+  roomRef.child(`chat/${messageId}`).set({
+    sender: currentUser.displayName || currentUser.email,
+    text: text,
+    timestamp: Date.now()
+  });
+  document.getElementById('chat-input').value = '';
+});
+document.getElementById('save-settings').addEventListener('click', () => {
+  if (!roomRef) return;
+  const settings = {
+    allowBots: document.getElementById('allowBots').checked,
+    allowMortgage: document.getElementById('allowMortgage').checked,
+    rentWhileInJail: document.getElementById('rentWhileInJail').checked,
+    vacationMoney: document.getElementById('vacationMoney').checked
+  };
+  roomRef.child('settings').set(settings);
+  alert("Settings saved!");
+});
+
+document.getElementById('start-game').addEventListener('click', () => {
+  if (!roomRef) return;
+  roomRef.child('status').set('inGame');
+  alert("Game started!");
+});
+
+
+
+
+
+
+
 // -------------- Snake Game -------------
 const snakeCanvas = document.getElementById("snakeCanvas");
 const snakeCtx = snakeCanvas.getContext("2d");

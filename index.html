@@ -1937,8 +1937,53 @@
         <div id="piComment" class="output mono pi-comment-hidden" role="status" aria-live="polite"></div>
       </div>
 
+      <!-- Sudoku -->
+       <div class="card" role="region" aria-labelledby="sudokuTitle">
+         <h3 id="sudokuTitle">Sudoku</h3>
+       </div>
+
+      <!-- Monopoly -->
+       <div id="monopoly-game" style="display:none;">
+          <div id="private-room" style="display:none;">
+          <h2 id="room-header"></h2>
+          <div id="settings">
+            <h3>Game Settings</h3>
+            <label><input type="checkbox" id="allowBots"> Allow Bots</label><br>
+            <label><input type="checkbox" id="allowMortgage"> Allow Mortgage</label><br>
+            <label><input type="checkbox" id="rentWhileInJail"> Rent while in Jail</label><br>
+            <label><input type="checkbox" id="vacationMoney"> Vacation Money</label><br>
+            <button id="save-settings">Save Settings</button>
+          </div>
+          <div id="players-list">
+            <h3>Players</h3>
+            <ul id="players"></ul>
+          </div>
+          <div id="board">
+            <h3>Board</h3>
+            <div id="board-spaces" style="display:flex; flex-wrap: wrap; width:400px;"></div>
+          </div>
+          <div id="controls">
+            <button id="roll-dice">Roll Dice</button>
+            <p id="dice-result"></p>
+            <button id="end-turn">End Turn</button>
+          </div>
+          <div id="game-log">
+            <h3>Game Log</h3>
+            <ul id="log"></ul>
+          </div>
+          <div id="chat-box">
+            <h3>In-Game Chat</h3>
+            <ul id="chat-messages"></ul>
+            <input type="text" id="chat-input" placeholder="Type a message...">
+            <button id="send-chat">Send</button>
+          </div>
+          <button id="start-game">Start Game</button>
+        </div>
+      </div>
+
+
       <!-- Number Guesser -->
-      <div class="card" role="region" aria-labelledby="ngTitle">
+      <div class="card" role="region" aria-labelledby="numberguesserTitle">
         <h3 id="ngTitle">Number Guessing</h3>
         <div class="row">
           <button class="btn primary" onclick="ng_start()">New Game</button>
